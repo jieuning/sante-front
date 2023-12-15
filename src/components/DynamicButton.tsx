@@ -1,29 +1,46 @@
 import styled from 'styled-components';
 
-type ButtonType = 'solid' | 'outline' | 'text';
-type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge';
+export type ButtonType = 'solid' | 'outline' | 'text';
+export type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge';
 
-const getButtonSize = (size: ButtonSize) => {
+export const getButtonSize = (size: ButtonSize) => {
   switch (size) {
     case 'small':
-      return { width: '79px', height: '52px' };
+      return {
+        width: '4.94rem',
+        height: '3.25rem',
+        fontSize: 'var(--font-size-small)',
+      };
     case 'medium':
-      return { width: '253px', height: '64px' };
+      return {
+        width: '15.81rem',
+        height: '4.00rem',
+        fontSize: 'var(--font-size-medium)',
+      };
     case 'large':
-      return { width: '300px', height: '106px' };
+      return {
+        width: '18.75rem',
+        height: '6.62rem',
+        fontSize: 'var(--font-size-large)',
+      };
     case 'xlarge':
-      return { width: '500px', height: '95px' };
+      return {
+        width: '31.25rem',
+        height: '5.94rem',
+        fontSize: 'var(--font-size-large)',
+      };
     default:
-      return { width: '200px', height: '50px' };
+      return { width: '12.5rem', height: '3.12rem' }; // 여기서 기본값도 rem으로 변경
   }
 };
 
-interface ButtonProps {
+export interface ButtonProps {
   type: ButtonType;
-  size: ButtonSize;
+  size?: ButtonSize;
   text: string;
   backgroundColor?: string;
   color?: string;
+  fontWeight?: string;
   onClick?: () => void;
 }
 
@@ -42,14 +59,18 @@ const DynamicButton = (props: ButtonProps) => {
           {text}
         </TextButton>
       )}
-      {props.type === 'outline' && <SolidButton {...props}>{text}</SolidButton>}
+      {props.type === 'outline' && (
+        <OutlineButton onClick={props.onClick} {...props}>
+          {text}
+        </OutlineButton>
+      )}
     </Container>
   );
 };
 
 const Container = styled.div<ButtonProps>`
-  width: ${(props) => getButtonSize(props.size).width};
-  height: ${(props) => getButtonSize(props.size).height};
+  width: ${(props) => getButtonSize(props.size ?? 'medium').width};
+  height: ${(props) => getButtonSize(props.size ?? 'medium').height};
   cursor: pointer;
 `;
 
@@ -58,16 +79,30 @@ const SolidButton = styled.button<ButtonProps>`
   height: 100%;
   border: none;
   cursor: pointer;
-  border-radius: 20px;
-  font-size: var(--font-size-large);
+  border-radius: 10px;
+  font-size: ${(props) => getButtonSize(props.size ?? 'medium').fontSize};
   background-color: ${(props) =>
     props.backgroundColor ? props.backgroundColor : 'var(--primary-color)'};
   color: ${(props) => (props.color ? props.color : 'white')};
+  font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
 `;
 
 const TextButton = styled.button<ButtonProps>`
   color: ${(props) => (props.color ? props.color : '#81D8D0')};
-  font-size:;
+  border: none;
+  background-color: rgba(255, 0, 0, 0);
+  font-size: 1.4rem;
+  font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
+  cursor: pointer;
+`;
+
+const OutlineButton = styled.button<ButtonProps>`
+  background-color: rgba(255, 0, 0, 0);
+  border-color: var(--gray-color);
+  border-radius: 5px;
+  font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
+  color: var(--gray-dark);
+  cursor: pointer;
 `;
 
 export default DynamicButton;
