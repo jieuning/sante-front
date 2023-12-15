@@ -1,11 +1,10 @@
-import { TextInput, NumberInput } from '../../components/Input';
+import Input from '../../components/Input';
 
 const Home = () => {
   return (
     <>
       <div>Home oh my sweet Home</div>
-      <TextInput></TextInput>
-      <NumberInput></NumberInput>
+      <Input placeholder={'입력하세요.'} width="200px" height="20px" />
     </>
   );
 };
