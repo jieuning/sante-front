@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export type ButtonType = 'solid' | 'outline' | 'text';
-export type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge';
+export type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'default';
 
 export const getButtonSize = (size: ButtonSize) => {
   switch (size) {
@@ -30,7 +30,7 @@ export const getButtonSize = (size: ButtonSize) => {
         fontSize: 'var(--font-size-large)',
       };
     default:
-      return { width: '12.5rem', height: '3.12rem' }; // 여기서 기본값도 rem으로 변경
+      return { width: 'auto', height: 'auto' }; // 여기서 기본값도 rem으로 변경
   }
 };
 
@@ -69,8 +69,9 @@ const DynamicButton = (props: ButtonProps) => {
 };
 
 const Container = styled.div<ButtonProps>`
-  width: ${(props) => getButtonSize(props.size ?? 'medium').width};
-  height: ${(props) => getButtonSize(props.size ?? 'medium').height};
+  width: ${(props) => getButtonSize(props.size ?? 'default').width};
+  height: ${(props) => getButtonSize(props.size ?? 'default').height};
+
   cursor: pointer;
 `;
 
@@ -91,18 +92,20 @@ const TextButton = styled.button<ButtonProps>`
   color: ${(props) => (props.color ? props.color : '#81D8D0')};
   border: none;
   background-color: rgba(255, 0, 0, 0);
-  font-size: 1.4rem;
+  font-size: 14px;
   font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
   cursor: pointer;
 `;
 
 const OutlineButton = styled.button<ButtonProps>`
   background-color: rgba(255, 0, 0, 0);
-  border-color: var(--gray-color);
+  outline: none;
+  border: solid 1px var(--gray-color);
   border-radius: 5px;
   font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
   color: var(--gray-dark);
   cursor: pointer;
+  font-size: 12px;
 `;
 
 export default DynamicButton;

@@ -78,6 +78,10 @@ export const GlobalStyles = createGlobalStyle`
 		font-family: 'SpoqaHanSansNeo';
 		overflow-x: hidden;
 	}
+
+	button {
+		font-family: 'SpoqaHanSansNeo';
+	}
 	img {
 		width: 100%;
 		height: 100%;
