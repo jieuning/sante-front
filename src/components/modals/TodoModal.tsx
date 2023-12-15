@@ -52,7 +52,6 @@ const TodoModal = ({ todoType }: ModalCardProps) => {
                                     </DayRadioLabel>
                                 ))
                             }
-                            <button>매일</button>
                         </ExerciseContentWrap>
                     </>
                     :
