@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import { ButtonSize, DynamicButtonInfo } from '../models/dynamicButton';
+import { ButtonSize, DynamicButtonInfo } from '../types/dynamicButton';
 
 interface DynamicButtonProps {
   info: DynamicButtonInfo;
 }
 
-const DynamicButton = (props: DynamicButtonProps) => {
-  const { info } = props;
+const DynamicButton = (info: any) => {
+  //const { info } = props;
 
   return (
     <Container {...info}>
