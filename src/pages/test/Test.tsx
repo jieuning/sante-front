@@ -10,6 +10,12 @@ const Test = () => (
       text="Click"
       backgroundColor="var(--gray-color)"
     ></DynamicButton>
+    <DynamicButton
+      type="text"
+      text="+식단추가"
+      color="var(--secondary-orange-color)"
+    ></DynamicButton>
+    <DynamicButton type="outline" text="더보기"></DynamicButton>
   </div>
 );
 
