@@ -1,13 +1,24 @@
 import styled from 'styled-components';
-import { ButtonSize, DynamicButtonInfo } from '../types/dynamicButton';
+import ColorType from '../types/colorType';
+
+type ButtonType = 'solid' | 'outline' | 'text';
+type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'default';
+
+type DynamicButtonInfo = {
+  type: ButtonType;
+  size?: ButtonSize;
+  text: string;
+  backgroundColor?: string;
+  color?: ColorType;
+  fontWeight?: string;
+  onClick?: () => void;
+};
 
 interface DynamicButtonProps {
   info: DynamicButtonInfo;
 }
 
-const DynamicButton = (info: any) => {
-  //const { info } = props;
-
+const DynamicButton = ({ info }: DynamicButtonProps) => {
   return (
     <Container {...info}>
       {info.type === 'solid' && (
@@ -29,7 +40,7 @@ const DynamicButton = (info: any) => {
   );
 };
 
-export const getButtonSize = (size: ButtonSize) => {
+const getButtonSize = (size: ButtonSize) => {
   switch (size) {
     case 'small':
       return {
@@ -100,4 +111,5 @@ const OutlineButton = styled.button<DynamicButtonInfo>`
   font-size: 12px;
 `;
 
-export default DynamicButton;
+export type { ButtonType, ButtonSize, DynamicButtonInfo };
+export { DynamicButton };
