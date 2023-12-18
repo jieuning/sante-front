@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ColorType from '../types/colorType';
+import { ColorType, getColorValue } from '../types/colorType';
 
 type ButtonType = 'solid' | 'outline' | 'text';
 type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'default';
@@ -8,7 +8,7 @@ type DynamicButtonInfo = {
   type: ButtonType;
   size?: ButtonSize;
   text: string;
-  backgroundColor?: string;
+  backgroundColor?: ColorType;
   color?: ColorType;
   fontWeight?: string;
   onClick?: () => void;
@@ -86,13 +86,13 @@ const SolidButton = styled.button<DynamicButtonInfo>`
   border-radius: 10px;
   font-size: ${(props) => getButtonSize(props.size ?? 'medium').fontSize};
   background-color: ${(props) =>
-    props.backgroundColor ? props.backgroundColor : 'var(--primary-color)'};
-  color: ${(props) => (props.color ? props.color : 'white')};
+    getColorValue(props.backgroundColor ?? 'primary')};
+  color: ${(props) => getColorValue(props.color ?? 'white')};
   font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
 `;
 
 const TextButton = styled.button<DynamicButtonInfo>`
-  color: ${(props) => (props.color ? props.color : '#81D8D0')};
+  color: ${(props) => getColorValue(props.color ?? 'primary')};
   border: none;
   background-color: rgba(255, 0, 0, 0);
   font-size: 14px;
