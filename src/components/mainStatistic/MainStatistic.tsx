@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import GageBar from './GageBar';
 import { useState, useEffect } from 'react';
-import DynamicButton from '../DynamicButton';
+import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
+import useUserModel from '../../hooks/useUserModel';
+import { User, Exercise, Food, FoodItem } from '../../types/user';
+// import { getColorValue } from '../../types/colorType';
 
 const MainStatistic = () => {
   const caloryMoods = {
@@ -10,24 +13,48 @@ const MainStatistic = () => {
     tooMuch: { emoji: '😵', message: '기준치를 초과했어요' },
   };
   const [caloryMood, setCaloryMood] = useState(caloryMoods.notEnough);
-  const [gage, setGage] = useState(0);
+  const [exerciseGage, setExerciseGage] = useState(0);
+  const [foodGage, setFoodGage] = useState(9);
+  const [userCalory, setUserCalory] = useState(0);
 
+  const user: User | undefined = useUserModel();
   // const API_ENDPOINT = 'url주소';
+
   useEffect(() => {
-    //NOTE 백엔드 API에서 데이터 가져오기
-    // axios.get(API_ENDPOINT)
-    //   .then((res) => {
-    //     const responseData = res.data;
-    //     const receivedGageValue = responseData.gage; // 실제 데이터 구조로 교체
-    //     setGage(calculatedGage);
-    //   })
-    //   .catch((error) => {
-    //     console.error('API에서 데이터를 가져오는 중 오류 발생:', error);
-    //   });
-    setGage(calculatedGage);
-  }, []);
+    if (user) {
+      const userData = user.user;
+      setUserCalory(userData.todayCalory);
+      const userFoodData = userData.userFoodList;
+      const userExerciseData = userData.userExerciseList;
+
+      const handleCalory = () => {
+        console.log('user', userData);
+        userFoodData.forEach((food: Food) => {
+          console.log('food', food);
+          const calculatedCalory = food.foodList.reduce(
+            (acc: number, item: FoodItem) => {
+              return acc + item.calory;
+            },
+            0
+          );
+          setFoodGage(calculatedCalory);
+        });
+      };
+
+      handleCalory();
+      //NOTE 백엔드 API에서 데이터 가져오기
+      console.log('userCalory', userCalory);
+    }
+  }, [user]);
 
   //NOTE: 기준 80%
+
+  const buttonInfo: DynamicButtonInfo = {
+    type: 'outline',
+    size: 'medium',
+    text: '통계 상세보기',
+    onClick: () => console.log('Button clicked!'),
+  };
 
   const handleCaloryGage = (currentGage: number) => {
     let newCaloryMood = { ...caloryMood };
@@ -43,26 +70,37 @@ const MainStatistic = () => {
 
   return (
     <GageContainerDiv>
-      <InformationAreaDiv>
-        <FlexContainerDiv>
-          <TextContainerDiv>주간 운동 달성률</TextContainerDiv>
-          <br />
-          <GageBar gage={50} type="exercise" />
-        </FlexContainerDiv>
-        <FlexContainerDiv>
-          <TextContainerDiv>하루 섭취 칼로리</TextContainerDiv>
-          <br />
-          <GageBar gage={101} type="food" handleGage={handleCaloryGage} />
-          <br />
-          <div>
-            <EmojiContainerSpan>{caloryMood.emoji}</EmojiContainerSpan>
-            <StatusContainerSpan>{caloryMood.message}</StatusContainerSpan>
-          </div>
-        </FlexContainerDiv>
-      </InformationAreaDiv>
-      <ButtonAreaDiv>
-        <DynamicButton type="outline" size="medium" text="통계 상세보기" />
-      </ButtonAreaDiv>
+      {user ? (
+        <>
+          <InformationAreaDiv>
+            <FlexContainerDiv>
+              <TextContainerDiv>주간 운동 달성률</TextContainerDiv>
+              <br />
+              {/* <GageBar gage={exerciseGage} type="exercise" /> */}
+            </FlexContainerDiv>
+            <FlexContainerDiv>
+              <TextContainerDiv>하루 섭취 칼로리</TextContainerDiv>
+              <br />
+              <GageBar
+                gage={foodGage}
+                maxGage={userCalory}
+                type="food"
+                handleGage={handleCaloryGage}
+              />
+              <br />
+              <div>
+                <EmojiContainerSpan>{caloryMood.emoji}</EmojiContainerSpan>
+                <StatusContainerSpan>{caloryMood.message}</StatusContainerSpan>
+              </div>
+            </FlexContainerDiv>
+          </InformationAreaDiv>
+          <ButtonAreaDiv>
+            <DynamicButton info={buttonInfo} />
+          </ButtonAreaDiv>
+        </>
+      ) : (
+        <h1>Loading...</h1>
+      )}
     </GageContainerDiv>
   );
 };
