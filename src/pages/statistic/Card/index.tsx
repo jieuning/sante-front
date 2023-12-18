@@ -30,10 +30,10 @@ const Card = ({ title, subTitle, data }: CardProps) => {
         {data.map((item, index) => {
           if (index + 1 === thisWeek) {
             return (
-              <div>
+              <BarContainer>
                 <Bar key={index} height={item} thisWeek={true}></Bar>
                 <p>{index + 1}주차</p>
-              </div>
+              </BarContainer>
             );
           }
           return (
@@ -61,7 +61,7 @@ const Title = styled.div`
 const StyledCard = styled.div`
   background-color: white;
   width: 100%;
-  height: 300px;
+  height: 100px;
   border-radius: 20px;
   display: flex;
   padding: 0 10%;
@@ -71,7 +71,12 @@ const StyledCard = styled.div`
 const BarContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
+
+  p {
+    margin-top: 0.5rem;
+  }
 `;
 
 const Bar = styled.div<BarProps>`
