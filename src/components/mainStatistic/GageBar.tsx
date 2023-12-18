@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 //NOTE: 퍼센테지에 따라 색상이 변경될 수 있게 state받기?
@@ -6,6 +7,7 @@ interface GageProps {
   gage?: number;
   maxGage?: number;
   type?: string;
+  handleGage?(currentGage: number): void;
 }
 
 type GageStatus = {
@@ -15,9 +17,22 @@ type GageStatus = {
 
 //NOTE 타입지정을 중복되지 않게 하는 방법?
 
-const GageBar = ({ gage = 0, maxGage = 100, type = 'exercise' }: GageProps) => {
-  console.log('type', type);
-  const gageStatus: number = Math.floor((gage / maxGage) * 100);
+const GageBar = ({
+  gage = 0,
+  maxGage = 100,
+  type = 'exercise',
+  handleGage,
+}: GageProps) => {
+  const [gageStatus, setGageStatus] = useState<number>(0);
+
+  useEffect(() => {
+    const calculateStatus: number = Math.floor((gage / maxGage) * 100);
+    setGageStatus(calculateStatus);
+    if (handleGage) {
+      handleGage(calculateStatus);
+    }
+  }, []);
+
   return (
     <Progress>
       <GageStatus gageStatus={gageStatus} type={type} />
