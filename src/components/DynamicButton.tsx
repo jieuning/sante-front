@@ -11,7 +11,7 @@ type DynamicButtonInfo = {
   backgroundColor?: ColorType;
   color?: ColorType;
   fontWeight?: string;
-  onClick?: () => void;
+  onClick?: (e?: any) => void;
 };
 
 interface DynamicButtonProps {
