@@ -17,8 +17,9 @@ type InputButtonInfo = {
   fontWeight?: string | number;
   fontSize?: string | number;
   value: string[];
-  checked: boolean[];
+  items: string[];
   onClick?: (e?: any) => void;
+  onChange?: (e?: any) => void;
 };
 
 interface InputButtonProps {
@@ -35,7 +36,7 @@ const getButtonSize = (size: InputSize) => {
       };
     case 'short-oval': // 중간너비타원
       return {
-        width: '55  px',
+        width: '55px',
         height: '25px',
         fontSize: '15px',
       };
@@ -138,8 +139,14 @@ const InputcheckButtonBox = styled.div`
   display: flex;
   cursor: pointer;
 `;
-
+const InputradioButtonBox = styled.div`
+  display: flex;
+  color: var(--white-background-color);
+  cursor: pointer;
+`;
 const CheckLabel = styled.label<InputButtonInfo>`
+  width: ${(props) =>
+    props.value.includes('매일') ? '55px' : getButtonSize(props.size).width};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,29 +158,64 @@ const CheckLabel = styled.label<InputButtonInfo>`
     getColorValue(props.backgroundColor ?? 'gray')};
   color: ${(props) => getColorValue(props.color ?? 'white')};
   cursor: pointer;
-  width: ${(props) => getButtonSize(props.size).width};
   height: ${(props) => getButtonSize(props.size).height};
   font-size: ${(props) => getButtonSize(props.size).fontSize};
 `;
 
-const InputradioButtonBox = styled.div`
+const CheckAllDayLabel = styled.label<InputButtonInfo>`
   display: flex;
-  color: var(--white-background-color);
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  border-radius: 3rem;
+  background-color: ${(props) =>
+    getColorValue(props.backgroundColor ?? 'gray')};
+  color: ${(props) => getColorValue(props.color ?? 'white')};
   cursor: pointer;
+  width: 60px;
+  height: ${(props) => getButtonSize(props.size).height};
+  font-size: ${(props) => getButtonSize(props.size).fontSize};
 `;
 
 const CheckButton = ({ info }: InputButtonProps) => {
+  const handleCheckAll = () => {
+    // 매일 버튼 클릭 처리 로직
+    console.log('매일 버튼이 클릭되었습니다!');
+  };
+
+  const handleDayClick = (day: string) => {
+    // 각 요일 클릭 처리 로직
+    console.log(`${day}이(가) 클릭되었습니다!`);
+  };
+
   return (
     <InputButtonContainer>
-      {info.type === 'checkbox' &&
-        info.value.map((item, index) => (
-          <InputcheckButtonBox key={index} {...info}>
-            <CheckInput type="checkbox" id={index + ''} name="check-group" />
-            <CheckLabel htmlFor={index + ''} {...info}>
-              <span>{item}</span>
-            </CheckLabel>
+      {info.type === 'checkbox' && (
+        <>
+          <InputcheckButtonBox key="everyday" onClick={handleCheckAll}>
+            <CheckInput type="checkbox" id="everyday" name="check-group" />
+            <CheckAllDayLabel htmlFor="everyday" {...info}>
+              <span>매일</span>
+            </CheckAllDayLabel>
           </InputcheckButtonBox>
-        ))}
+
+          {info.items.map((item, index) => (
+            <InputcheckButtonBox key={index} {...info}>
+              <CheckInput
+                type="checkbox"
+                id={`check-${index}`}
+                name="check-group"
+                onChange={() => handleDayClick(item)}
+              />
+              <CheckLabel htmlFor={`check-${index}`} {...info}>
+                <span>{item}</span>
+              </CheckLabel>
+            </InputcheckButtonBox>
+          ))}
+        </>
+      )}
     </InputButtonContainer>
   );
 };
@@ -182,7 +224,7 @@ const RadioButton = ({ info }: InputButtonProps) => {
   return (
     <InputButtonContainer>
       {info.type === 'circleRadio' &&
-        info.value.map((item, index) => (
+        info.items.map((item, index) => (
           <InputradioButtonBox key={index}>
             <RadioInput
               type="radio"
@@ -195,7 +237,7 @@ const RadioButton = ({ info }: InputButtonProps) => {
           </InputradioButtonBox>
         ))}
       {info.type === 'shortOvalRadio' &&
-        info.value.map((item, index) => (
+        info.items.map((item, index) => (
           <InputradioButtonBox key={index}>
             <RadioInput
               type="radio"
@@ -211,7 +253,7 @@ const RadioButton = ({ info }: InputButtonProps) => {
           </InputradioButtonBox>
         ))}
       {info.type === 'longOvalRadio' &&
-        info.value.map((item, index) => (
+        info.items.map((item, index) => (
           <InputradioButtonBox key={index}>
             <RadioInput
               type="radio"
