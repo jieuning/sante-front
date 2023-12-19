@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import logoImage from '../assets/logo.png';
+// import logoImage from '../assets/logo.png';
 import { DynamicButton, DynamicButtonInfo } from '../components/DynamicButton';
 
 const LogoImage = () => {
-  return <StyledLogoImage src={logoImage} alt="logoImage" />;
+  return <StyledLogoImage src="./logo.png" alt="logoImage" />;
 };
 
 const buttonInfo: DynamicButtonInfo = {
