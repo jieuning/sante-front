@@ -1,7 +1,9 @@
+import Register from '../../pages/register';
+
 const Home = () => {
   return (
     <>
-      <div>Home oh my sweet Home</div>
+      <Register></Register>
     </>
   );
 };
