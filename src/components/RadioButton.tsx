@@ -1,17 +1,22 @@
 import styled from 'styled-components';
 import { ColorType, getColorValue } from '../types/colorType';
 
-type InputType = 'radio' | 'checkbox';
+type InputType =
+  | 'checkbox'
+  | 'circleRadio'
+  | 'shortOvalRadio'
+  | 'longOvalRadio';
 type InputSize = 'circle' | 'short-oval' | 'long-oval';
 
 type InputButtonInfo = {
   type: InputType;
   size: InputSize;
-  text: (string | number)[];
   backgroundColor?: ColorType;
   color?: ColorType;
   border?: ColorType;
-  fontWeight?: string;
+  fontWeight?: string | number;
+  value: string[];
+  checked: boolean[];
   onClick?: (e?: any) => void;
 };
 
@@ -19,55 +24,24 @@ interface InputButtonProps {
   info: InputButtonInfo;
 }
 
-const InputButton = ({ info }: InputButtonProps) => {
-
-  const handleClick = info.onClick || (() => {}); // 기본값 설정
-
-
-  return (
-    <Container {...info}>
-      {info.type === 'checkbox' && (
-        <CheckButton onClick={handleClick} {...info}>
-          {info.text}
-        </CheckButton>
-      )}
-      {info.type === 'radio' && (
-        <RadioButton onClick={handleClick} {...info}>
-          {info.text}
-        </RadioButton>
-      )}
-      {info.type === 'radio' && (
-        <RadioCategoryButton onClick={handleClick} {...info}>
-          {info.text}
-        </RadioCategoryButton>
-      )}
-      {info.type === 'radio' && (
-        <RadioGenderButton onClick={handleClick} {...info}>
-          {info.text}
-        </RadioGenderButton>
-      )}
-    </Container>
-  );
-};
-
 const getButtonSize = (size: InputSize) => {
   switch (size) {
     case 'circle':
       return {
-        width: '3.125rem',
-        height: '3.125rem',
-        fontSize: 'var(--font-size-primary)',
+        width: '50px',
+        height: '50px',
+        fontSize: 'var(--font-size-medium)',
       };
     case 'short-oval': // 중간너비타원
       return {
-        width: '4.375rem',
-        height: '3.125rem',
+        width: '100px',
+        height: '50px',
         fontSize: 'var(--font-size-primary)',
       };
     case 'long-oval': // 긴너비타원
       return {
-        width: '6.15rem',
-        height: '3.125rem',
+        width: '200px',
+        height: '50px',
         fontSize: 'var(--font-size-primary)',
       };
     default:
@@ -79,51 +53,178 @@ const getButtonSize = (size: InputSize) => {
   }
 };
 
-const Container = styled.div<InputButtonInfo>`
-  width: ${(props) => getButtonSize(props.size ?? 'default').width};
-  height: ${(props) => getButtonSize(props.size ?? 'default').height};
+const RadioLabel = styled.label<InputButtonInfo>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  cursor: pointer;
+  width: ${(props) => getButtonSize(props.size).width};
+  height: ${(props) => getButtonSize(props.size).height};
+  color: ${(props) => getColorValue(props.color ?? 'white')};
+`;
 
+const CircleRadioLabel = styled(RadioLabel)`
+  border-radius: 3rem;
+  background-color: ${(props) =>
+    getColorValue(props.backgroundColor ?? 'gray')};
+`;
+
+const ShortOvalRadioLabel = styled(RadioLabel)`
+  border: 2px solid ${(props) => getColorValue(props.border ?? 'primary')};
+  border-radius: 3rem;
+  background-color: ${(props) =>
+    getColorValue(props.backgroundColor ?? 'white')};
+`;
+
+const LongOvalRadioLabel = styled(RadioLabel)`
+  border: 2px solid ${(props) => getColorValue(props.border ?? 'primary')};
+  border-radius: 3rem;
+  background-color: ${(props) =>
+    getColorValue(props.backgroundColor ?? 'primary')};
+  &:hover {
+    border: 2px solid ${(props) => getColorValue('primary')};
+    color: ${(props) => getColorValue('black')};
+  }
+`;
+
+const CheckInput = styled.input`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+
+  &:checked + label {
+    background-color: var(--primary-color);
+    color: white;
+  }
+`;
+
+const RadioInput = styled.input`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+
+  &:checked {
+    + ${RadioLabel}, + ${ShortOvalRadioLabel} {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    + ${LongOvalRadioLabel} {
+      border: 2px solid var(--primary-color);
+      color: var(--black-color);
+    }
+  }
+`;
+
+const InputButtonContainer = styled.div`
+  display: flex;
+`;
+
+const InputcheckButtonBox = styled.div`
+  display: flex;
   cursor: pointer;
 `;
 
-// 체크: 모양, 배경색의 변화만 있으면 됨_원/타원
-const CheckButton = styled.input<InputButtonInfo>`
+const CheckLabel = styled.label<InputButtonInfo>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  border-radius: 3rem;
+  background-color: ${(props) =>
+    getColorValue(props.backgroundColor ?? 'gray')};
+  color: ${(props) => getColorValue(props.color ?? 'white')};
+  cursor: pointer;
+  width: ${(props) => getButtonSize(props.size).width};
+  height: ${(props) => getButtonSize(props.size).height};
+`;
+
+const InputradioButtonBox = styled.div`
+  display: flex;
   color: var(--white-background-color);
-  border: none;
-  outline: none;
   cursor: pointer;
-
-  // true일때 민트 false일때 gray로 설정하기
-  background-color: ${(props) =>
-    getColorValue(props.backgroundColor ? 'primary' : 'gray')};
 `;
 
-// 라디오: 모양, 배경색, 글씨색, 테두리색의 변화 필요
+const CheckButton = ({ info }: InputButtonProps) => {
+  return (
+    <InputButtonContainer>
+      {info.type === 'checkbox' &&
+        info.value.map((item, index) => (
+          <InputcheckButtonBox key={index} {...info}>
+            <CheckInput type="checkbox" id={index + ''} name="check-group" />
+            <CheckLabel htmlFor={index + ''} {...info}>
+              <span>{item}</span>
+            </CheckLabel>
+          </InputcheckButtonBox>
+        ))}
+    </InputButtonContainer>
+  );
+};
 
-const BaseInputButton = styled.input<InputButtonInfo>`
-  color: var(--white-background-color);
-  border: ${(props) =>
-    props.type === 'radio'
-      ? '1px solid ' + getColorValue(props.border || 'gray')
-      : 'none'};
-  outline: none;
-  cursor: pointer;
-  background-color: ${(props) =>
-    getColorValue(props.backgroundColor ? 'primary' : 'gray')};
-`;
-
-
-const RadioButton = styled(BaseInputButton)``;
-
-const RadioCategoryButton = styled(BaseInputButton)`
-  color: var(--black-color);
-  background-color: ${(props) =>
-    getColorValue(props.backgroundColor ? 'primary' : 'white')};
-`;
-
-const RadioGenderButton = styled(BaseInputButton)`
-  color: var(--black-color);
-  background-color: var(--white-background-color);
-`;
-
-export default InputButton;
+const RadioButton = ({ info }: InputButtonProps) => {
+  return (
+    <InputButtonContainer>
+      {info.type === 'circleRadio' &&
+        info.value.map((item, index) => (
+          <InputradioButtonBox key={index}>
+            <RadioInput
+              type="radio"
+              id={`radio-${info.type}-${index}`}
+              name="radio-group"
+            />
+            <CircleRadioLabel htmlFor={`radio-${info.type}-${index}`} {...info}>
+              <span>{item}</span>
+            </CircleRadioLabel>
+          </InputradioButtonBox>
+        ))}
+      {info.type === 'shortOvalRadio' &&
+        info.value.map((item, index) => (
+          <InputradioButtonBox key={index}>
+            <RadioInput
+              type="radio"
+              id={`radio-${info.type}-${index}`}
+              name="radio-group"
+            />
+            <ShortOvalRadioLabel
+              htmlFor={`radio-${info.type}-${index}`}
+              {...info}
+            >
+              <span>{item}</span>
+            </ShortOvalRadioLabel>
+          </InputradioButtonBox>
+        ))}
+      {info.type === 'longOvalRadio' &&
+        info.value.map((item, index) => (
+          <InputradioButtonBox key={index}>
+            <RadioInput
+              type="radio"
+              id={`radio-${info.type}-${index}`}
+              name="radio-group"
+            />
+            <LongOvalRadioLabel
+              htmlFor={`radio-${info.type}-${index}`}
+              {...info}
+            >
+              <span>{item}</span>
+            </LongOvalRadioLabel>
+          </InputradioButtonBox>
+        ))}
+    </InputButtonContainer>
+  );
+};
+export { CheckButton, RadioButton };
+export type { InputType, InputSize, InputButtonInfo };
