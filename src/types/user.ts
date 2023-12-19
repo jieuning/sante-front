@@ -19,7 +19,12 @@ interface Exercise {
   repeatDate?: string[];
   createdAt?: Date;
   lastUpdated?: Date;
-  isDone: boolean;
+  scheduledDate?: [
+    {
+      date: Date;
+      isDone: Boolean;
+    },
+  ];
 }
 interface User {
   email: string;
