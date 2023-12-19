@@ -50,9 +50,9 @@ const getButtonSize = (size: ButtonSize) => {
       };
     case 'medium':
       return {
-        width: '15.81rem',
-        height: '4.00rem',
-        fontSize: 'var(--font-size-medium)',
+        width: '400px',
+        height: '50px',
+        fontSize: '20px',
       };
     case 'large':
       return {
