@@ -15,6 +15,7 @@ type InputButtonInfo = {
   color?: ColorType;
   border?: ColorType;
   fontWeight?: string | number;
+  fontSize?: string | number;
   value: string[];
   checked: boolean[];
   onClick?: (e?: any) => void;
@@ -28,27 +29,27 @@ const getButtonSize = (size: InputSize) => {
   switch (size) {
     case 'circle':
       return {
-        width: '50px',
-        height: '50px',
-        fontSize: 'var(--font-size-medium)',
+        width: '40px',
+        height: '40px',
+        fontSize: '15px',
       };
     case 'short-oval': // 중간너비타원
       return {
-        width: '100px',
-        height: '50px',
-        fontSize: 'var(--font-size-primary)',
+        width: '55  px',
+        height: '25px',
+        fontSize: '15px',
       };
     case 'long-oval': // 긴너비타원
       return {
         width: '200px',
         height: '50px',
-        fontSize: 'var(--font-size-primary)',
+        fontSize: '18px',
       };
     default:
       return {
         width: 'auto',
         height: 'auto',
-        fontSize: 'var(--font-size-primary)',
+        fontSize: '16px',
       };
   }
 };
@@ -64,6 +65,7 @@ const RadioLabel = styled.label<InputButtonInfo>`
   width: ${(props) => getButtonSize(props.size).width};
   height: ${(props) => getButtonSize(props.size).height};
   color: ${(props) => getColorValue(props.color ?? 'white')};
+  font-size: ${(props) => getButtonSize(props.size).fontSize};
 `;
 
 const CircleRadioLabel = styled(RadioLabel)`
@@ -81,7 +83,7 @@ const ShortOvalRadioLabel = styled(RadioLabel)`
 
 const LongOvalRadioLabel = styled(RadioLabel)`
   border: 2px solid ${(props) => getColorValue(props.border ?? 'primary')};
-  border-radius: 3rem;
+  border-radius: 2rem;
   background-color: ${(props) =>
     getColorValue(props.backgroundColor ?? 'primary')};
   &:hover {
@@ -151,6 +153,7 @@ const CheckLabel = styled.label<InputButtonInfo>`
   cursor: pointer;
   width: ${(props) => getButtonSize(props.size).width};
   height: ${(props) => getButtonSize(props.size).height};
+  font-size: ${(props) => getButtonSize(props.size).fontSize};
 `;
 
 const InputradioButtonBox = styled.div`
