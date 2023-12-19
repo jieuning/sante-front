@@ -44,7 +44,7 @@ const getButtonSize = (size: ButtonSize) => {
   switch (size) {
     case 'small':
       return {
-        width: '4.94rem',
+        width: 'auto',
         height: '3.25rem',
         fontSize: 'var(--font-size-small)',
       };
