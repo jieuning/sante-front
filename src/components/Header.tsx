@@ -29,6 +29,7 @@ const StyledHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 50px;
+  padding-right: 13px;
 `;
 
 const StyledLogoImage = styled.img`
