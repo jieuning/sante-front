@@ -15,10 +15,11 @@ interface Exercise {
   exerciseId?: string;
   exerciseStartDate?: Date;
   exerciseEndDate?: Date;
-  exerciseTime?: Date;
+  exerciseTime?: number;
   repeatDate?: string[];
   createdAt?: Date;
   lastUpdated?: Date;
+  isDone: boolean;
 }
 interface User {
   email: string;

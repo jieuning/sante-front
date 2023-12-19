@@ -58,6 +58,7 @@ export const GlobalStyles = createGlobalStyle`
 	}
 	body {
 		line-height: 1;
+		background-color : var(--white-background-color);
 	}
 	ol, ul {
 		list-style: none;
