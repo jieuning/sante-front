@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { User } from '../types/user';
+import axios from 'axios';
 
 const URL = 'http://localhost:3000/user/';
 
@@ -10,18 +11,17 @@ const useUserModel = () => {
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
-    fetch(`${URL}check`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    axios
+      .post(`${URL}check`, {
         email: 'email@email.com',
         password: 'sdfdsf',
-      }),
-    })
-      .then((res) => res.json())
-      .then(setUser);
+      })
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
   }, []);
 
   return user;
