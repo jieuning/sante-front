@@ -1,21 +1,9 @@
-// import { useState } from 'react';
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getMonth } from 'date-fns';
 
 export const MonthCalendar = () => {
-  // const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  // const [endDate, setEndDate] = useState<Date | null>(null);
-
-  // const handleOnChange = (dates: [Date | null, Date | null] | null): void => {
-  //   if (dates) {
-  //     const [start, end] = dates;
-  //     setStartDate(start);
-  //     setEndDate(end);
-  //   }
-  // };
-
   const months = [
     '1',
     '2',
