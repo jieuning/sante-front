@@ -15,6 +15,9 @@ export const GlobalStyles = createGlobalStyle`
         --gray-dark : #868686;
 
         --black-color : #0F0F0F;
+
+		--green-color : #97F39A;
+		--red-color : #F39797;
         
         --font-size-title: 4rem;
         --font-size-large: 2.8rem;
