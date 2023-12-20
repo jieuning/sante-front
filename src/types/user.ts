@@ -16,6 +16,11 @@ interface Food extends Document {
   lastUpdated: Date | null;
 }
 
+interface ScheduledDate {
+  date: Date;
+  isDone: Boolean;
+}
+
 interface Exercise {
   exerciseName?: string;
   exerciseId?: string;
@@ -25,12 +30,7 @@ interface Exercise {
   repeatDate?: string[];
   createdAt?: Date;
   lastUpdated?: Date;
-  scheduledDate?: [
-    {
-      date: Date;
-      isDone: Boolean;
-    },
-  ];
+  scheduledDate?: ScheduledDate[];
 }
 interface User {
   email: string;
