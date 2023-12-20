@@ -1,15 +1,26 @@
-interface FoodItem {
-  name?: string;
-  calory?: number;
+interface Menu {
+  name: string;
+  calory: number;
 }
 
-interface Food {
-  foodList?: FoodItem[];
-  foodId?: string;
-  foodCategory?: string;
-  createdAt?: Date;
-  lastUpdated?: Date;
+interface FoodList {
+  foodCategory: string;
+  totalCalory: string;
+  menu: Menu[];
 }
+
+interface Food extends Document {
+  foodList: FoodList[];
+  foodId: string;
+  createdAt: Date;
+  lastUpdated: Date | null;
+}
+
+interface ScheduledDate {
+  date: Date;
+  isDone: Boolean;
+}
+
 interface Exercise {
   exerciseName?: string;
   exerciseId?: string;
@@ -19,7 +30,7 @@ interface Exercise {
   repeatDate?: string[];
   createdAt?: Date;
   lastUpdated?: Date;
-  isDone: boolean;
+  scheduledDate?: ScheduledDate[];
 }
 interface User {
   email: string;
@@ -32,4 +43,4 @@ interface User {
   joinedAt?: Date;
 }
 
-export type { User, Exercise, Food, FoodItem };
+export type { User, Exercise, Food, FoodList, Menu };

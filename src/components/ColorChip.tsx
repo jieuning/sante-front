@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 interface ColorChipProps {
   color?: string;
@@ -7,19 +7,19 @@ interface ColorChipProps {
 }
 
 const ChipDiv = styled.div<ColorChipProps>`
-  height: ${({ ratio }) => (ratio ? `${ratio * 11}px` : "11px")};
-  width: ${({ ratio }) => (ratio ? `${ratio * 11}px` : "11px")};
+  height: ${({ ratio }) => (ratio ? `${ratio * 8}px` : '8px')};
+  width: ${({ ratio }) => (ratio ? `${ratio * 8}px` : '8px')};
   background-color: ${({ color }) => color};
   border-radius: 50%;
   display: flex;
   margin-left: 1px;
   border: ${({ borderColor, color }) =>
-    color ? "0" : `1px solid ${borderColor}`};
+    color !== 'transparent' ? 'none' : `1px solid ${borderColor}`};
 `;
 
 const ColorChip: React.FC<ColorChipProps> = ({
-  color = "transparent",
-  borderColor = "#8699FF",
+  color = 'transparent',
+  borderColor = '#8699FF',
   ratio = 1,
 }) => {
   return (

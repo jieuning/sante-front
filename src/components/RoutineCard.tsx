@@ -3,7 +3,8 @@ import { Exercise, Food } from '../types/user';
 import Tag from '../components/Tag';
 import { DynamicButton, DynamicButtonInfo } from './DynamicButton';
 import { GrEdit } from 'react-icons/gr';
-import { IoTerminalOutline } from 'react-icons/io5';
+import { IoAddCircle } from 'react-icons/io5';
+import { MouseEventHandler } from 'react';
 
 type RoutineType = 'exercise' | 'food';
 interface RoutineCardProps {
@@ -18,6 +19,10 @@ const RoutineCard = ({ type, exerciseList, foodList }: RoutineCardProps) => {
     text: '더보기',
     fontWeight: 'bold',
     onClick: () => console.log('Button clicked!'),
+  };
+
+  const handlePlusIconClick = (e: MouseEventHandler<HTMLDivElement>) => {
+    console.log('icon click');
   };
 
   return (
@@ -108,6 +113,26 @@ const RoutineCard = ({ type, exerciseList, foodList }: RoutineCardProps) => {
             </ContentsContainer>
           );
         })}
+      {type === 'exercise' && (
+        <IconContainer onClick={handlePlusIconClick}>
+          <IoAddCircle
+            type="button"
+            cursor="pointer"
+            color="var(--secondary-purple-color)"
+            size="3.8rem"
+          />
+        </IconContainer>
+      )}
+      {type === 'food' && (
+        <IconContainer onClick={handlePlusIconClick}>
+          <IoAddCircle
+            type="button"
+            cursor="pointer"
+            color="var(--secondary-orange-color)"
+            size="3.8rem"
+          />
+        </IconContainer>
+      )}
     </Container>
   );
 };
@@ -124,6 +149,11 @@ const ContentsContainer = styled.div`
   margin: 10px;
 `;
 
+const IconContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
 const Line = styled.div`
   margin: 2px 0 2px 0;
   border: solid 1px var(--gray-light);
@@ -135,6 +165,7 @@ const Title = styled.div`
   display: flex;
   align-items: center;
   font-weight: bold;
+  color: var(--black-color);
 
   p {
     margin-right: 10px;
@@ -146,7 +177,7 @@ const ContentsName = styled.div`
   margin: 4px;
   display: flex;
   justify-content: space-between;
-
+  color: var(--black-color);
   p > span {
     margin-left: 10px;
   }

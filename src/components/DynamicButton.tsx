@@ -44,15 +44,15 @@ const getButtonSize = (size: ButtonSize) => {
   switch (size) {
     case 'small':
       return {
-        width: '4.94rem',
+        width: 'auto',
         height: '3.25rem',
-        fontSize: 'var(--font-size-small)',
+        fontSize: '14px',
       };
     case 'medium':
       return {
-        width: '15.81rem',
-        height: '4.00rem',
-        fontSize: 'var(--font-size-medium)',
+        width: '400px',
+        height: '50px',
+        fontSize: '20px',
       };
     case 'large':
       return {
@@ -83,6 +83,7 @@ const SolidButton = styled.button<DynamicButtonInfo>`
   height: 100%;
   border: none;
   cursor: pointer;
+  padding: 2px 10px 2px 10px;
   border-radius: 10px;
   font-size: ${(props) => getButtonSize(props.size ?? 'medium').fontSize};
   background-color: ${(props) =>
