@@ -81,7 +81,7 @@ const ModalTitle = styled.h2`
   font-weight: 600;
   font-size: 18px;
   margin: 0;
-  padding: 20px 20px 40px 20px;
+  padding: 30px 25px 20px 25px; 
   display: flex;
   justify-content: space-between;
 `;
@@ -89,7 +89,7 @@ const ModalTitle = styled.h2`
 //TODO: 수정
 
 const ModalLine = styled.div`
-  margin-bottom: 30px;
+  margin: 20px 0 30px 0;
   border-top: 1px solid #ababab;
 `;
 
