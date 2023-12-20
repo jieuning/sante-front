@@ -1,14 +1,34 @@
 import styled from 'styled-components';
 import { ReactNode } from 'react';
-import DynamicButton from '../DynamicButton';
+import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 
 export interface ModalCardProps {
-  modalTitle: string;
+  modalTitle: ReactNode;
   children?: ReactNode;
   modalButton: boolean;
+  onClick?: (e?: any) => void;
 }
 
 const ModalCard = ({ modalTitle, children, modalButton }: ModalCardProps) => {
+  const buttonCreateInfo: DynamicButtonInfo = {
+    type: 'solid',
+    size: 'medium',
+    text: '생성하기',
+    backgroundColor: 'primary',
+    color: 'white',
+    fontWeight: 'bold',
+    onClick: () => console.log('Button clicked!'),
+  };
+  const buttonDeleteInfo: DynamicButtonInfo = {
+    type: 'solid',
+    size: 'medium',
+    text: '삭제하기',
+    backgroundColor: 'gray',
+    color: 'white',
+    fontWeight: 'bold',
+    onClick: () => console.log('Button clicked!'),
+  };
+
   return (
     <ModalCardContainer>
       <ModalTitle>{modalTitle}</ModalTitle>
@@ -17,32 +37,11 @@ const ModalCard = ({ modalTitle, children, modalButton }: ModalCardProps) => {
       <ModalLine />
       <ButtonContainer>
         {modalButton ? (
-          <DynamicButton
-            type="solid"
-            size="medium"
-            text="생성하기"
-            backgroundColor="#81D8D0"
-            color="white"
-            fontWeight="bold"
-          />
+          <DynamicButton info={buttonCreateInfo} />
         ) : (
           <>
-            <DynamicButton
-              type="solid"
-              size="medium"
-              text="생성하기"
-              backgroundColor="#81D8D0"
-              color="white"
-              fontWeight="bold"
-            />
-            <DynamicButton
-              type="solid"
-              size="medium"
-              text="삭제하기"
-              backgroundColor="#ABABAB"
-              color="white"
-              fontWeight="bold"
-            />
+            <DynamicButton info={buttonCreateInfo} />
+            <DynamicButton info={buttonDeleteInfo} />
           </>
         )}
       </ButtonContainer>
@@ -58,11 +57,12 @@ const ModalCardContainer = styled.section`
   left: 50%;
   transform: translate(-50%, -50%);
   max-width: 100%;
+  width: 37%;
   height: auto;
   border: 1px solid #ababab;
   border-radius: 6px;
-  font-color: #0f0f0f;
-`;
+  color: #0f0f0f;
+`; //NOTE: width 추가.
 
 const ModalTitle = styled.h2`
   font-weight: 600;
@@ -70,6 +70,8 @@ const ModalTitle = styled.h2`
   margin: 0;
   padding: 20px 20px 40px 20px;
 `;
+
+//TODO: 수정
 
 const ModalLine = styled.div`
   margin-bottom: 30px;
