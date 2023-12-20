@@ -1,6 +1,7 @@
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import Input from '../../components/Input';
+import SelectBox, { Option } from '../../components/SelectBox';
 import {
   DynamicButton,
   DynamicButtonInfo,
@@ -21,6 +22,7 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   text-align: center;
+  padding-top: 20px;
 `;
 
 const buttonInfo: DynamicButtonInfo = {
@@ -32,6 +34,18 @@ const buttonInfo: DynamicButtonInfo = {
 };
 
 const Register = () => {
+  const options: Option[] = [
+    { value: 'option1', label: '12~14세' },
+    { value: 'option2', label: '15~18세' },
+    { value: 'option3', label: '19~29세' },
+    { value: 'option4', label: '30~49세' },
+    { value: 'option5', label: '50~64세' },
+    { value: 'option6', label: '65세 이상' },
+  ];
+
+  const handleSelectChange = (selectedValue: string) => {
+    console.log('Selected value:', selectedValue);
+  };
   return (
     <StyledRegister>
       <Header />
@@ -56,11 +70,12 @@ const Register = () => {
           width="400px"
           height="40px"
         />
-        <Input
-          type="text"
-          placeholder="연령을 선택해주세요."
+        <SelectBox
           width="400px"
           height="40px"
+          placeholder="연령을 선택해주세요."
+          options={options}
+          onChange={handleSelectChange}
         />
       </InputContainer>
       <ButtonContainer>
