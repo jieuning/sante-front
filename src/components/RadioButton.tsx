@@ -88,8 +88,8 @@ const LongOvalRadioLabel = styled(RadioLabel)`
   background-color: ${(props) =>
     getColorValue(props.backgroundColor ?? 'primary')};
   &:hover {
-    border: 2px solid ${(props) => getColorValue('primary')};
-    color: ${(props) => getColorValue('black')};
+    border: 2px solid ${(props) => getColorValue(props.border ??'primary')};
+    color: ${(props) => getColorValue(props.color ??'black')};
   }
 `;
 
