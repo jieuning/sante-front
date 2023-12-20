@@ -12,12 +12,16 @@ const useUserModel = (startDate: Date, endDate?: Date) => {
 
   useEffect(() => {
     axios
-      .post<User>(`${URL}check`, {
+      .post(`${URL}check`, {
+        // email: 'yeojin@naver.com',
+        // password: '1234',
         email: 'email@email.com',
         password: 'sdfdsf',
       })
       .then((response) => {
-        const userData = response.data;
+        const userData = response.data.user;
+
+        //console.log(userData);
 
         let filteredFoodList = new Array<Food>();
         let filteredExerciseList = new Array<Exercise>();
@@ -30,6 +34,7 @@ const useUserModel = (startDate: Date, endDate?: Date) => {
             endDate || startDate
           );
         }
+
         if (userData.userExerciseList !== undefined) {
           filteredExerciseList = filterExerciseListByDateRange(
             userData.userExerciseList,
@@ -37,20 +42,17 @@ const useUserModel = (startDate: Date, endDate?: Date) => {
             endDate || startDate
           );
         }
-
-        // 필터링된 데이터로 user 상태 업데이트
+        console.log(filteredExerciseList);
         setUser({
           ...userData,
           userFoodList: filteredFoodList,
           userExerciseList: filteredExerciseList,
         });
-
-        setUser(response.data);
       })
       .catch((error) => {
         console.error('There was an error!', error);
       });
-  }, [startDate, endDate]);
+  }, []);
 
   return user;
 };
@@ -73,17 +75,28 @@ function filterExerciseListByDateRange(
   exerciseList: Exercise[],
   startDate: Date,
   endDate: Date
-) {
+): Exercise[] {
   const start = new Date(startDate);
   const end = new Date(endDate);
 
-  return exerciseList.filter((exercise) => {
-    const exerciseStartDate = new Date(
-      exercise.exerciseStartDate ?? new Date()
+  return exerciseList
+    .map((exercise) => {
+      // 날짜 범위에 맞는 scheduledDate만 필터링
+      const filteredScheduledDates = exercise.scheduledDate?.filter(
+        (scheduledItem) => {
+          const scheduledDate = new Date(scheduledItem.date);
+          return scheduledDate >= start && scheduledDate <= end;
+        }
+      );
+
+      return {
+        ...exercise,
+        scheduledDate: filteredScheduledDates,
+      };
+    })
+    .filter(
+      (exercise) => exercise.scheduledDate && exercise.scheduledDate.length > 0
     );
-    const exerciseEndDate = new Date(exercise.exerciseEndDate ?? new Date());
-    return exerciseStartDate >= start && exerciseEndDate <= end;
-  });
 }
 
 export default useUserModel;
