@@ -2,9 +2,46 @@ import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getMonth } from 'date-fns';
+import ColorChip from './ColorChip';
+import { Exercise } from '../types/user';
+
+export interface Diet {
+  createdAt?: Date;
+  todayCalory?: number;
+}
 
 export const MonthCalendar = () => {
-  const months = [
+  // 운동 테스트 데이터
+  const exerciseDummyData: Exercise[] = [
+    { createdAt: new Date(), isDone: true },
+    { createdAt: new Date(), isDone: false },
+    { createdAt: new Date(), isDone: false },
+    { createdAt: new Date(), isDone: true },
+  ];
+
+  // 식단 테스트 데이터
+  const dietDummyData: Diet[] = [
+    { createdAt: new Date(), todayCalory: 1500 },
+    { createdAt: new Date(), todayCalory: 1800 },
+    { createdAt: new Date(), todayCalory: 500 },
+    { createdAt: new Date(), todayCalory: 2300 },
+  ];
+
+  // exerciseDummyData createdAt에 생성 날짜 + 1씩 증가
+  exerciseDummyData.forEach((exercise, index) => {
+    const nextDay = new Date();
+    nextDay.setDate(nextDay.getDate() + index);
+    exercise.createdAt = nextDay;
+  });
+
+  // dietDummyData createdAt에 생성 날짜 + 1씩 증가
+  dietDummyData.forEach((diet, index) => {
+    const nextDay = new Date();
+    nextDay.setDate(nextDay.getDate() + index);
+    diet.createdAt = nextDay;
+  });
+
+  const months: string[] = [
     '1',
     '2',
     '3',
@@ -22,12 +59,47 @@ export const MonthCalendar = () => {
   const currentMonth = getMonth(new Date());
   const currentMonthName = months[currentMonth];
 
+  const renderCustomDayContents = (dayOfMonth?: number) => {
+    return (
+      <>
+        <span>{dayOfMonth}</span>
+        <ColorChipWrap>
+          {/* 운동 컬러칩 */}
+          {exerciseDummyData?.map((exercise: Exercise) => {
+            const currentDay = Number(
+              exercise.createdAt?.toString().slice(8, 10)
+            );
+            return currentDay === dayOfMonth ? (
+              <ColorChip
+                color={exercise.isDone ? '#8699FF' : 'transparent'}
+                borderColor="#8699FF"
+              />
+            ) : null;
+          })}
+          {/* 식단 컬러칩 */}
+          {dietDummyData?.map((diet: Diet) => {
+            const currentDay = Number(diet.createdAt?.toString().slice(8, 10));
+            const todayCalory = diet.todayCalory;
+            return currentDay === dayOfMonth ? (
+              <ColorChip
+                color={
+                  todayCalory && todayCalory >= 1800 ? '#97F39A' : '#F39797'
+                }
+              />
+            ) : null;
+          })}
+        </ColorChipWrap>
+      </>
+    );
+  };
+
   return (
     <MainCalendarContainer>
       <DatePicker
         onChange={(date) => console.log(date)}
         inline
         disabledKeyboardNavigation
+        renderDayContents={renderCustomDayContents}
         renderCustomHeader={() => (
           <CustomHeader>{currentMonthName}월</CustomHeader>
         )}
@@ -40,6 +112,13 @@ const CustomHeader = styled.div`
   width: 100%;
   font-size: 20px;
   font-weight: 600;
+`;
+
+const ColorChipWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
 `;
 
 const MainCalendarContainer = styled.div`
@@ -82,7 +161,7 @@ const MainCalendarContainer = styled.div`
   .react-datepicker__month {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     margin: 0;
     pointer-events: none;
   }
@@ -93,6 +172,7 @@ const MainCalendarContainer = styled.div`
 
   .react-datepicker__day-names {
     padding-bottom: 10px;
+    margin-bottom: 0;
   }
 
   .react-datepicker__day-names,
@@ -110,6 +190,8 @@ const MainCalendarContainer = styled.div`
   .react-datepicker__day,
   .react-datepicker__time-name {
     color: #0f0f0f;
+    margin: 0;
+    width: 100%;
   }
 
   .react-datepicker__navigation {
