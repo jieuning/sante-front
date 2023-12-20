@@ -1,6 +1,134 @@
 import styled from 'styled-components';
 import GageBar from './GageBar';
+import { useState, useEffect } from 'react';
+import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
+import useUserModel from '../../hooks/useUserModel';
+import { User, Exercise, Food, FoodItem } from '../../types/user';
+// import { getColorValue } from '../../types/colorType';
+import { scheduledDateList, thisWeekDateList } from './calculateWeek';
 
+const MainStatistic = () => {
+  const caloryMoods = {
+    notEnough: { emoji: '🥺', message: '끼니 거르고 계신거 아니죠?ㅜㅜ' },
+    enough: { emoji: '😊', message: '잘 먹고 있어요!' },
+    tooMuch: { emoji: '😵', message: '기준치를 초과했어요' },
+  };
+  const [caloryMood, setCaloryMood] = useState(caloryMoods.notEnough);
+  const [exerciseGage, setExerciseGage] = useState(0);
+  const [foodGage, setFoodGage] = useState(0);
+  const [userCalory, setUserCalory] = useState(1500);
+
+  const user: User | undefined = useUserModel();
+
+  // useEffect(() => {
+  //   console.log('exercises', scheduledDateList);
+  //   console.log('exercisesThisWeek', thisWeekDateList);
+  //   if (user) {
+  //     const userData = user.user;
+  //     setUserCalory(userData.todayCalory);
+  //     const userFoodData = userData.userFoodList;
+  //     const userExerciseData = userData.userExerciseList;
+
+  //     const handleCalory = () => {
+  //       console.log('user', userData);
+  //       userFoodData.forEach((food: Food) => {
+  //         console.log('food', food);
+  //         const calculatedCalory = food.foodList.reduce(
+  //           (acc: number, item: FoodItem) => {
+  //             return acc + item.calory;
+  //           },
+  //           0
+  //         );
+  //         setFoodGage(calculatedCalory);
+  //       });
+  //     };
+
+  //     handleCalory();
+  //     //NOTE 백엔드 API에서 데이터 가져오기
+  //     console.log('userCalory', userCalory);
+  //   }
+  // }, [user]);
+
+  // const user1 = {
+  //   email: 'example@example.com',
+  //   password: 'password123',
+  //   gender: 'Male',
+  //   age: '30',
+  //   userFoodList: [
+  //     {
+  //       foodList: [
+  //         {
+  //           name: 'Pizza',
+  //           calory: 285,
+  //         },
+  //         {
+  //           name: 'Salad',
+  //           calory: 150,
+  //         },
+  //       ],
+  //       foodCategory: 'Fast Food',
+  //     },
+  //   ],
+  //   userExerciseList: [], // exerciseList를 기반으로 데이터 추가
+  //   todayCalory: null,
+  // };
+
+  //NOTE: 기준 80%
+
+  const buttonInfo: DynamicButtonInfo = {
+    type: 'outline',
+    text: '통계 상세보기',
+    onClick: () => console.log('Button clicked!'),
+  };
+
+  const handleCaloryGage = (currentGage: number) => {
+    let newCaloryMood = { ...caloryMood };
+    if (currentGage === 80) {
+      newCaloryMood = caloryMoods.enough;
+    } else if (currentGage > 80) {
+      newCaloryMood = caloryMoods.tooMuch;
+    } else {
+      newCaloryMood = caloryMoods.notEnough;
+    }
+    setCaloryMood(newCaloryMood);
+  };
+
+  return (
+    <GageContainerDiv>
+      {user ? (
+        <>
+          <InformationAreaDiv>
+            <FlexContainerDiv>
+              <TextContainerDiv>주간 운동 달성률</TextContainerDiv>
+              <br />
+              {/* <GageBar gage={exerciseGage} type="exercise" /> */}
+            </FlexContainerDiv>
+            <FlexContainerDiv>
+              <TextContainerDiv>하루 섭취 칼로리</TextContainerDiv>
+              <br />
+              <GageBar
+                gage={foodGage}
+                maxGage={userCalory}
+                type="food"
+                handleGage={handleCaloryGage}
+              />
+              <br />
+              <div>
+                <EmojiContainerSpan>{caloryMood.emoji}</EmojiContainerSpan>
+                <StatusContainerSpan>{caloryMood.message}</StatusContainerSpan>
+              </div>
+            </FlexContainerDiv>
+          </InformationAreaDiv>
+          <ButtonAreaDiv>
+            <DynamicButton info={buttonInfo} />
+          </ButtonAreaDiv>
+        </>
+      ) : (
+        <h1>Loading...</h1>
+      )}
+    </GageContainerDiv>
+  );
+};
 //NOTE: 미완성
 const GageContainerDiv = styled.div`
   width: 27.4rem;
@@ -46,44 +174,4 @@ const EmojiContainerSpan = styled.span`
   font-size: 2rem;
   font-weight: 600;
 `;
-
-// const calculateCaloryStatus = (calory) => {};
-
-const MainStatistic = () => {
-  // const caloryStatus = [
-  //   '🥺 끼니 거르고 계신거 아니죠?ㅜㅜ',
-  //   '😊 잘 먹고 있어요!',
-  //   '😵 기준치를 초과했어요',
-  // ];
-
-  //NOTE: 기준 80%
-
-  return (
-    <GageContainerDiv>
-      <InformationAreaDiv>
-        <FlexContainerDiv>
-          <TextContainerDiv>주간 운동 달성률</TextContainerDiv>
-          <br />
-          <GageBar gage={50} type="exercise" />
-        </FlexContainerDiv>
-        <FlexContainerDiv>
-          <TextContainerDiv>하루 섭취 칼로리</TextContainerDiv>
-          <br />
-          <GageBar gage={50} type="food" />
-          <br />
-          <div>
-            <EmojiContainerSpan>🥺</EmojiContainerSpan>
-            <StatusContainerSpan>
-              끼니 거르고 계신거 아니죠?ㅜㅜ
-            </StatusContainerSpan>
-          </div>
-        </FlexContainerDiv>
-      </InformationAreaDiv>
-      <ButtonAreaDiv>
-        <button className="temporaryButton">통계 상세보기</button>
-      </ButtonAreaDiv>
-    </GageContainerDiv>
-  );
-};
-
 export default MainStatistic;
