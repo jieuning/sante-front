@@ -1,15 +1,22 @@
 import styled from 'styled-components';
 import { ReactNode } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
+import Closed from '../icons/Closed';
 
 export interface ModalCardProps {
-  modalTitle: ReactNode;
+  modalTitle: string;
+  inputElement: ReactNode;
   children?: ReactNode;
   modalButton: boolean;
   onClick?: (e?: any) => void;
 }
 
-const ModalCard = ({ modalTitle, children, modalButton }: ModalCardProps) => {
+const ModalCard = ({
+  modalTitle,
+  children,
+  modalButton,
+  inputElement,
+}: ModalCardProps) => {
   const buttonCreateInfo: DynamicButtonInfo = {
     type: 'solid',
     size: 'medium',
@@ -31,7 +38,13 @@ const ModalCard = ({ modalTitle, children, modalButton }: ModalCardProps) => {
 
   return (
     <ModalCardContainer>
-      <ModalTitle>{modalTitle}</ModalTitle>
+      <ModalTitle>
+        {modalTitle}
+        <div>
+          <Closed />
+        </div>
+      </ModalTitle>
+      {inputElement}
       <ModalLine />
       {children}
       <ModalLine />
@@ -69,6 +82,8 @@ const ModalTitle = styled.h2`
   font-size: 18px;
   margin: 0;
   padding: 20px 20px 40px 20px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 //TODO: 수정
