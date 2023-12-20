@@ -18,6 +18,8 @@ const InputContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
   text-align: center;
 `;
 
