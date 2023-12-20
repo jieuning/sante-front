@@ -2,6 +2,14 @@ import { createGlobalStyle } from 'styled-components';
 import SpoqaHanSansNeo from '../assets/font/SpoqaHanSansNeo-Regular.ttf';
 
 export const GlobalStyles = createGlobalStyle`
+
+	/* input number 화살표 없애기 */
+	input[type="number"]::-webkit-outer-spin-button,
+  	input[type="number"]::-webkit-inner-spin-button {
+    	-webk it-appearance: none;
+    	margin: 0;
+  	}
+
     :root {
         --primary-color: #81D8D0;
         --secondary-orange-color: #FF9116;
