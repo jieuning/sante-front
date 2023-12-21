@@ -26,6 +26,7 @@ const Main = () => {
             foodList={user?.userFoodList}
             isPlusIconVisible={true}
           ></RoutineCard>
+          <Blank />
           <RoutineCard
             type="exercise"
             exerciseList={user?.userExerciseList}
