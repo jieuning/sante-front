@@ -4,7 +4,7 @@ import Test from '../pages/test/Test';
 import Home from '../pages/home/Home';
 import Statistic from '../pages/Statistic';
 import Main from '../pages/Main';
-
+import Login from '../pages/login';
 const AppRoutes = () => (
   <Router>
     <GlobalStyles />
@@ -13,6 +13,7 @@ const AppRoutes = () => (
       <Route path="/test" element={<Test />} />
       <Route path="/statistic" element={<Statistic />} />
       <Route path="/main" element={<Main />} />
+      <Route path="/login" element={<Login />} />
     </Routes>
   </Router>
 );
