@@ -3,12 +3,9 @@ import GageBar from './GageBar';
 import { useState, useEffect } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import { User, Exercise, Food, FoodList, Menu } from '../../types/user';
-import calculateWeeklyExercise from './calculateWeeklyExercise';
 import { getColorValue } from '../../types/colorType';
-import { isSameDay } from 'date-fns';
-import useUserModel, {
-  filterExerciseListByDateRange,
-} from '../../hooks/useUserModel';
+import { isSameDay, startOfWeek, endOfWeek } from 'date-fns';
+import useUserModel from '../../hooks/useUserModel';
 
 const FOOD_COLORS = {
   notEnough: getColorValue('orange'),
@@ -39,111 +36,32 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
       color: FOOD_COLORS.tooMuch,
     },
   };
-  const [today, setToday] = useState(todayDate);
+  const [today, setToday] = useState(todayDate); // 현재 날짜를 가져옵니다.
   const [caloryMood, setCaloryMood] = useState(caloryMoods.notEnough);
-  const [exerciseGage, setExerciseGage] = useState(50);
-  const [exerciseMaxGage, setExerciseMaxGage] = useState(100);
+  const [exerciseGage, setExerciseGage] = useState(0);
+  const [exerciseMaxGage, setExerciseMaxGage] = useState(0);
   const [foodGage, setFoodGage] = useState(0);
-  const [userCalory, setUserCalory] = useState(0);
+  const [userCalory, setUserCalory] = useState<number>(0);
 
   console.log('foodgage', foodGage);
   console.log('usercalory', userCalory);
 
-  const exerciseList: Exercise[] = [
-    {
-      exerciseName: '운동1',
-      exerciseId: 'abc1',
-      exerciseStartDate: new Date('2023-9-18'),
-      exerciseEndDate: new Date('2024-1-25'),
-      repeatDate: ['월', '수'],
-      scheduledDate: [
-        { date: new Date('2023-11-30'), isDone: false },
-        { date: new Date('2023-12-02'), isDone: true },
-        { date: new Date('2023-12-03'), isDone: false },
-      ],
-    },
-    {
-      exerciseName: '운동2',
-      exerciseId: 'abc13',
-      exerciseStartDate: new Date('2023-9-18'),
-      exerciseEndDate: new Date('2024-1-25'),
-      repeatDate: ['월', '수'],
-      scheduledDate: [
-        { date: new Date('2023-11-30'), isDone: true },
-        { date: new Date('2023-12-02'), isDone: true },
-        { date: new Date('2023-12-03'), isDone: false },
-      ],
-    },
-    // 다른 운동
-  ];
+  const startOfThisWeek = startOfWeek(today); // 이번 주의 시작 날짜를 계산합니다.
+  const endOfThisWeek = endOfWeek(today); // 이번 주의 종료 날짜를 계산합니다.
 
-  const user = {
-    email: 'example@example.com',
-    password: 'password123',
-    gender: 'Male',
-    age: '30',
-    userFoodList: [
-      {
-        foodList: [
-          {
-            foodCategory: '아침',
-            totalCalory: 350,
-            menu: [
-              {
-                name: '오트밀',
-                calory: 200,
-                _id: {
-                  $oid: '65827407bf551e51ed5f77f3',
-                },
-              },
-              {
-                name: '바나나',
-                calory: 150,
-                _id: {
-                  $oid: '65827407bf551e51ed5f77f4',
-                },
-              },
-            ],
-            _id: {
-              $oid: '65827407bf551e51ed5f77f2',
-            },
-          },
-        ],
-        foodId: 'food-20231201',
-        createdAt: {
-          $date: '2023-12-01T00:00:00.000Z',
-        },
-        lastUpdated: null,
-        _id: {
-          $oid: '65827407bf551e51ed5f77f1',
-        },
-      },
-    ],
-    userExerciseList: exerciseList, // exerciseList를 기반으로 데이터 추가
-    todayCalory: 2500,
-  };
-
-  // const user: User | undefined = useUserModel();
+  const user: User | undefined = useUserModel(startOfThisWeek, endOfThisWeek);
 
   useEffect(() => {
-    // console.log('exercises', scheduledDateList);
-    // console.log('exercisesThisWeek', thisWeekDateList);
     if (user) {
-      setUserCalory(user.todayCalory);
+      console.log('-------thisIsUser------', user);
+      user.todayCalory && setUserCalory(user.todayCalory);
       const userFoodData = user.userFoodList;
       const userExerciseData = user.userExerciseList;
 
-      const handleCalory = (date: Date) => {
-        // console.log('--today', today);
-        // console.log('user', user);
+      const handleCalory = () => {
         const todayFoods = userFoodData.find((food: Food) => {
-          // console.log('thisFood', food);
-          // console.log('---today2', new Date('2023-12-01'));
-          // console.log('---todayFoods', food.createdAt.$date);
-          return isSameDay(date, new Date(food.createdAt.$date));
+          return isSameDay(today, new Date(food.createdAt));
         });
-        console.log('todayFoods', todayFoods);
-
         if (todayFoods) {
           const calculatedCalory = todayFoods.foodList.reduce(
             (acc: number, item: FoodList) => {
@@ -152,22 +70,32 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
             },
             0
           );
-          console.log('calculatedCalory', calculatedCalory);
           setFoodGage(calculatedCalory);
         }
       };
 
-      const weeklyExercise = calculateWeeklyExercise(
-        todayDate,
-        userExerciseData
-      );
-      const handleExercise = (todayDate: Date) => {
-        setExerciseMaxGage(weeklyExercise.totalWeekExercise);
-        setExerciseGage(weeklyExercise.exercise);
+      const handleExercise = () => {
+        const scheduledDateOnlyArray = userExerciseData?.map((exercise) => {
+          return exercise.scheduledDate;
+        });
+        let totalExercise = 0;
+        let doneExercise = 0;
+
+        if (scheduledDateOnlyArray?.length) {
+          scheduledDateOnlyArray.forEach((exercise) => {
+            totalExercise += exercise?.length || 0;
+            const doneExerciseFiltered = exercise?.filter((data) => {
+              return data.isDone === true;
+            });
+            doneExercise = doneExerciseFiltered?.length || 0;
+          });
+        }
+        setExerciseMaxGage(totalExercise);
+        setExerciseGage(doneExercise);
       };
 
-      handleCalory(today); //TODO: 클릭했던 날짜 값 받아오기
-      handleExercise(today);
+      handleCalory(); //TODO: 클릭했던 날짜 값 받아오기
+      handleExercise();
     }
     console.log('--userCalory', userCalory);
     console.log('--food', foodGage);
