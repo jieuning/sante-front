@@ -17,7 +17,7 @@ const Card = ({ title, subTitle, data }: CardProps) => {
   const [thisWeek, setThisWeek] = useState(0);
 
   useEffect(() => {
-    setThisWeek(getWeekOfMonth(getToday()));
+    setThisWeek(getWeekOfMonth(new Date()));
   }, []);
 
   return (
