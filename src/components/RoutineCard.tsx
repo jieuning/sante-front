@@ -3,26 +3,34 @@ import { Exercise, Food } from '../types/user';
 import Tag from '../components/Tag';
 import { DynamicButton, DynamicButtonInfo } from './DynamicButton';
 import { GrEdit } from 'react-icons/gr';
-import { IoAddCircle } from 'react-icons/io5';
+import { IoAddCircle, IoTerminalOutline } from 'react-icons/io5';
 import { MouseEventHandler } from 'react';
 
 type RoutineType = 'exercise' | 'food';
 interface RoutineCardProps {
   type: RoutineType;
+  isPlusIconVisible?: boolean;
   exerciseList?: Exercise[] | undefined;
   foodList?: Food[] | undefined;
+  date?: Date;
+  onClickMore?: (e?: any) => void; //더보기 버튼용
+  onClickAdd?: (e?: any) => void; // + 버튼용
 }
 
-const RoutineCard = ({ type, exerciseList, foodList }: RoutineCardProps) => {
+const RoutineCard = ({
+  type,
+  exerciseList,
+  foodList,
+  isPlusIconVisible,
+  date,
+  onClickMore,
+  onClickAdd,
+}: RoutineCardProps) => {
   const buttonInfo: DynamicButtonInfo = {
     type: 'outline',
     text: '더보기',
     fontWeight: 'bold',
-    onClick: () => console.log('Button clicked!'),
-  };
-
-  const handlePlusIconClick = (e: MouseEventHandler<HTMLDivElement>) => {
-    console.log('icon click');
+    onClick: onClickMore,
   };
 
   return (
@@ -30,13 +38,14 @@ const RoutineCard = ({ type, exerciseList, foodList }: RoutineCardProps) => {
       {type === 'exercise' && (
         <Title>
           <p>🏃 운동</p>
-          <DynamicButton info={buttonInfo} />
+          {isPlusIconVisible && <DynamicButton info={buttonInfo} />}
+          {date && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
         </Title>
       )}
       {type === 'food' && (
         <Title>
           <p>🍚 식단</p>
-          <DynamicButton info={buttonInfo} />
+          {isPlusIconVisible && <DynamicButton info={buttonInfo} />}
         </Title>
       )}
       <Line />
@@ -48,7 +57,7 @@ const RoutineCard = ({ type, exerciseList, foodList }: RoutineCardProps) => {
           }
 
           return (
-            <ContentsContainer key={(item as Exercise).exerciseId}>
+            <ContentsContainer key={item.exerciseId}>
               <ContentsName>
                 <p>{text}</p>
                 <GrEdit
@@ -77,44 +86,35 @@ const RoutineCard = ({ type, exerciseList, foodList }: RoutineCardProps) => {
         })}
 
       {type === 'food' &&
-        foodList?.map((item) => {
-          let text = '';
-          if (type === 'food' && 'foodCategory' in item) {
-            text = item.foodCategory ?? '기본 식품 이름';
-          }
-          return (
-            <ContentsContainer key={(item as Food).foodId}>
-              <ContentsName>
-                <p>
-                  {text}
-                  <span>
-                    {item.foodList?.reduce(
-                      (acc, curr) => acc + (curr.calory ?? 0),
-                      0
-                    )}
-                    kcal
-                  </span>
-                </p>
-                <GrEdit
-                  type="button"
-                  cursor="pointer"
-                  color="var(--black-color)"
-                />
-              </ContentsName>
-              {item.foodList?.map((foodItem) => {
-                return (
+        foodList?.map((item) => (
+          <ContentsContainer key={item.foodId}>
+            {item.foodList.map((foodItem, index) => (
+              <div key={foodItem.foodCategory}>
+                <ContentsName>
+                  <p>
+                    {foodItem.foodCategory}
+                    <span>{foodItem.totalCalory} kcal</span>
+                  </p>
+                  <GrEdit
+                    type="button"
+                    cursor="pointer"
+                    color="var(--black-color)"
+                  />
+                </ContentsName>
+                {foodItem.menu.map((menuItem, index) => (
                   <Tag
-                    text={foodItem.name ?? ''}
-                    color={'white'}
-                    backgroundColor={'orange'}
-                  ></Tag>
-                );
-              })}
-            </ContentsContainer>
-          );
-        })}
-      {type === 'exercise' && (
-        <IconContainer onClick={handlePlusIconClick}>
+                    key={index} // 'id'는 menuItem의 고유 식별자를 가정함
+                    text={menuItem.name ?? ''}
+                    color="white"
+                    backgroundColor="orange"
+                  />
+                ))}
+              </div>
+            ))}
+          </ContentsContainer>
+        ))}
+      {type === 'exercise' && isPlusIconVisible && (
+        <IconContainer onClick={onClickAdd}>
           <IoAddCircle
             type="button"
             cursor="pointer"
@@ -123,8 +123,8 @@ const RoutineCard = ({ type, exerciseList, foodList }: RoutineCardProps) => {
           />
         </IconContainer>
       )}
-      {type === 'food' && (
-        <IconContainer onClick={handlePlusIconClick}>
+      {type === 'food' && isPlusIconVisible && (
+        <IconContainer onClick={onClickAdd}>
           <IoAddCircle
             type="button"
             cursor="pointer"

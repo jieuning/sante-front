@@ -42,7 +42,6 @@ const useUserModel = (startDate: Date, endDate?: Date) => {
             endDate || startDate
           );
         }
-        console.log(filteredExerciseList);
         setUser({
           ...userData,
           userFoodList: filteredFoodList,
