@@ -4,38 +4,17 @@ import { getColorValue } from '../../types/colorType';
 
 //NOTE: 퍼센테지에 따라 색상이 변경될 수 있게 state받기?
 
-const FOOD_COLORS = {
-  notEnough: getColorValue('orange'),
-  enough: getColorValue('purple'),
-  tooMuch: '#F39797',
-};
-
-const getGageTheme = (type: string, gageStatus: number) => {
-  if (type === 'food') {
-    if (gageStatus > 80) {
-      return { color: FOOD_COLORS.tooMuch };
-    } else if (gageStatus === 80) {
-      return { color: FOOD_COLORS.enough };
-    } else {
-      return { color: FOOD_COLORS.notEnough };
-    }
-  } else if (type === 'exercise') {
-    return { color: FOOD_COLORS.enough };
-  } else {
-    return { color: FOOD_COLORS.enough };
-  }
-};
-
 interface GageProps {
   gage?: number;
   maxGage?: number;
   type?: string;
   handleGage?(currentGage: number): void;
+  color?: string;
 }
 
 type GageStatus = {
+  color: string;
   gageStatus: number;
-  type: string;
 };
 
 //NOTE 타입지정을 중복되지 않게 하는 방법?
@@ -43,7 +22,8 @@ type GageStatus = {
 const GageBar = ({
   gage = 0,
   maxGage = 100,
-  type = 'exercise',
+  // eslint-disable-next-line react/prop-types
+  color = getColorValue('purple'),
   handleGage,
 }: GageProps) => {
   const [gageStatus, setGageStatus] = useState<number>(0);
@@ -61,7 +41,7 @@ const GageBar = ({
 
   return (
     <Progress>
-      <GageStatus gageStatus={gageStatus} type={type} />
+      <GageStatus gageStatus={gageStatus} color={color} />
     </Progress>
   );
 };
@@ -74,8 +54,7 @@ const Progress = styled.div`
 `;
 
 const GageStatus = styled.div<GageStatus>`
-  background-color: ${({ type, gageStatus }) =>
-    getGageTheme(type, gageStatus).color};
+  background-color: ${({ color }) => color};
   width: ${({ gageStatus }) => gageStatus + '%'};
   height: 100%;
   border-radius: 20px;

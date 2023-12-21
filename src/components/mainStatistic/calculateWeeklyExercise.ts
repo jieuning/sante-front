@@ -36,13 +36,22 @@ const calculateWeeklyExercise = (todayDate: Date, exerciseList: Exercise[]) => {
     endOfThisWeek
   );
   console.log('exerciseWeek--', exerciseWeekDates);
-  const totalExercise = exerciseWeekDates.scheduledDate.length();
-  const exercise = exerciseWeekDates.scheduledDate.filter(
-    (item) => item.isDone === true
-  ).length;
-  console.log('exerciseWeek', exerciseWeekDates);
+  const scheduledDateOnlyArray = exerciseWeekDates.map((exercise) => {
+    return exercise.scheduledDate;
+  });
+  let totalExercise = 0;
+  let doneExercise = 0;
+  if (scheduledDateOnlyArray.length) {
+    scheduledDateOnlyArray.forEach((exercise) => {
+      totalExercise += exercise?.length;
+      const doneExerciseFiltered = exercise.filter((data) => {
+        return data.isDone === true;
+      });
+      doneExercise = doneExerciseFiltered.length;
+    });
+  }
 
-  return { totalWeekExercise: totalExercise, exericse: exercise };
+  return { totalWeekExercise: totalExercise, exercise: doneExercise };
 };
 
 // // scheduleDate에서 이번 주에 등록한 운동만 필터링

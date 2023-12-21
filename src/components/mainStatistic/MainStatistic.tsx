@@ -57,15 +57,20 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
       exerciseEndDate: new Date('2024-1-25'),
       repeatDate: ['월', '수'],
       scheduledDate: [
-        { date: new Date('2023-9-18'), isDone: false },
-        { date: new Date('2023-9-20'), isDone: false },
-        { date: new Date('2023-9-25'), isDone: false },
-        { date: new Date('2023-9-27'), isDone: false },
-        { date: new Date('2023-10-2'), isDone: false },
-        { date: new Date('2023-10-4'), isDone: false },
-        { date: new Date('2023-10-9'), isDone: false },
-        { date: new Date('2023-11-31'), isDone: true },
-        { date: new Date('2023-12-01'), isDone: true },
+        { date: new Date('2023-11-30'), isDone: false },
+        { date: new Date('2023-12-02'), isDone: true },
+        { date: new Date('2023-12-03'), isDone: false },
+      ],
+    },
+    {
+      exerciseName: '운동2',
+      exerciseId: 'abc13',
+      exerciseStartDate: new Date('2023-9-18'),
+      exerciseEndDate: new Date('2024-1-25'),
+      repeatDate: ['월', '수'],
+      scheduledDate: [
+        { date: new Date('2023-11-30'), isDone: true },
+        { date: new Date('2023-12-02'), isDone: true },
         { date: new Date('2023-12-03'), isDone: false },
       ],
     },
@@ -114,7 +119,7 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
         },
       },
     ],
-    userExerciseList: [exerciseList], // exerciseList를 기반으로 데이터 추가
+    userExerciseList: exerciseList, // exerciseList를 기반으로 데이터 추가
     todayCalory: 2500,
   };
 
@@ -129,12 +134,12 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
       const userExerciseData = user.userExerciseList;
 
       const handleCalory = (date: Date) => {
-        console.log('--today', today);
-        console.log('user', user);
+        // console.log('--today', today);
+        // console.log('user', user);
         const todayFoods = userFoodData.find((food: Food) => {
-          console.log('thisFood', food);
-          console.log('---today2', new Date('2023-12-01'));
-          console.log('---todayFoods', food.createdAt.$date);
+          // console.log('thisFood', food);
+          // console.log('---today2', new Date('2023-12-01'));
+          // console.log('---todayFoods', food.createdAt.$date);
           return isSameDay(date, new Date(food.createdAt.$date));
         });
         console.log('todayFoods', todayFoods);
@@ -152,13 +157,13 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
         }
       };
 
+      const weeklyExercise = calculateWeeklyExercise(
+        todayDate,
+        userExerciseData
+      );
       const handleExercise = (todayDate: Date) => {
-        setExerciseMaxGage(
-          calculateWeeklyExercise(todayDate, userExerciseData).totalWeekExercise
-        );
-        setExerciseGage(
-          calculateWeeklyExercise(todayDate, userExerciseData).exercise
-        );
+        setExerciseMaxGage(weeklyExercise.totalWeekExercise);
+        setExerciseGage(weeklyExercise.exercise);
       };
 
       handleCalory(today); //TODO: 클릭했던 날짜 값 받아오기
