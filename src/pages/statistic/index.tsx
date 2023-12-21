@@ -1,13 +1,32 @@
+import { useEffect } from 'react';
 import useUserModel from '../../hooks/useUserModel';
+import {
+  getMonthlyExerciseRateStatistic,
+  getMonthlyCaloryTotalStatistic,
+} from '../../utils/Date';
 import '../../index.css';
 import Card from './Card';
 import styled from 'styled-components';
 
 //TODO - 여기서 백분율 계산해서 Card에 보내야함
 const Statistic = () => {
-  const user = useUserModel();
-  console.log(user);
+  const user = useUserModel(new Date('2023-12-01'), new Date('2023-12-10'));
   const arr = [100, 60, 30, 10, 50];
+
+  useEffect(() => {
+    const st = getMonthlyExerciseRateStatistic(
+      user?.userExerciseList,
+      new Date('2023-12-08'),
+      'cnt'
+    );
+
+    const fst = getMonthlyCaloryTotalStatistic(
+      user?.userFoodList,
+      new Date('2023-12-08')
+    );
+    console.log(fst);
+  }, []);
+
   return (
     <Container>
       <ContentsContainer>
