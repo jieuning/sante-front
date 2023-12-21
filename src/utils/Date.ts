@@ -1,20 +1,170 @@
-const getWeekOfMonth = (dateStr: string): number => {
-  const date = new Date(dateStr);
-  const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-  const pastDaysOfMonth =
-    (date.getTime() - firstDayOfMonth.getTime()) / 86400000; // 밀리초를 일 단위로 변환
+import { User, Exercise, Food, FoodList } from '../types/user';
+import {
+  startOfMonth,
+  getDay,
+  addDays,
+  lastDayOfMonth,
+  endOfMonth,
+  format,
+} from 'date-fns';
 
-  // 첫 번째 날의 요일과 경과한 일수를 더한 후 7로 나누어서 몇 주차인지 계산
-  return Math.ceil((firstDayOfMonth.getDay() + pastDaysOfMonth + 1) / 7);
+interface StatisticType {
+  week: number;
+  max: number;
+  curr: number;
+}
+
+type ExerciseType = 'rate' | 'cnt';
+
+function getWeekOfMonth(date: Date): number {
+  const startOfMonthDate = startOfMonth(date);
+  const dayOfWeek = getDay(startOfMonthDate);
+  const dateDayOfWeek = getDay(date);
+
+  // 주차 계산: 시작 요일과 날짜의 요일 차이를 고려
+  return Math.ceil((date.getDate() + dayOfWeek - dateDayOfWeek) / 7);
+}
+
+const getMonthlyExerciseRateStatistic = (
+  userExerciseList: Exercise[] | undefined,
+  targetDate: Date,
+  exerciseType: ExerciseType
+) => {
+  if (userExerciseList === undefined) {
+    return;
+  }
+
+  const statistic = new Array<StatisticType>();
+
+  // 계산하고 그 주차는 max가 해당 주차에서 그 날까지만임 그걸 위한 '이번 주'를 저장
+  //const thisWeek = getWeekOfMonth(date);
+  const today = new Date();
+
+  //여기서 해당 날짜 isDone 체크되어있는지 확인
+  //scheduled date 의 날짜와 존재하는 isDone을 키밸류로 저장
+  const isDoneDate = packingScheduledDate(userExerciseList);
+
+  for (let i = 1; i <= endOfMonth(targetDate).getDate(); i++) {
+    const thisDay = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth(),
+      i
+    );
+    const currWeek = getWeekOfMonth(thisDay);
+    //주차가 증가하면 새로운 주차 추가
+    if (statistic.length < currWeek) {
+      statistic.push({
+        week: currWeek,
+        max: 0,
+        curr: 0,
+      });
+    }
+
+    //여기서 오늘 날짜를 넘어가는지를 체크해서 이후에는 빈값만 추가하면 되는거지 위에 푸쉬되는거 그럼ok
+    if (today >= thisDay) {
+      const weekIndex = currWeek - 1;
+      const dateKey = format(thisDay, 'yyyy-MM-dd');
+
+      const doneAllCnt = isDoneDate?.get(dateKey)?.length ?? 0;
+
+      const doneCnt =
+        isDoneDate?.get(dateKey)?.reduce((acc, curr) => {
+          if (curr) {
+            return acc + 1;
+          }
+          return acc;
+        }, 0) ?? 0;
+
+      //rate는 해당 날짜의 done이 다 되었는지 아닌지만 체크한다.
+      const maxCnt = exerciseType === 'rate' ? 1 : doneAllCnt;
+      const currCnt =
+        exerciseType === 'rate' ? (doneCnt === doneAllCnt ? 1 : 0) : doneCnt;
+
+      statistic[weekIndex] = {
+        week: currWeek,
+        max: statistic[weekIndex].max + maxCnt,
+        curr: statistic[weekIndex].curr + currCnt,
+      };
+    }
+  }
+
+  return statistic;
 };
 
-const getToday = (): string => {
-  var date = new Date();
-  var year = date.getFullYear();
-  var month = ('0' + (1 + date.getMonth())).slice(-2);
-  var day = ('0' + date.getDate()).slice(-2);
+const getMonthlyCaloryTotalStatistic = (
+  userFoodList: Food[] | undefined,
+  targetDate: Date
+) => {
+  if (userFoodList === undefined) {
+    return;
+  }
 
-  return year + '-' + month + '-' + day;
+  const statistic = new Array<StatisticType>();
+
+  const packedFoodList = packingFoodList(userFoodList);
+  const today = new Date();
+  const lastDay = endOfMonth(targetDate).getDate();
+  let maxMonthlyCaloryTotal = 0;
+  let dayCount = 0;
+
+  for (let i = 1; i <= lastDay; i++) {
+    const thisDay = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth(),
+      i
+    );
+    const currWeek = getWeekOfMonth(thisDay);
+    //주차가 증가하면 새로운 주차 추가
+    if (statistic.length < currWeek) {
+      maxMonthlyCaloryTotal = 0;
+      dayCount = 0;
+      statistic.push({
+        week: currWeek,
+        max: 0,
+        curr: 0,
+      });
+    }
+    if (today >= thisDay) {
+      const weekIndex = currWeek - 1;
+      dayCount += 1;
+      maxMonthlyCaloryTotal +=
+        packedFoodList.get(format(thisDay, 'yyyy-MM-dd')) ?? 0;
+
+      statistic[weekIndex] = {
+        week: currWeek,
+        max: maxMonthlyCaloryTotal,
+        curr: Math.ceil(maxMonthlyCaloryTotal / dayCount),
+      };
+    }
+  }
+  return statistic;
 };
 
-export { getWeekOfMonth, getToday };
+const packingScheduledDate = (userExerciseList: Exercise[]) => {
+  return userExerciseList.reduce((acc, exercises) => {
+    exercises.scheduledDate?.forEach(({ date, isDone }) => {
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      const existingEntries = acc.get(formattedDate) || [];
+      acc.set(formattedDate, [...existingEntries, isDone]);
+    });
+    return acc;
+  }, new Map<string, Boolean[]>());
+};
+
+const packingFoodList = (userFoodList: Food[]) => {
+  return userFoodList.reduce((acc, curr) => {
+    const formattedDate = format(curr.createdAt, 'yyyy-MM-dd');
+    const sum = curr.foodList.reduce((listAcc, listCurr) => {
+      return listAcc + listCurr.totalCalory;
+    }, 0);
+    console.log(sum);
+    return acc.set(formattedDate, sum);
+  }, new Map<string, number>());
+};
+
+export {
+  getWeekOfMonth,
+  getMonthlyExerciseRateStatistic,
+  getMonthlyCaloryTotalStatistic,
+};
+export type { ExerciseType };
