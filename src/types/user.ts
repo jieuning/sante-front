@@ -5,7 +5,7 @@ interface Menu {
 
 interface FoodList {
   foodCategory: string;
-  totalCalory: string;
+  totalCalory: number;
   menu: Menu[];
 }
 
