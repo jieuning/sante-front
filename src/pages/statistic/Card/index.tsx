@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { getWeekOfMonth, getToday } from '../../../utils/Date';
+import { getWeekOfMonth } from '../../../utils/Date';
 import { useEffect, useState } from 'react';
 
 interface BarProps {

@@ -4,7 +4,9 @@ import Tag from '../components/Tag';
 import { DynamicButton, DynamicButtonInfo } from './DynamicButton';
 import { GrEdit } from 'react-icons/gr';
 import { IoAddCircle, IoTerminalOutline } from 'react-icons/io5';
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, useEffect, useState } from 'react';
+import CheckBox from './CheckBox';
+import { format } from 'date-fns';
 
 type RoutineType = 'exercise' | 'food';
 interface RoutineCardProps {
@@ -32,6 +34,32 @@ const RoutineCard = ({
     fontWeight: 'bold',
     onClick: onClickMore,
   };
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxChange = (checkboxKey: string, isChecked: boolean) => {
+    setCheckboxStates((prevStates) => ({
+      ...prevStates,
+      [checkboxKey]: isChecked,
+    }));
+  };
+
+  const initialCheckboxState: { [key: string]: boolean } = {};
+  useEffect(() => {
+    const initialCheckboxState: { [key: string]: boolean } = {};
+    if (type === 'exercise' && exerciseList) {
+      exerciseList.forEach((item) => {
+        item.scheduledDate?.forEach((scheduled) => {
+          const dateKey = format(scheduled.date, 'yyyy-MM-dd');
+          const checkboxKey = `${item.exerciseId}-${dateKey}`;
+          initialCheckboxState[checkboxKey] = scheduled.isDone ? true : false;
+        });
+      });
+    }
+  }, []);
+
+  const [checkboxStates, setCheckboxStates] = useState<{
+    [key: string]: boolean;
+  }>(initialCheckboxState);
 
   return (
     <Container>
@@ -59,7 +87,22 @@ const RoutineCard = ({
           return (
             <ContentsContainer key={item.exerciseId}>
               <ContentsName>
-                <p>{text}</p>
+                <p>
+                  {item.scheduledDate?.map((scheduled) => {
+                    const dateKey = format(scheduled.date, 'yyyy-MM-dd');
+                    const checkboxKey = `${item.exerciseId}-${dateKey}`;
+                    return (
+                      <CheckBox
+                        key={checkboxKey}
+                        checked={checkboxStates[checkboxKey]}
+                        onChange={(e) =>
+                          handleCheckboxChange(checkboxKey, e.target.checked)
+                        }
+                      />
+                    );
+                  })}
+                  <span>{text}</span>
+                </p>
                 <GrEdit
                   type="button"
                   cursor="pointer"
@@ -179,7 +222,7 @@ const ContentsName = styled.div`
   justify-content: space-between;
   color: var(--black-color);
   p > span {
-    margin-left: 10px;
+    margin-left: 25px;
   }
 `;
 
