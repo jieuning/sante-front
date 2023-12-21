@@ -30,11 +30,6 @@ const FoodMadal = () => {
     },
   };
 
-  const inputStyle = {
-    WebkitAppearance: 'none', // 화살표 숨기기
-    margin: 0,
-  };
-
   const buttonInfo: DynamicButtonInfo = {
     type: 'text',
     size: 'medium',
@@ -51,35 +46,73 @@ const FoodMadal = () => {
         <ModalCard
           modalTitle="🍚식단"
           inputElement={
-            <Input
-              type="number"
-              placeholder="칼로리를 입력하세요."
-              width="80%"
-              height="50px"
-              style={inputStyle}
-            />
+            <p
+              style={{
+                fontSize: '15px',
+                marginLeft: '40px',
+                fontWeight: 'bold',
+              }}
+            >
+              하루 권장 칼로리 1800Kcal
+            </p>
           }
           onClick={closeModal}
         >
-          <RadioButton info={radioButtonInfo} style={{ margin: '10px' }} />
-          <div style={{ display: 'flex' }}>
+          <div style={{ margin: '0px 20px 20px 25px' }}>
+            <RadioButton info={radioButtonInfo} />
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              columnGap: '10px',
+              margin: '15px',
+            }}
+          >
             <div>
               <Remove />
             </div>
             <Input
               type="text"
-              placeholder="음식이름"
+              placeholder="음식 이름을 입력하세요."
               width="40%"
               height="30px"
             />
             <Input
               type="number"
-              placeholder="음식칼로리"
+              placeholder="칼로리를 입력하세요."
               width="40%"
               height="30px"
-              style={{ ...inputStyle }}
             />
-            <p>kcal</p>
+            <p style={{ fontSize: '15px' }}>Kcal</p>
+          </div>
+
+
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              columnGap: '10px',
+              margin: '15px',
+            }}
+          >
+            <div>
+              <Remove />
+            </div>
+            <Input
+              type="text"
+              placeholder="음식 이름을 입력하세요."
+              width="40%"
+              height="30px"
+            />
+            <Input
+              type="number"
+              placeholder="칼로리를 입력하세요."
+              width="40%"
+              height="30px"
+            />
+            <p style={{ fontSize: '15px' }}>Kcal</p>
           </div>
           <DynamicButton info={buttonInfo} />
         </ModalCard>
