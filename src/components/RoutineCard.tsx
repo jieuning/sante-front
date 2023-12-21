@@ -109,21 +109,23 @@ const RoutineCard = ({
                   color="var(--black-color)"
                 />
               </ContentsName>
-              <Tag
-                text={item.repeatDate?.join(',') ?? ''}
-                color={'white'}
-                backgroundColor={'purple'}
-              ></Tag>
-              <Tag
-                text={calculateDDay(item.exerciseEndDate ?? new Date())}
-                color={'white'}
-                backgroundColor={'purple'}
-              ></Tag>
-              <Tag
-                text={getTimeFromMinutes(item.exerciseTime ?? 0)}
-                color={'white'}
-                backgroundColor={'purple'}
-              ></Tag>
+              <TagContainer>
+                <Tag
+                  text={item.repeatDate?.join(',') ?? ''}
+                  color={'white'}
+                  backgroundColor={'purple'}
+                ></Tag>
+                <Tag
+                  text={calculateDDay(item.exerciseEndDate ?? new Date())}
+                  color={'white'}
+                  backgroundColor={'purple'}
+                ></Tag>
+                <Tag
+                  text={getTimeFromMinutes(item.exerciseTime ?? 0)}
+                  color={'white'}
+                  backgroundColor={'purple'}
+                ></Tag>
+              </TagContainer>
             </ContentsContainer>
           );
         })}
@@ -135,7 +137,7 @@ const RoutineCard = ({
               <div key={foodItem.foodCategory}>
                 <ContentsName>
                   <p>
-                    {foodItem.foodCategory}
+                    <span>{foodItem.foodCategory}</span>
                     <span>{foodItem.totalCalory} kcal</span>
                   </p>
                   <GrEdit
@@ -144,14 +146,16 @@ const RoutineCard = ({
                     color="var(--black-color)"
                   />
                 </ContentsName>
-                {foodItem.menu.map((menuItem, index) => (
-                  <Tag
-                    key={index} // 'id'는 menuItem의 고유 식별자를 가정함
-                    text={menuItem.name ?? ''}
-                    color="white"
-                    backgroundColor="orange"
-                  />
-                ))}
+                <TagContainer>
+                  {foodItem.menu.map((menuItem, index) => (
+                    <Tag
+                      key={index} // 'id'는 menuItem의 고유 식별자를 가정함
+                      text={menuItem.name ?? ''}
+                      color="white"
+                      backgroundColor="orange"
+                    />
+                  ))}
+                </TagContainer>
               </div>
             ))}
           </ContentsContainer>
@@ -215,12 +219,18 @@ const Title = styled.div`
   }
 `;
 
+const TagContainer = styled.div`
+  margin-top: 5px;
+  margin-left: 25px;
+`;
+
 const ContentsName = styled.div`
   font-size: 14px;
   margin: 4px;
   display: flex;
   justify-content: space-between;
   color: var(--black-color);
+
   p > span {
     margin-left: 25px;
   }
@@ -260,4 +270,5 @@ const getTimeFromMinutes = (minutes: number): string => {
     return `${hour}시간${min}분`;
   }
 };
+
 export default RoutineCard;
