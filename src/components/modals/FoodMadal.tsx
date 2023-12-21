@@ -7,6 +7,7 @@ import {
   DynamicButton,
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
+import styled from 'styled-components';
 
 const FoodModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
@@ -84,7 +85,7 @@ const FoodModal = () => {
             <RadioButton info={radioButtonInfo} />
           </div>
 
-          <div style={{ overflowY: 'auto', maxHeight: '130px' }}>
+          <ScrollBarDiv>
             {foodItems.map((item, index) => (
               <>
                 <div
@@ -121,7 +122,7 @@ const FoodModal = () => {
                 </div>
               </>
             ))}
-          </div>
+          </ScrollBarDiv>
           <div
             style={{
               display: 'flex',
@@ -136,5 +137,25 @@ const FoodModal = () => {
     </>
   );
 };
+
+const ScrollBarDiv = styled.div`
+  margin-bottom: 10px ;
+  overflow-y: auto;
+  max-height: 130px;
+  &::-webkit-scrollbar {
+    width: 10px; // Chrome 및 Safari에서 스크롤 너비 조절
+    
+  }
+  &::-webkit-scrollbar-thumb {
+    height: 5px;
+    border-radius: 10px;
+    background-color: var(--primary-color);
+  }
+  &::-webkit-scrollbar-track {
+    border: 1px solid var(--gray-light);
+    border-radius: 10px;
+    background-color: none;
+  }
+`;
 
 export default FoodModal;
