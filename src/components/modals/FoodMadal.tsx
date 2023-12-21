@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import ModalCard from '../../components/modals/ModalCard';
-// import { Remove } from '../icons/Remove';
 import Input from '../../components/Input';
 import Remove from '../icons/Remove';
 import { RadioButton, InputButtonInfo } from '../RadioButton';
@@ -9,11 +8,24 @@ import {
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
 
-const FoodMadal = () => {
+const FoodModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
+
+  const [foodItems, setFoodItems] = useState([
+    { id: 1, name: '', calories: '' }, //TODO - 아점저간 추가
+  ]);
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const addFoodItem = (e: any) => {
+    e.preventDefault();
+    console.log('클릭');
+    setFoodItems((prevItems) => [
+      ...prevItems,
+      { id: Date.now(), name: '', calories: '' },
+    ]);
   };
 
   const radioButtonInfo: InputButtonInfo = {
@@ -30,19 +42,13 @@ const FoodMadal = () => {
     },
   };
 
-  const inputStyle = {
-    WebkitAppearance: 'none', // 화살표 숨기기
-    margin: 0,
-  };
-
   const buttonInfo: DynamicButtonInfo = {
     type: 'text',
-    size: 'medium',
+    size: 'small',
     text: '+식단추가',
-    // backgroundColor: 'primary',
     color: 'orange',
     fontWeight: 'bold',
-    onClick: () => console.log('Button clicked!'),
+    onClick: addFoodItem,
   };
 
   return (
@@ -51,41 +57,99 @@ const FoodMadal = () => {
         <ModalCard
           modalTitle="🍚식단"
           inputElement={
-            <Input
-              type="number"
-              placeholder="칼로리를 입력하세요."
-              width="80%"
-              height="50px"
-              style={inputStyle}
-            />
+            <p
+              style={{
+                fontSize: '15px',
+                marginLeft: '40px',
+                fontWeight: 'bold',
+              }}
+            >
+              하루 권장 칼로리 1800Kcal
+            </p>
           }
           onClick={closeModal}
         >
-          <RadioButton info={radioButtonInfo} style={{ margin: '10px' }} />
-          <div style={{ display: 'flex' }}>
-            <div>
-              <Remove />
-            </div>
-            <Input
-              type="text"
-              placeholder="음식이름"
-              width="40%"
-              height="30px"
-            />
-            <Input
-              type="number"
-              placeholder="음식칼로리"
-              width="40%"
-              height="30px"
-              style={{ ...inputStyle }}
-            />
-            <p>kcal</p>
+          <div style={{ margin: '0px 20px 20px 25px' }}>
+            <RadioButton info={radioButtonInfo} />
           </div>
-          <DynamicButton info={buttonInfo} />
+
+          <div style={{ overflowY: 'auto', maxHeight: '130px' }}>
+            {foodItems.map((item, index) => (
+              <div
+                key={item.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  columnGap: '10px',
+                  margin: '10px 15px',
+                }}
+              >
+                <div>
+                  <Remove />
+                </div>
+                <Input
+                  type="text"
+                  placeholder="음식 이름을 입력하세요."
+                  width="40%"
+                  height="30px"
+                  // value={item.name}
+                  // onChange={(e) =>
+                  //   handleInputChange(index, 'name', e.target.value)
+                  // }
+                />
+                <Input
+                  type="number"
+                  placeholder="칼로리를 입력하세요."
+                  width="40%"
+                  height="30px"
+                  // value={item.calories}
+                  // onChange={(e) =>
+                  //   handleInputChange(index, 'calories', e.target.value)
+                  // }
+                />
+                <p style={{ fontSize: '15px' }}>Kcal</p>
+              </div>
+            ))}
+
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                columnGap: '10px',
+                margin: '10px 15px',
+              }}
+            >
+              <div>
+                <Remove />
+              </div>
+              <Input
+                type="text"
+                placeholder="음식 이름을 입력하세요."
+                width="40%"
+                height="30px"
+              />
+              <Input
+                type="number"
+                placeholder="칼로리를 입력하세요."
+                width="40%"
+                height="30px"
+              />
+              <p style={{ fontSize: '15px' }}>Kcal</p>
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              paddingRight: '10px',
+            }}
+          >
+            <DynamicButton info={buttonInfo} />
+          </div>
         </ModalCard>
       )}
     </>
   );
 };
 
-export default FoodMadal;
+export default FoodModal;
