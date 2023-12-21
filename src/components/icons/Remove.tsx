@@ -6,7 +6,7 @@ const Remove = () => {
       type="button"
       cursor="pointer"
       color="#ABABAB"
-      // size="20"
+      size="20"
     />
   );
 };
