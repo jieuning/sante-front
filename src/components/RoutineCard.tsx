@@ -153,6 +153,7 @@ const RoutineCard = ({
                     type="button"
                     cursor="pointer"
                     color="var(--black-color)"
+                    onClick={onClickEdit}
                   />
                 </ContentsName>
                 <TagContainer>
