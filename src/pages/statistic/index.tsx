@@ -17,7 +17,7 @@ type ObjectType = {
   result: number;
 };
 const Statistic = () => {
-  const user = useUserModel(new Date('2023-12-01'), new Date('2023-12-10'));
+  const user = useUserModel(new Date('2023-12-01'), new Date('2023-12-23'));
   const [exerciseRateList, setExerciseRateList] = useState<ObjectType>();
   const [exerciseCntList, setExerciseCntList] = useState<ObjectType>();
   const [targetDate, setTargetDate] = useState<Date>(new Date());
@@ -50,6 +50,8 @@ const Statistic = () => {
       user?.userFoodList,
       new Date('2023-12-08')
     );
+    console.log(cnt);
+    setCaloryList(fst);
   }, []);
 
   return (
@@ -79,8 +81,8 @@ const Statistic = () => {
           <CardContainer>
             <Card
               title="식단 평균 칼로리"
-              subTitle="이번달 평균 칼로리 1500kcal"
-              data={arr}
+              subTitle={`이번달 평균 칼로리 ${caloryList?.result}kcal`}
+              data={caloryList?.list ?? [0, 0, 0, 0, 0]}
             />
           </CardContainer>
         </ContentsContainer>

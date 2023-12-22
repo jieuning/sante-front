@@ -43,6 +43,7 @@ const getMonthlyExerciseRateStatistic = (
   //여기서 해당 날짜 isDone 체크되어있는지 확인
   //scheduled date 의 날짜와 존재하는 isDone을 키밸류로 저장
   const isDoneDate = packingScheduledDate(userExerciseList);
+  if (exerciseType === 'cnt') console.log(isDoneDate);
   let max = 0;
   for (let i = 1; i <= endOfMonth(targetDate).getDate(); i++) {
     const thisDay = new Date(
@@ -76,15 +77,17 @@ const getMonthlyExerciseRateStatistic = (
         }, 0) ?? 0;
 
       //rate는 해당 날짜의 done이 다 되었는지 아닌지만 체크한다.
-      const maxCnt = exerciseType === 'rate' ? 1 : doneAllCnt;
+      const maxCnt =
+        exerciseType === 'rate' ? (doneCnt !== 0 ? 0 : 1) : doneAllCnt;
       const currCnt =
         exerciseType === 'rate'
           ? doneCnt === doneAllCnt && doneCnt !== 0
             ? 1
             : 0
           : doneCnt;
-      if (currCnt > max) {
-        max = currCnt;
+
+      if (statistic[weekIndex].curr + currCnt > max) {
+        max = statistic[weekIndex].curr + currCnt;
       }
       statistic[weekIndex] = {
         week: currWeek,
@@ -93,14 +96,13 @@ const getMonthlyExerciseRateStatistic = (
       };
     }
   }
-  console.log(statistic);
 
   const list = statistic.reduce((acc, curr) => {
     if (exerciseType === 'rate') {
       const result = curr.max > 0 ? Math.ceil((curr.curr / curr.max) * 100) : 0;
       acc.push(result ?? 0);
     } else {
-      acc.push(Math.ceil(curr.curr / max) * 100);
+      acc.push(Math.ceil((curr.curr / max) * 100));
     }
     return acc;
   }, new Array<number>());
@@ -148,6 +150,9 @@ const getMonthlyCaloryTotalStatistic = (
       dayCount += 1;
       maxMonthlyCaloryTotal +=
         packedFoodList.get(format(thisDay, 'yyyy-MM-dd')) ?? 0;
+      if (Math.ceil(maxMonthlyCaloryTotal / dayCount) > max) {
+        max = Math.ceil(maxMonthlyCaloryTotal / dayCount);
+      }
 
       statistic[weekIndex] = {
         week: currWeek,
@@ -156,7 +161,19 @@ const getMonthlyCaloryTotalStatistic = (
       };
     }
   }
-  return statistic;
+
+  console.log(statistic);
+  const list = statistic.reduce((acc, curr) => {
+    const result = curr.max > 0 ? Math.ceil((curr.curr / max) * 100) : 0;
+    acc.push(result ?? 0);
+
+    return acc;
+  }, new Array<number>());
+
+  return {
+    list: list,
+    result: Math.ceil(max / today.getDate()),
+  };
 };
 
 const packingScheduledDate = (userExerciseList: Exercise[]) => {
