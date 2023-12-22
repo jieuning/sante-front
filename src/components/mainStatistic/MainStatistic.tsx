@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import { User, Exercise, Food, FoodList, Menu } from '../../types/user';
 import { getColorValue } from '../../types/colorType';
-import { isSameDay, startOfWeek, endOfWeek } from 'date-fns';
-import useUserModel from '../../hooks/useUserModel';
+import { isSameDay } from 'date-fns';
 
 const FOOD_COLORS = {
   notEnough: getColorValue('orange'),
@@ -13,12 +12,20 @@ const FOOD_COLORS = {
   tooMuch: '#F39797',
 };
 
-interface DateProps {
-  todayDate: Date;
+interface sizeProps {
+  width: string;
+  height: string;
+}
+interface MainStatisticProps {
+  user: User | undefined;
+  todayDate?: Date;
 }
 
 // eslint-disable-next-line react/prop-types
-const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
+const MainStatistic = ({
+  user,
+  todayDate = new Date(),
+}: MainStatisticProps) => {
   const caloryMoods = {
     notEnough: {
       emoji: '🥺',
@@ -36,7 +43,8 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
       color: FOOD_COLORS.tooMuch,
     },
   };
-  const [today, setToday] = useState(todayDate); // 현재 날짜를 가져옵니다.
+
+  const today: Date = new Date(todayDate);
   const [caloryMood, setCaloryMood] = useState(caloryMoods.notEnough);
   const [exerciseGage, setExerciseGage] = useState(0);
   const [exerciseMaxGage, setExerciseMaxGage] = useState(0);
@@ -45,11 +53,6 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
 
   console.log('foodgage', foodGage);
   console.log('usercalory', userCalory);
-
-  const startOfThisWeek = startOfWeek(today); // 이번 주의 시작 날짜를 계산합니다.
-  const endOfThisWeek = endOfWeek(today); // 이번 주의 종료 날짜를 계산합니다.
-
-  const user: User | undefined = useUserModel(startOfThisWeek, endOfThisWeek);
 
   useEffect(() => {
     if (user) {
@@ -161,9 +164,9 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
   );
 };
 //NOTE: 미완성
-const GageContainerDiv = styled.div`
-  width: 27.4rem;
-  height: 36.7rem;
+const GageContainerDiv = styled.div<sizeProps>`
+  width: ${({ width }) => (width ? width : '23rem')};
+  height: ${({ height }) => (height ? height : '30rem')};
   border-radius: 2rem;
   background-color: white;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -172,7 +175,7 @@ const GageContainerDiv = styled.div`
 
 const InformationAreaDiv = styled.div`
   width: 100%;
-  height: 82%;
+  height: 87%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -180,14 +183,15 @@ const InformationAreaDiv = styled.div`
 `;
 
 const ButtonAreaDiv = styled.div`
+  height: auto;
   display: flex;
   justify-content: flex-end;
-  margin: 2.4rem;
+  margin-right: 2.4rem;
 `;
 
 const TextContainerDiv = styled.div`
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: bold;
 `;
 const FlexContainerDiv = styled.div`
   display: flex;
@@ -198,7 +202,6 @@ const FlexContainerDiv = styled.div`
 
 const StatusContainerSpan = styled.span`
   font-size: 1.3rem;
-  font-weight: 600;
 `;
 
 const EmojiContainerSpan = styled.span`

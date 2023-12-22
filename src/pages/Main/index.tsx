@@ -8,13 +8,19 @@ import MainStatistic from '../../components/mainStatistic/MainStatistic';
 const TODAY = '2023-12-08';
 import { MonthCalendar } from '../../components/Calendar';
 import { DateSelect } from '../../components/DateSelect';
+import { endOfWeek, startOfWeek } from 'date-fns';
 
 interface BalckProps {
   height?: string;
 }
 
 const Main = () => {
-  const user = useUserModel(new Date(TODAY));
+  const today = new Date(TODAY); // 현재 날짜를 가져옵니다.
+  const user = useUserModel(today);
+  const startOfThisWeek = startOfWeek(today); // 이번 주의 시작 날짜를 계산합니다.
+  const endOfThisWeek = endOfWeek(today); // 이번 주의 종료 날짜를 계산합니다.
+  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
+  //NOTE: mainStatistics는 이번주차 데이터를 불러와야합니다
   console.log(user);
   return (
     <>
@@ -43,11 +49,11 @@ const Main = () => {
             <RoutineCard
               type="exercise"
               exerciseList={user?.userExerciseList}
-              date={new Date(TODAY)}
+              date={today}
             ></RoutineCard>
           </CardContainer>
 
-          <MainStatistic todayDate={new Date(TODAY)} />
+          <MainStatistic user={weeklyUser} todayDate={today} />
         </ContentsContainer>
       </Container>
     </>
