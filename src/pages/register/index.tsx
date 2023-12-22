@@ -54,8 +54,15 @@ const radioGenderButtonInfo: InputButtonInfo = {
   border: 'primary',
   color: 'inputText',
   fontWeight: 'regular',
-  onClick: () => {
-    console.log('버튼이 클릭되었습니다!');
+  onChange: (selectedValue) => {
+    console.log('selectedValue:', selectedValue);
+    if (selectedValue === '남성') {
+      //남성에 대한 처리
+      console.log('남성');
+    } else {
+      //여성에 대한 처리
+      console.log('여성');
+    }
   },
 };
 
