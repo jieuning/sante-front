@@ -3,11 +3,15 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getMonth } from 'date-fns';
 import ColorChip from './ColorChip';
-import { Exercise } from '../types/user';
 
 export interface Diet {
   createdAt?: Date;
   todayCalory?: number;
+}
+
+export interface Exercise {
+  createdAt?: Date;
+  isDone?: boolean;
 }
 
 export const MonthCalendar = () => {
