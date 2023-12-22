@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { ColorType, getColorValue } from '../types/colorType';
+import { useState } from 'react';
 
 type InputType =
   | 'checkbox'
@@ -221,6 +222,15 @@ const CheckButton = ({ info }: InputButtonProps) => {
 };
 
 const RadioButton = ({ info }: InputButtonProps) => {
+  const [selectedValue, setSelectedValue] = useState(null);
+
+  const handleRadioChange = (value: any) => {
+    setSelectedValue(value);
+    if (info.onChange) {
+      info.onChange(value);
+    }
+  };
+
   return (
     <InputButtonContainer>
       {info.type === 'circleRadio' &&
@@ -230,6 +240,8 @@ const RadioButton = ({ info }: InputButtonProps) => {
               type="radio"
               id={`radio-${info.type}-${index}`}
               name="radio-group"
+              checked={selectedValue === item}
+              onChange={() => handleRadioChange(item)}
             />
             <CircleRadioLabel htmlFor={`radio-${info.type}-${index}`} {...info}>
               <span>{item}</span>
@@ -243,6 +255,8 @@ const RadioButton = ({ info }: InputButtonProps) => {
               type="radio"
               id={`radio-${info.type}-${index}`}
               name="radio-group"
+              checked={selectedValue === item}
+              onChange={() => handleRadioChange(item)}
             />
             <ShortOvalRadioLabel
               htmlFor={`radio-${info.type}-${index}`}
@@ -259,6 +273,8 @@ const RadioButton = ({ info }: InputButtonProps) => {
               type="radio"
               id={`radio-${info.type}-${index}`}
               name="radio-group"
+              checked={selectedValue === item}
+              onChange={() => handleRadioChange(item)}
             />
             <LongOvalRadioLabel
               htmlFor={`radio-${info.type}-${index}`}
