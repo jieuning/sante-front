@@ -52,7 +52,7 @@ const Statistic = () => {
     );
     console.log(cnt);
     setCaloryList(fst);
-  }, []);
+  }, [user]);
 
   return (
     <>

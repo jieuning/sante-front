@@ -204,9 +204,53 @@ const getSum = (arr: StatisticType[]): number => {
   return arr.reduce((acc, curr) => acc + curr.curr, 0);
 };
 
+function filterFoodListByDateRange(
+  foodList: Food[],
+  startDate: Date,
+  endDate: Date
+) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  return foodList.filter((food) => {
+    const foodDate = new Date(food.createdAt);
+    return foodDate >= start && foodDate <= end;
+  });
+}
+
+function filterExerciseListByDateRange(
+  exerciseList: Exercise[],
+  startDate: Date,
+  endDate: Date
+): Exercise[] {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  return exerciseList
+    .map((exercise) => {
+      // 날짜 범위에 맞는 scheduledDate만 필터링
+      const filteredScheduledDates = exercise.scheduledDate?.filter(
+        (scheduledItem) => {
+          const scheduledDate = new Date(scheduledItem.date);
+          return scheduledDate >= start && scheduledDate <= end;
+        }
+      );
+
+      return {
+        ...exercise,
+        scheduledDate: filteredScheduledDates,
+      };
+    })
+    .filter(
+      (exercise) => exercise.scheduledDate && exercise.scheduledDate.length > 0
+    );
+}
+
 export {
   getWeekOfMonth,
   getMonthlyExerciseRateStatistic,
   getMonthlyCaloryTotalStatistic,
+  filterExerciseListByDateRange,
+  filterFoodListByDateRange,
 };
 export type { ExerciseType };
