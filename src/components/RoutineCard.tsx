@@ -17,6 +17,7 @@ interface RoutineCardProps {
   date?: Date;
   onClickMore?: (e?: any) => void; //더보기 버튼용
   onClickAdd?: (e?: any) => void; // + 버튼용
+  onClickEdit?: (e?: any) => void; // 수정 버튼용
 }
 
 const RoutineCard = ({
@@ -27,6 +28,7 @@ const RoutineCard = ({
   date,
   onClickMore,
   onClickAdd,
+  onClickEdit,
 }: RoutineCardProps) => {
   const buttonInfo: DynamicButtonInfo = {
     type: 'outline',
@@ -35,6 +37,9 @@ const RoutineCard = ({
     onClick: onClickMore,
   };
   const [isChecked, setIsChecked] = useState(false);
+  const [checkboxStates, setCheckboxStates] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   const handleCheckboxChange = (checkboxKey: string, isChecked: boolean) => {
     setCheckboxStates((prevStates) => ({
@@ -43,23 +48,24 @@ const RoutineCard = ({
     }));
   };
 
-  const initialCheckboxState: { [key: string]: boolean } = {};
+  //const initialCheckboxState: { [key: string]: boolean } = {};
+
   useEffect(() => {
     const initialCheckboxState: { [key: string]: boolean } = {};
+
     if (type === 'exercise' && exerciseList) {
       exerciseList.forEach((item) => {
         item.scheduledDate?.forEach((scheduled) => {
           const dateKey = format(scheduled.date, 'yyyy-MM-dd');
           const checkboxKey = `${item.exerciseId}-${dateKey}`;
+          console.log(dateKey, scheduled.isDone);
           initialCheckboxState[checkboxKey] = scheduled.isDone ? true : false;
         });
       });
     }
-  }, []);
 
-  const [checkboxStates, setCheckboxStates] = useState<{
-    [key: string]: boolean;
-  }>(initialCheckboxState);
+    setCheckboxStates(initialCheckboxState); // 여기서 상태 업데이트
+  }, []);
 
   return (
     <Container>
@@ -83,30 +89,33 @@ const RoutineCard = ({
           if (type === 'exercise' && 'exerciseName' in item) {
             text = item.exerciseName ?? '기본 운동 이름';
           }
-
+          const dateKey = format(date ?? new Date(), 'yyyy-MM-dd');
+          const checkboxKey = `${item.exerciseId}-${dateKey}`;
+          console.log('checkbox----------------------');
+          console.log(checkboxKey);
+          console.log(checkboxStates);
+          console.log(checkboxStates[checkboxKey]);
           return (
             <ContentsContainer key={item.exerciseId}>
               <ContentsName>
                 <p>
-                  {item.scheduledDate?.map((scheduled) => {
-                    const dateKey = format(scheduled.date, 'yyyy-MM-dd');
-                    const checkboxKey = `${item.exerciseId}-${dateKey}`;
-                    return (
-                      <CheckBox
-                        key={checkboxKey}
-                        checked={checkboxStates[checkboxKey]}
-                        onChange={(e) =>
-                          handleCheckboxChange(checkboxKey, e.target.checked)
-                        }
-                      />
-                    );
-                  })}
+                  {
+                    <CheckBox
+                      key={checkboxKey}
+                      checked={checkboxStates[checkboxKey]}
+                      onChange={(e) =>
+                        handleCheckboxChange(checkboxKey, e.target.checked)
+                      }
+                    />
+                  }
+
                   <span>{text}</span>
                 </p>
                 <GrEdit
                   type="button"
                   cursor="pointer"
                   color="var(--black-color)"
+                  onClick={onClickEdit}
                 />
               </ContentsName>
               <TagContainer>
