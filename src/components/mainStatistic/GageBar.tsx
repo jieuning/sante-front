@@ -47,7 +47,7 @@ const GageBar = ({
 };
 
 const Progress = styled.div`
-  width: 16.3rem;
+  width: 16rem;
   height: 2.3rem;
   background-color: var(--white-background-color);
   border-radius: 2rem;

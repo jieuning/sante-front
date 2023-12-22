@@ -17,6 +17,11 @@ interface DateProps {
   todayDate: Date;
 }
 
+interface sizeProps {
+  width: string;
+  height: string;
+}
+
 // eslint-disable-next-line react/prop-types
 const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
   const caloryMoods = {
@@ -161,9 +166,9 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
   );
 };
 //NOTE: 미완성
-const GageContainerDiv = styled.div`
-  width: 27.4rem;
-  height: 36.7rem;
+const GageContainerDiv = styled.div<sizeProps>`
+  width: ${({ width }) => (width ? width : '23rem')};
+  height: ${({ height }) => (height ? height : '30rem')};
   border-radius: 2rem;
   background-color: white;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
@@ -172,7 +177,7 @@ const GageContainerDiv = styled.div`
 
 const InformationAreaDiv = styled.div`
   width: 100%;
-  height: 82%;
+  height: 87%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -180,14 +185,15 @@ const InformationAreaDiv = styled.div`
 `;
 
 const ButtonAreaDiv = styled.div`
+  height: auto;
   display: flex;
   justify-content: flex-end;
-  margin: 2.4rem;
+  margin-right: 2.4rem;
 `;
 
 const TextContainerDiv = styled.div`
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: bold;
 `;
 const FlexContainerDiv = styled.div`
   display: flex;
@@ -198,7 +204,6 @@ const FlexContainerDiv = styled.div`
 
 const StatusContainerSpan = styled.span`
   font-size: 1.3rem;
-  font-weight: 600;
 `;
 
 const EmojiContainerSpan = styled.span`
