@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import Input from '../../components/Input';
@@ -6,6 +7,7 @@ import {
   DynamicButton,
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
+import { RadioButton, InputButtonInfo } from '../../components/RadioButton';
 
 const StyledTitle = styled.h1`
   text-align: center;
@@ -25,6 +27,16 @@ const ButtonContainer = styled.div`
   padding-top: 20px;
 `;
 
+const RadioButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  &:nth-child(1) {
+    margin-right: 5px; /* 원하는 값으로 조절 */
+  }
+  margin-top: 7px;
+`;
+
 const buttonInfo: DynamicButtonInfo = {
   type: 'solid',
   size: 'medium',
@@ -33,19 +45,88 @@ const buttonInfo: DynamicButtonInfo = {
   onClick: () => console.log('Button clicked!'),
 };
 
+const radioGenderButtonInfo: InputButtonInfo = {
+  type: 'longOvalRadio',
+  size: 'long-oval',
+  value: [],
+  items: ['남성', '여성'],
+  backgroundColor: 'white',
+  border: 'primary',
+  color: 'inputText',
+  fontWeight: 'regular',
+  onClick: () => {
+    console.log('버튼이 클릭되었습니다!');
+  },
+};
+
 const Register = () => {
-  const options: Option[] = [
-    { value: 'option1', label: '12~14세' },
-    { value: 'option2', label: '15~18세' },
+  const [email, setEmail] = useState<string | number>('');
+  const [pw, setPw] = useState<string | number>('');
+  const [pwConfirm, setPwConfirm] = useState('');
+//   const [age, setAge] = useState('');
+
+  const [emailValid, setEmailValid] = useState<boolean>(false);
+  const [pwValid, setPwValid] = useState<boolean>(false);
+  const [pwCheck, setPwCheck] = useState<boolean>(false);
+
+  const ageOptions: Option[] = [
+    { value: '12~14세', label: '12~14세' },
+    { value: '15~18세', label: '15~18세' },
     { value: 'option3', label: '19~29세' },
     { value: 'option4', label: '30~49세' },
     { value: 'option5', label: '50~64세' },
     { value: 'option6', label: '65세 이상' },
   ];
 
-  const handleSelectChange = (selectedValue: string) => {
+  useEffect(() => {
+    console.log('Email:', email);
+    const emailRegex = /^\S+@\S+.\S+$/;
+    if (emailRegex.test(email)) {
+      setEmailValid(true);
+    } else {
+      setEmailValid(false);
+    }
+  }, [email]);
+
+  const handleEmailChange = (value: string | number) => {
+    //input에서 받아온 onchange값을 setEmail에 할당
+    //에러상태 true -> 에러메세지
+    setEmail(value);
+  };
+
+  useEffect(() => {
+    console.log('Password:', pw);
+    const pwRegex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (pwRegex.test(pw)) {
+      setPwValid(true);
+    } else {
+      setPwValid(false);
+    }
+  }, [pw]);
+
+  const handlePwChange = (value: string | number) => {
+    setPw(value);
+  };
+
+  useEffect(() => {
+    console.log('pw confirm:', pwConfirm);
+    if (pw === pwConfirm) {
+      setPwCheck(true);
+    } else {
+      setPwCheck(false);
+    }
+  }, [pw, pwConfirm]);
+
+  const handlePwConfirmChange = (value: string | number) => {
+    setPwConfirm(value);
+  };
+
+  const handleAgeSelectChange = (selectedValue: string) => {
+    //setAge 할 필요 없이 selectedValue에 선택한 나이가 이미 들어있음
     console.log('Selected value:', selectedValue);
   };
+
   return (
     <StyledRegister>
       <Header />
@@ -53,29 +134,56 @@ const Register = () => {
       <InputContainer>
         <Input
           type="text"
+          name="email"
           placeholder="이메일을 입력해주세요."
           width="400px"
           height="40px"
+          value={email}
+          onChange={handleEmailChange}
+        //   errorMessage={'유효성 검사 멘트'}
         />
-        <p>유효성 검사 멘트</p>
+        <div className="errorMessageWrap">
+          {!emailValid && email.length > 0 && (
+            <div>올바른 이메일 형식으로 입력해주세요.</div>
+          )}
+        </div>
         <Input
-          type="text"
-          placeholder="비밀번호를 입력해주세요. 8자리 이상 영문과 숫자를 포함해야 합니다."
+          type="password"
+          name="password"
+          placeholder="비밀번호를 입력해주세요."
           width="400px"
           height="40px"
+          value={pw}
+          onChange={handlePwChange}
         />
+        <div className="errorMessageWrap">
+          {!pwValid && pw.length > 0 && (
+            <div>8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.</div>
+          )}
+        </div>
         <Input
-          type="text"
+          type="password"
+          name="password-confirm"
           placeholder="비밀번호 확인을 위해 다시 입력해주세요."
           width="400px"
           height="40px"
+          value={pwConfirm}
+          onChange={handlePwConfirmChange}
         />
+        <div className="errorMessageWrap">
+          {!pwCheck && pwConfirm.length > 0 && (
+            <div>동일한 비밀번호인지 확인해주세요.</div>
+          )}
+        </div>
+        <RadioButtonContainer>
+          <RadioButton info={radioGenderButtonInfo} />
+        </RadioButtonContainer>
         <SelectBox
           width="400px"
           height="40px"
           placeholder="연령을 선택해주세요."
-          options={options}
-          onChange={handleSelectChange}
+          ageOptions={ageOptions}
+          onChange={handleAgeSelectChange}
         />
       </InputContainer>
       <ButtonContainer>
