@@ -16,7 +16,7 @@ const StyledInputWrapper = styled.div<{
 const StyledInput = styled.input`
   width: 100%;
   height: 100%;
-  border: 1px solid #bebebe;
+  border: 1px solid var(--gray-light);
   outline: none;
   border-radius: 10px;
   background: #fff;
@@ -28,25 +28,37 @@ const StyledInput = styled.input`
 `;
 
 interface StyledInputProps {
-  type?: 'text' | 'number';
+  type: 'text' | 'number' | 'password';
+  name: string;
   placeholder: string;
-  value?: 'string' | 'number';
+  value?: string | number;
   width: string;
   height: string;
   textAlign?: string;
+  onChange: (v: string | number) => void;
 }
 
 const Input = ({
   type = 'text',
+  name,
   placeholder,
   value,
   width,
   height,
   textAlign,
+  onChange,
 }: StyledInputProps) => {
   return (
     <StyledInputWrapper width={width} height={height} textAlign={textAlign}>
-      <StyledInput type={type} placeholder={placeholder} value={value} />
+      <StyledInput
+        type={type}
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => {
+          onChange(e.target.value);
+        }}
+      />
     </StyledInputWrapper>
   );
 };
