@@ -10,6 +10,7 @@ import {
 import styled from 'styled-components';
 
 const FoodModal = () => {
+  const [selectedValue, setSelectedValue] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(true);
 
   const [foodItems, setFoodItems] = useState([
@@ -43,14 +44,24 @@ const FoodModal = () => {
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
     size: 'short-oval',
-    value: [],
+    value: selectedValue,
     items: ['아침', '점심', '저녁', '간식'],
     backgroundColor: 'gray',
     color: 'white',
     fontWeight: 'bold',
-    onClick: () => {
-      // 버튼 클릭 처리
-      console.log('버튼이 클릭되었습니다!');
+    onChange: (selectedTime) => {
+      console.log('선택된 값:', selectedTime);
+      setSelectedValue(selectedTime);
+      // 선택된 아점저간에 따른 로직 수행
+      if (selectedTime === '아침') {
+        console.log('아침');
+      } else if (selectedTime === '점심') {
+        console.log('점심');
+      } else if (selectedTime === '저녁') {
+        console.log('저녁');
+      } else {
+        console.log('간식');
+      }
     },
   };
 
@@ -139,12 +150,11 @@ const FoodModal = () => {
 };
 
 const ScrollBarDiv = styled.div`
-  margin-bottom: 10px ;
+  margin-bottom: 10px;
   overflow-y: auto;
   max-height: 130px;
   &::-webkit-scrollbar {
     width: 10px; // Chrome 및 Safari에서 스크롤 너비 조절
-    
   }
   &::-webkit-scrollbar-thumb {
     height: 5px;

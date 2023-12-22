@@ -3,20 +3,29 @@ import { RadioButton, InputButtonInfo } from '../../components/RadioButton';
 import Arrow from '../../components/icons/Arrow';
 import RoutineCard from '../../components/RoutineCard';
 import styled from 'styled-components';
+import { useState } from 'react';
 
 const List = () => {
+  const [selectedValue, setSelectedValue] = useState('');
+
   const radioCategoryButtonInfo: InputButtonInfo = {
     type: 'shortOvalRadio',
     size: 'short-oval',
-    value: ['운동'],
+    value: selectedValue,
     items: ['운동', '식단'],
     backgroundColor: 'white',
     border: 'primary',
     color: 'black',
     fontWeight: 'bold',
-    onClick: () => {
-      // 버튼 클릭 처리
-      console.log('버튼이 클릭되었습니다!');
+    onChange: (selectedCategory) => {
+      console.log('선택된 값:', selectedCategory);
+      setSelectedValue(selectedCategory);
+      // 선택된 아점저간에 따른 로직 수행
+      if (selectedCategory === '운동') {
+        console.log('운동');
+      } else {
+        console.log('식단');
+      }
     },
   };
 
