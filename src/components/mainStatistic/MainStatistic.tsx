@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import { User, Exercise, Food, FoodList, Menu } from '../../types/user';
 import { getColorValue } from '../../types/colorType';
-import { isSameDay, startOfWeek, endOfWeek } from 'date-fns';
-import useUserModel from '../../hooks/useUserModel';
+import { isSameDay } from 'date-fns';
 
 const FOOD_COLORS = {
   notEnough: getColorValue('orange'),
@@ -13,17 +12,20 @@ const FOOD_COLORS = {
   tooMuch: '#F39797',
 };
 
-interface DateProps {
-  todayDate: Date;
-}
-
 interface sizeProps {
   width: string;
   height: string;
 }
+interface MainStatisticProps {
+  user: User | undefined;
+  todayDate?: Date;
+}
 
 // eslint-disable-next-line react/prop-types
-const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
+const MainStatistic = ({
+  user,
+  todayDate = new Date(),
+}: MainStatisticProps) => {
   const caloryMoods = {
     notEnough: {
       emoji: '🥺',
@@ -41,7 +43,8 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
       color: FOOD_COLORS.tooMuch,
     },
   };
-  const [today, setToday] = useState(todayDate); // 현재 날짜를 가져옵니다.
+
+  const today: Date = new Date(todayDate);
   const [caloryMood, setCaloryMood] = useState(caloryMoods.notEnough);
   const [exerciseGage, setExerciseGage] = useState(0);
   const [exerciseMaxGage, setExerciseMaxGage] = useState(0);
@@ -50,11 +53,6 @@ const MainStatistic = ({ todayDate = new Date() }: DateProps) => {
 
   console.log('foodgage', foodGage);
   console.log('usercalory', userCalory);
-
-  const startOfThisWeek = startOfWeek(today); // 이번 주의 시작 날짜를 계산합니다.
-  const endOfThisWeek = endOfWeek(today); // 이번 주의 종료 날짜를 계산합니다.
-
-  const user: User | undefined = useUserModel(startOfThisWeek, endOfThisWeek);
 
   useEffect(() => {
     if (user) {
