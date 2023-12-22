@@ -7,25 +7,32 @@ import { IoAddCircle, IoTerminalOutline } from 'react-icons/io5';
 import { MouseEventHandler, useEffect, useState } from 'react';
 import CheckBox from './CheckBox';
 import { format } from 'date-fns';
+import {
+  filterExerciseListByDateRange,
+  filterFoodListByDateRange,
+} from '../utils/Date';
+import useUserModel from '../hooks/useUserModel';
+import useUserModelAll from '../hooks/useUserModelAll';
+import useCheckboxHandler from '../hooks/useCheckboxHandler';
 
 type RoutineType = 'exercise' | 'food';
 interface RoutineCardProps {
   type: RoutineType;
-  isPlusIconVisible?: boolean;
-  exerciseList?: Exercise[] | undefined;
+  isAll?: boolean;
+  exerciseList?: Exercise[];
   foodList?: Food[] | undefined;
-  date?: Date;
+  date: Date;
   onClickMore?: (e?: any) => void; //더보기 버튼용
   onClickAdd?: (e?: any) => void; // + 버튼용
   onClickEdit?: (e?: any) => void; // 수정 버튼용
 }
-
+const initialCheckboxState: { [key: string]: boolean } = {};
 const RoutineCard = ({
   type,
   exerciseList,
   foodList,
-  isPlusIconVisible,
   date,
+  isAll,
   onClickMore,
   onClickAdd,
   onClickEdit,
@@ -36,65 +43,70 @@ const RoutineCard = ({
     fontWeight: 'bold',
     onClick: onClickMore,
   };
-  const [isChecked, setIsChecked] = useState(false);
-  const [checkboxStates, setCheckboxStates] = useState<{
-    [key: string]: boolean;
-  }>({});
 
-  const handleCheckboxChange = (checkboxKey: string, isChecked: boolean) => {
-    setCheckboxStates((prevStates) => ({
-      ...prevStates,
-      [checkboxKey]: isChecked,
-    }));
+  if (type === 'exercise' && exerciseList) {
+    exerciseList.forEach((item) => {
+      item.scheduledDate?.forEach((scheduled) => {
+        const dateKey = format(scheduled.date, 'yyyy-MM-dd');
+        const checkboxKey = `${item.exerciseId}-${dateKey}`;
+        console.log(dateKey, scheduled.isDone);
+        initialCheckboxState[checkboxKey] = scheduled.isDone ? true : false;
+      });
+    });
+  }
+
+  const [isChecked, setIsChecked] = useState(false);
+  const [checkboxStates, handleCheckboxChange] =
+    useCheckboxHandler(initialCheckboxState);
+  const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
+  const [filteredFoods, setFilteredFoods] = useState<Food[]>([]);
+
+  const handleCheckboxChangeEvent = async (
+    checkboxKey: string,
+    isChecked: boolean
+  ) => {
+    //여기서 put 작업을 해야하는데... get and put 하면 되려나
+    handleCheckboxChange(checkboxKey, isChecked);
   };
 
-  //const initialCheckboxState: { [key: string]: boolean } = {};
-
   useEffect(() => {
-    const initialCheckboxState: { [key: string]: boolean } = {};
-
+    if (type === 'food' && foodList) {
+      const filtered = filterFoodListByDateRange(foodList, date, date);
+      setFilteredFoods(filtered);
+    }
     if (type === 'exercise' && exerciseList) {
-      exerciseList.forEach((item) => {
-        item.scheduledDate?.forEach((scheduled) => {
-          const dateKey = format(scheduled.date, 'yyyy-MM-dd');
-          const checkboxKey = `${item.exerciseId}-${dateKey}`;
-          console.log(dateKey, scheduled.isDone);
-          initialCheckboxState[checkboxKey] = scheduled.isDone ? true : false;
-        });
-      });
+      const filtered = filterExerciseListByDateRange(exerciseList, date, date);
+      setFilteredExercises(filtered);
     }
 
-    setCheckboxStates(initialCheckboxState); // 여기서 상태 업데이트
-  }, []);
+    //handleCheckboxChange(initialCheckboxState); // 여기서 상태 업데이트
+  }, [exerciseList, foodList]);
 
   return (
     <Container>
       {type === 'exercise' && (
         <Title>
           <p>🏃 운동</p>
-          {isPlusIconVisible && <DynamicButton info={buttonInfo} />}
-          {date && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
+          {!isAll && <DynamicButton info={buttonInfo} />}
+          {isAll && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
         </Title>
       )}
       {type === 'food' && (
         <Title>
           <p>🍚 식단</p>
-          {isPlusIconVisible && <DynamicButton info={buttonInfo} />}
+          {!isAll && <DynamicButton info={buttonInfo} />}
         </Title>
       )}
       <Line />
       {type === 'exercise' &&
-        exerciseList?.map((item) => {
+        filteredExercises?.map((item) => {
           let text = '';
           if (type === 'exercise' && 'exerciseName' in item) {
             text = item.exerciseName ?? '기본 운동 이름';
           }
           const dateKey = format(date ?? new Date(), 'yyyy-MM-dd');
           const checkboxKey = `${item.exerciseId}-${dateKey}`;
-          console.log('checkbox----------------------');
-          console.log(checkboxKey);
-          console.log(checkboxStates);
-          console.log(checkboxStates[checkboxKey]);
+
           return (
             <ContentsContainer key={item.exerciseId}>
               <ContentsName>
@@ -104,7 +116,7 @@ const RoutineCard = ({
                       key={checkboxKey}
                       checked={checkboxStates[checkboxKey]}
                       onChange={(e) =>
-                        handleCheckboxChange(checkboxKey, e.target.checked)
+                        handleCheckboxChangeEvent(checkboxKey, e.target.checked)
                       }
                     />
                   }
@@ -119,11 +131,13 @@ const RoutineCard = ({
                 />
               </ContentsName>
               <TagContainer>
-                <Tag
-                  text={item.repeatDate?.join(',') ?? ''}
-                  color={'white'}
-                  backgroundColor={'purple'}
-                ></Tag>
+                {item.repeatDate !== undefined && (
+                  <Tag
+                    text={getRepeatDayString(item.repeatDate)}
+                    color={'white'}
+                    backgroundColor={'purple'}
+                  ></Tag>
+                )}
                 <Tag
                   text={calculateDDay(item.exerciseEndDate ?? new Date())}
                   color={'white'}
@@ -140,7 +154,7 @@ const RoutineCard = ({
         })}
 
       {type === 'food' &&
-        foodList?.map((item) => (
+        filteredFoods?.map((item) => (
           <ContentsContainer key={item.foodId}>
             {item.foodList.map((foodItem, index) => (
               <div key={foodItem.foodCategory}>
@@ -170,7 +184,7 @@ const RoutineCard = ({
             ))}
           </ContentsContainer>
         ))}
-      {type === 'exercise' && isPlusIconVisible && (
+      {type === 'exercise' && !isAll && (
         <IconContainer onClick={onClickAdd}>
           <IoAddCircle
             type="button"
@@ -180,7 +194,7 @@ const RoutineCard = ({
           />
         </IconContainer>
       )}
-      {type === 'food' && isPlusIconVisible && (
+      {type === 'food' && !isAll && (
         <IconContainer onClick={onClickAdd}>
           <IoAddCircle
             type="button"
@@ -279,6 +293,21 @@ const getTimeFromMinutes = (minutes: number): string => {
   } else {
     return `${hour}시간${min}분`;
   }
+};
+
+const getRepeatDayString = (repeatDay: string[]): string => {
+  if (repeatDay.length === 7) {
+    return '매일';
+  } else if (
+    repeatDay.length === 5 &&
+    !repeatDay.includes('토') &&
+    !repeatDay.includes('일')
+  ) {
+    return '주중';
+  } else if (repeatDay.includes('토') && repeatDay.includes('일')) {
+    return '주말';
+  }
+  return repeatDay.join(',');
 };
 
 export default RoutineCard;

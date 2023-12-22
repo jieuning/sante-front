@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import { FoodList, User, Food, Exercise } from '../types/user';
+import {
+  filterExerciseListByDateRange,
+  filterFoodListByDateRange,
+} from '../utils/Date';
 import axios from 'axios';
 
-const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user/';
+const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 //TODO - axios로 수정 + 에러처리
 //후에 webstorage로 바꿔야함 그런데 비번 그냥 박아두는게 역시 많이 그러네용..
@@ -12,9 +16,7 @@ const useUserModel = (startDate: Date, endDate?: Date) => {
 
   useEffect(() => {
     axios
-      .post(`${URL}check`, {
-        // email: 'yeojin@naver.com',
-        // password: '1234',
+      .post(`${URL}/check`, {
         email: 'email@email.com',
         password: 'sdfdsf',
       })
@@ -55,47 +57,5 @@ const useUserModel = (startDate: Date, endDate?: Date) => {
 
   return user;
 };
-
-function filterFoodListByDateRange(
-  foodList: Food[],
-  startDate: Date,
-  endDate: Date
-) {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  return foodList.filter((food) => {
-    const foodDate = new Date(food.createdAt);
-    return foodDate >= start && foodDate <= end;
-  });
-}
-
-function filterExerciseListByDateRange(
-  exerciseList: Exercise[],
-  startDate: Date,
-  endDate: Date
-): Exercise[] {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-
-  return exerciseList
-    .map((exercise) => {
-      // 날짜 범위에 맞는 scheduledDate만 필터링
-      const filteredScheduledDates = exercise.scheduledDate?.filter(
-        (scheduledItem) => {
-          const scheduledDate = new Date(scheduledItem.date);
-          return scheduledDate >= start && scheduledDate <= end;
-        }
-      );
-
-      return {
-        ...exercise,
-        scheduledDate: filteredScheduledDates,
-      };
-    })
-    .filter(
-      (exercise) => exercise.scheduledDate && exercise.scheduledDate.length > 0
-    );
-}
 
 export default useUserModel;
