@@ -42,9 +42,9 @@ const getButtonSize = (size: InputSize) => {
       };
     case 'long-oval': // 긴너비타원
       return {
-        width: '200px',
-        height: '50px',
-        fontSize: '18px',
+        width: '197.5px',
+        height: '40px',
+        fontSize: '13px',
       };
     default:
       return {
@@ -60,8 +60,12 @@ const RadioLabel = styled.label<InputButtonInfo>`
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   margin-left: 5px;
+  &:nth-child(1) {
+    margin-left: 0px;
+  }
+
   cursor: pointer;
   width: ${(props) => getButtonSize(props.size).width};
   height: ${(props) => getButtonSize(props.size).height};
@@ -83,13 +87,12 @@ const ShortOvalRadioLabel = styled(RadioLabel)`
 `;
 
 const LongOvalRadioLabel = styled(RadioLabel)`
-  border: 2px solid ${(props) => getColorValue(props.border ?? 'primary')};
-  border-radius: 2rem;
-  background-color: ${(props) =>
-    getColorValue(props.backgroundColor ?? 'primary')};
+  border: 1px solid var(--gray-light);
+  border-radius: 10px;
+  background-color: #fff;
   &:hover {
-    border: 2px solid ${(props) => getColorValue(props.border ??'primary')};
-    color: ${(props) => getColorValue(props.color ??'black')};
+    border: 1px solid ${(props) => getColorValue(props.border ?? 'primary')};
+    color: ${(props) => getColorValue(props.color ?? 'black')};
   }
 `;
 
@@ -125,7 +128,7 @@ const RadioInput = styled.input`
       color: white;
     }
     + ${LongOvalRadioLabel} {
-      border: 2px solid var(--primary-color);
+      border: 1px solid var(--primary-color);
       color: var(--black-color);
     }
   }

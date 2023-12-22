@@ -5,7 +5,9 @@ type ColorType =
   | 'gray'
   | 'black'
   | 'white'
-  | 'lightGray';
+  | 'lightGray'
+  | 'lightGray01'
+  | 'inputText';
 
 const getColorValue = (color: ColorType) => {
   switch (color) {
@@ -22,7 +24,11 @@ const getColorValue = (color: ColorType) => {
     case 'white':
       return '#FFFFFF';
     case 'lightGray':
+      return '#BEBEBE';
+    case 'lightGray01':
       return 'var(--gray-light-01)';
+    case 'inputText':
+      return '#757575';
   }
 };
 

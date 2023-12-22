@@ -7,11 +7,12 @@ type Option = {
 };
 
 interface SelectBoxProps {
-  options: Option[];
+  ageOptions: Option[];
   onChange: (selectedValue: string) => void;
   placeholder: string;
   width: string;
   height: string;
+  // value: string;
 }
 
 const StyledSelect = styled.select<{
@@ -32,7 +33,7 @@ const StyledSelect = styled.select<{
 `;
 
 const SelectBox: React.FC<SelectBoxProps> = ({
-  options,
+  ageOptions,
   onChange,
   placeholder,
   width,
@@ -56,7 +57,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
       <option value="" disabled>
         {placeholder}
       </option>
-      {options.map((option) => (
+      {ageOptions.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}
         </option>
