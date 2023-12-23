@@ -10,12 +10,16 @@ import {
 import styled from 'styled-components';
 
 const FoodModal = () => {
-  const [selectedValue, setSelectedValue] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(true);
-
+  const [selectedValue, setSelectedValue] = useState('');
   const [foodItems, setFoodItems] = useState([
     { id: 1, food: '', calorie: '' },
   ]);
+
+  // 입력창
+  const [food, setFood] = useState('');
+  const [calorie, setCalorie] = useState('');
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -40,6 +44,14 @@ const FoodModal = () => {
     list[index][e.target.id] = e.target.value;
     setFoodItems(list);
   };
+
+  const handleFoodChange = (value: string | number) => {
+    setFood(value)
+  }
+  const handleCalorieChange = (value: string | number) => {
+    setCalorie(value)
+  }
+
 
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
@@ -116,8 +128,8 @@ const FoodModal = () => {
                     placeholder="음식 이름을 입력하세요."
                     width="40%"
                     height="30px"
-                    value={item.food}
-                    onChange={(e) => handleChange(index, e)}
+                    value={food}
+                    onChange={handleFoodChange}
                     id="food"
                   />
                   <Input
@@ -125,8 +137,8 @@ const FoodModal = () => {
                     placeholder="칼로리를 입력하세요."
                     width="40%"
                     height="30px"
-                    value={item.calorie}
-                    onChange={(e) => handleChange(index, e)}
+                    value={calorie}
+                    onChange={handleCalorieChange}
                     id="calorie"
                   />
                   <p style={{ fontSize: '15px' }}>Kcal</p>
