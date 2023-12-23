@@ -96,8 +96,6 @@ const Register = () => {
   }, [email]);
 
   const handleEmailChange = (value: string | number) => {
-    //input에서 받아온 onchange값을 setEmail에 할당
-    //에러상태 true -> 에러메세지
     setEmail(value);
   };
 
@@ -147,13 +145,12 @@ const Register = () => {
           height="40px"
           value={email}
           onChange={handleEmailChange}
-        //   errorMessage={'유효성 검사 멘트'}
+          errorMessage={
+            !emailValid && email.length > 0
+              ? '올바른 이메일 형식으로 입력해주세요.'
+              : undefined
+          }
         />
-        <div className="errorMessageWrap">
-          {!emailValid && email.length > 0 && (
-            <div>올바른 이메일 형식으로 입력해주세요.</div>
-          )}
-        </div>
         <Input
           type="password"
           name="password"
@@ -162,12 +159,12 @@ const Register = () => {
           height="40px"
           value={pw}
           onChange={handlePwChange}
+          errorMessage={
+            !pwValid && pw.length > 0
+              ? '8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.'
+              : undefined
+          }
         />
-        <div className="errorMessageWrap">
-          {!pwValid && pw.length > 0 && (
-            <div>8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.</div>
-          )}
-        </div>
         <Input
           type="password"
           name="password-confirm"
@@ -176,12 +173,12 @@ const Register = () => {
           height="40px"
           value={pwConfirm}
           onChange={handlePwConfirmChange}
+          errorMessage={
+            !pwCheck && pwConfirm.length > 0
+              ? '동일한 비밀번호인지 확인해주세요.'
+              : undefined
+          }
         />
-        <div className="errorMessageWrap">
-          {!pwCheck && pwConfirm.length > 0 && (
-            <div>동일한 비밀번호인지 확인해주세요.</div>
-          )}
-        </div>
         <RadioButtonContainer>
           <RadioButton info={radioGenderButtonInfo} />
         </RadioButtonContainer>
