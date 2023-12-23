@@ -62,7 +62,7 @@ const RadioLabel = styled.label<InputButtonInfo>`
   padding: 0.5rem 1rem;
   margin-bottom: 10px;
   margin-left: 5px;
-  &:nth-child(1) {
+  &:first-of-type {
     margin-left: 0px;
   }
 
@@ -146,6 +146,10 @@ const InputradioButtonBox = styled.div`
   display: flex;
   color: var(--white-background-color);
   cursor: pointer;
+  margin-left: 5px;
+  &:first-child {
+    margin-left: 0px;
+  }
 `;
 const CheckLabel = styled.label<InputButtonInfo>`
   width: ${(props) =>

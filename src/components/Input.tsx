@@ -36,6 +36,7 @@ interface StyledInputProps {
   height: string;
   textAlign?: string;
   onChange: (v: string | number) => void;
+  errorMessage?: string;
 }
 
 const Input = ({
@@ -47,6 +48,7 @@ const Input = ({
   height,
   textAlign,
   onChange,
+  errorMessage,
 }: StyledInputProps) => {
   return (
     <StyledInputWrapper width={width} height={height} textAlign={textAlign}>
@@ -59,6 +61,9 @@ const Input = ({
           onChange(e.target.value);
         }}
       />
+      <div className="errorMessageWrap">
+        {errorMessage && <div>{errorMessage}</div>}
+      </div>
     </StyledInputWrapper>
   );
 };
