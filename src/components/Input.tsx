@@ -10,7 +10,7 @@ const StyledInputWrapper = styled.div<{
   text-align: ${(props) => props.textAlign || 'left'};
 
   display: block; /* 블록 레벨 요소로 설정 */
-  margin: 10px auto; /* 가운데 정렬을 위한 스타일 */
+  margin: 22px auto; /* 가운데 정렬을 위한 스타일 */
 `;
 
 const StyledInput = styled.input`
@@ -25,6 +25,11 @@ const StyledInput = styled.input`
   &:focus {
     border: 1px solid #81d8d0;
   }
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  padding: 5px 0;
 `;
 
 interface StyledInputProps {
@@ -61,9 +66,7 @@ const Input = ({
           onChange(e.target.value);
         }}
       />
-      <div className="errorMessageWrap">
-        {errorMessage && <div>{errorMessage}</div>}
-      </div>
+      <ErrorMessage>{errorMessage && <div>{errorMessage}</div>}</ErrorMessage>
     </StyledInputWrapper>
   );
 };
