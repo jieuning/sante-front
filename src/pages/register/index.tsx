@@ -13,7 +13,7 @@ const StyledTitle = styled.h1`
   text-align: center;
   font-size: 25px;
   font-weight: bold;
-  padding: 50px 0;
+  padding: 50px 0 30px 0;
 `;
 
 const InputContainer = styled.div`
@@ -30,11 +30,6 @@ const ButtonContainer = styled.div`
 const RadioButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  text-align: center;
-  &:nth-child(1) {
-    margin-right: 5px; /* 원하는 값으로 조절 */
-  }
-  margin-top: 7px;
 `;
 
 const buttonInfo: DynamicButtonInfo = {
@@ -42,34 +37,14 @@ const buttonInfo: DynamicButtonInfo = {
   size: 'medium',
   text: '가입하기',
   fontWeight: 'bold',
-  onClick: () => console.log('Button clicked!'),
-};
-
-const radioGenderButtonInfo: InputButtonInfo = {
-  type: 'longOvalRadio',
-  size: 'long-oval',
-  value: [],
-  items: ['남성', '여성'],
-  backgroundColor: 'white',
-  border: 'primary',
-  color: 'inputText',
-  fontWeight: 'regular',
-  onChange: (selectedValue) => {
-    console.log('selectedValue:', selectedValue);
-    if (selectedValue === '남성') {
-      //남성에 대한 처리
-      console.log('남성');
-    } else {
-      //여성에 대한 처리
-      console.log('여성');
-    }
-  },
+  onClick: () => alert('가입이 완료되었습니다!'),
 };
 
 const Register = () => {
   const [email, setEmail] = useState<string | number>('');
   const [pw, setPw] = useState<string | number>('');
   const [pwConfirm, setPwConfirm] = useState('');
+  const [selectedValue, setSelectedValue] = useState(null);
 //   const [age, setAge] = useState('');
 
   const [emailValid, setEmailValid] = useState<boolean>(false);
@@ -130,6 +105,28 @@ const Register = () => {
   const handleAgeSelectChange = (selectedValue: string) => {
     //setAge 할 필요 없이 selectedValue에 선택한 나이가 이미 들어있음
     console.log('Selected value:', selectedValue);
+  };
+
+  const radioGenderButtonInfo: InputButtonInfo = {
+    type: 'longOvalRadio',
+    size: 'long-oval',
+    value: selectedValue,
+    items: ['남성', '여성'],
+    backgroundColor: 'white',
+    border: 'primary',
+    color: 'inputText',
+    fontWeight: 'regular',
+    onChange: (selectedGender) => {
+      console.log('selectedValue:', selectedGender);
+      setSelectedValue(selectedGender);
+      if (selectedGender === '남성') {
+        //남성에 대한 처리
+        console.log('남성');
+      } else {
+        //여성에 대한 처리
+        console.log('여성');
+      }
+    },
   };
 
   return (

@@ -26,6 +26,7 @@ const StyledSelect = styled.select<{
   border-radius: 10px;
   background: #fff;
   padding-left: 7px;
+  margin-top: 12px;
 
   &:focus {
     border: 1px solid #81d8d0;
