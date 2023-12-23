@@ -18,7 +18,7 @@ import useCheckboxHandler from '../hooks/useCheckboxHandler';
 type RoutineType = 'exercise' | 'food';
 interface RoutineCardProps {
   type: RoutineType;
-  isAll?: boolean;
+  isMain?: boolean;
   exerciseList?: Exercise[];
   foodList?: Food[] | undefined;
   date: Date;
@@ -32,7 +32,7 @@ const RoutineCard = ({
   exerciseList,
   foodList,
   date,
-  isAll,
+  isMain,
   onClickMore,
   onClickAdd,
   onClickEdit,
@@ -87,14 +87,14 @@ const RoutineCard = ({
       {type === 'exercise' && (
         <Title>
           <p>🏃 운동</p>
-          {!isAll && <DynamicButton info={buttonInfo} />}
-          {isAll && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
+          {isMain && <DynamicButton info={buttonInfo} />}
+          {!isMain && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
         </Title>
       )}
       {type === 'food' && (
         <Title>
           <p>🍚 식단</p>
-          {!isAll && <DynamicButton info={buttonInfo} />}
+          {!isMain && <DynamicButton info={buttonInfo} />}
         </Title>
       )}
       <Line />
@@ -184,7 +184,7 @@ const RoutineCard = ({
             ))}
           </ContentsContainer>
         ))}
-      {type === 'exercise' && !isAll && (
+      {type === 'exercise' && isMain && (
         <IconContainer onClick={onClickAdd}>
           <IoAddCircle
             type="button"
@@ -194,7 +194,7 @@ const RoutineCard = ({
           />
         </IconContainer>
       )}
-      {type === 'food' && !isAll && (
+      {type === 'food' && isMain && (
         <IconContainer onClick={onClickAdd}>
           <IoAddCircle
             type="button"
