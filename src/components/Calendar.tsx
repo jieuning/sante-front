@@ -3,47 +3,56 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { getMonth } from 'date-fns';
 import ColorChip from './ColorChip';
+import { Exercise, Food } from '../types/user';
 
-export interface Diet {
-  createdAt?: Date;
-  todayCalory?: number;
+// export interface Diet {
+//   createdAt?: Date;
+//   todayCalory?: number;
+// }
+
+// export interface Exercise {
+//   createdAt?: Date;
+//   isDone?: boolean;
+// }
+
+interface MonthCalendarProps {
+  exerciseList?: Exercise[] | undefined;
+  foodList?: Food[] | undefined;
 }
 
-export interface Exercise {
-  createdAt?: Date;
-  isDone?: boolean;
-}
+export const MonthCalendar = ({
+  exerciseList,
+  foodList,
+}: MonthCalendarProps) => {
+  // // 운동 테스트 데이터
+  // const exerciseDummyData: Exercise[] = [
+  //   { createdAt: new Date(), isDone: true },
+  //   { createdAt: new Date(), isDone: false },
+  //   { createdAt: new Date(), isDone: false },
+  //   { createdAt: new Date(), isDone: true },
+  // ];
 
-export const MonthCalendar = () => {
-  // 운동 테스트 데이터
-  const exerciseDummyData: Exercise[] = [
-    { createdAt: new Date(), isDone: true },
-    { createdAt: new Date(), isDone: false },
-    { createdAt: new Date(), isDone: false },
-    { createdAt: new Date(), isDone: true },
-  ];
+  // // 식단 테스트 데이터
+  // const dietDummyData: Diet[] = [
+  //   { createdAt: new Date(), todayCalory: 1500 },
+  //   { createdAt: new Date(), todayCalory: 1800 },
+  //   { createdAt: new Date(), todayCalory: 500 },
+  //   { createdAt: new Date(), todayCalory: 2300 },
+  // ];
 
-  // 식단 테스트 데이터
-  const dietDummyData: Diet[] = [
-    { createdAt: new Date(), todayCalory: 1500 },
-    { createdAt: new Date(), todayCalory: 1800 },
-    { createdAt: new Date(), todayCalory: 500 },
-    { createdAt: new Date(), todayCalory: 2300 },
-  ];
+  // // exerciseDummyData createdAt에 생성 날짜 + 1씩 증가
+  // exerciseDummyData.forEach((exercise, index) => {
+  //   const nextDay = new Date();
+  //   nextDay.setDate(nextDay.getDate() + index);
+  //   exercise.createdAt = nextDay;
+  // });
 
-  // exerciseDummyData createdAt에 생성 날짜 + 1씩 증가
-  exerciseDummyData.forEach((exercise, index) => {
-    const nextDay = new Date();
-    nextDay.setDate(nextDay.getDate() + index);
-    exercise.createdAt = nextDay;
-  });
-
-  // dietDummyData createdAt에 생성 날짜 + 1씩 증가
-  dietDummyData.forEach((diet, index) => {
-    const nextDay = new Date();
-    nextDay.setDate(nextDay.getDate() + index);
-    diet.createdAt = nextDay;
-  });
+  // // dietDummyData createdAt에 생성 날짜 + 1씩 증가
+  // dietDummyData.forEach((diet, index) => {
+  //   const nextDay = new Date();
+  //   nextDay.setDate(nextDay.getDate() + index);
+  //   diet.createdAt = nextDay;
+  // });
 
   const months: string[] = [
     '1',
@@ -67,32 +76,7 @@ export const MonthCalendar = () => {
     return (
       <>
         <span>{dayOfMonth}</span>
-        <ColorChipWrap>
-          {/* 운동 컬러칩 */}
-          {exerciseDummyData?.map((exercise: Exercise) => {
-            const currentDay = Number(
-              exercise.createdAt?.toString().slice(8, 10)
-            );
-            return currentDay === dayOfMonth ? (
-              <ColorChip
-                color={exercise.isDone ? '#8699FF' : 'transparent'}
-                borderColor="#8699FF"
-              />
-            ) : null;
-          })}
-          {/* 식단 컬러칩 */}
-          {dietDummyData?.map((diet: Diet) => {
-            const currentDay = Number(diet.createdAt?.toString().slice(8, 10));
-            const todayCalory = diet.todayCalory;
-            return currentDay === dayOfMonth ? (
-              <ColorChip
-                color={
-                  todayCalory && todayCalory >= 1800 ? '#97F39A' : '#F39797'
-                }
-              />
-            ) : null;
-          })}
-        </ColorChipWrap>
+        <ColorChipWrap></ColorChipWrap>
       </>
     );
   };

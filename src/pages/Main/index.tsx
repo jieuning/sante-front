@@ -30,7 +30,10 @@ const Main = () => {
         <DateSelect />
         <Blank />
         <ContentsContainer>
-          <MonthCalendar />
+          <MonthCalendar
+            exerciseList={user?.userExerciseList}
+            foodList={user?.userFoodList}
+          />
           <CardContainer>
             <RoutineCard
               type="exercise"
