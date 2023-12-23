@@ -4,9 +4,14 @@ import Arrow from '../../components/icons/Arrow';
 import RoutineCard from '../../components/RoutineCard';
 import styled from 'styled-components';
 import { useState } from 'react';
+import useUserModel from '../../hooks/useUserModel';
+
+const TODAY = '2023-12-08';
 
 const List = () => {
   const [selectedValue, setSelectedValue] = useState('');
+  const today = new Date(TODAY); // 현재 날짜를 가져옵니다.
+  const user = useUserModel(today);
 
   const radioCategoryButtonInfo: InputButtonInfo = {
     type: 'shortOvalRadio',
@@ -47,12 +52,14 @@ const List = () => {
         </div>
       </WeeklyContainer>
 
-      <RoutineCard
-        type="exercise"
-        // exerciseList={user?.userExerciseList}
-        date={new Date()}
-        onClickEdit={() => console.log('edit click')}
-      ></RoutineCard>
+      <RoutineCardContainer>
+        <RoutineCard
+          type="exercise"
+          exerciseList={user?.userExerciseList}
+          date={new Date(TODAY)}
+          onClickEdit={() => console.log('edit click')}
+        ></RoutineCard>
+      </RoutineCardContainer>
     </>
   );
 };
@@ -73,5 +80,9 @@ const DateBox = styled.p`
   font-size: 25px;
   font-weight: bold;
   margin: 0 10px;
+`;
+const RoutineCardContainer = styled.div`
+  width: 50%;
+  margin: auto;
 `;
 export default List;
