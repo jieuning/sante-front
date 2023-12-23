@@ -13,25 +13,26 @@ import {
   InputButtonInfo,
 } from '../../components/RadioButton';
 import { addMonths, subMonths, isAfter, isBefore, format } from 'date-fns';
+import { Exercise } from '../../types/user';
 
-const checkButtonInfo: InputButtonInfo = {
-  type: 'checkbox',
-  size: 'circle',
-  backgroundColor: 'gray',
-  color: 'white',
-  fontWeight: 'bold',
-  value: [],
-  items: ['월', '화', '수', '목', '금', '토', '일'],
-  onClick: () => {
-    // 버튼 클릭 처리
-    console.log('버튼이 클릭되었습니다!');
-  },
-};
+interface ExerciseModalProps {
+  info?: Exercise[];
+}
 
-let hours = [];
-for (let i = 1; i <= 12; i++) {
-  hours.push({ value: `${i}시간`, label: `${i}시간` });
-} //useMemo
+const hours = [
+  { value: '1시간', label: '1시간' },
+  { value: '2시간', label: '2시간' },
+  { value: '3시간', label: '3시간' },
+  { value: '4시간', label: '4시간' },
+  { value: '5시간', label: '5시간' },
+  { value: '6시간', label: '6시간' },
+  { value: '7시간', label: '7시간' },
+  { value: '8시간', label: '8시간' },
+  { value: '9시간', label: '9시간' },
+  { value: '10시간', label: '10시간' },
+  { value: '11시간', label: '11시간' },
+  { value: '12시간', label: '12시간' },
+];
 
 const minutes = [
   { value: '0분', label: '0분' },
@@ -41,12 +42,35 @@ const minutes = [
   { value: '40분', label: '40분' },
   { value: '50분', label: '50분' },
 ];
-const ExerciseModal = () => {
+
+const ExerciseModal = ({ info }: ExerciseModalProps) => {
+  const [inputValue, setInputValue] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
+  const [selectHour, setSelectHour] = useState<string>('0시간');
+  const [selectMinutes, setSelectMinutes] = useState<string>('0분');
+  const [repeatDays, setRepeatDays] = useState<string[]>([]);
+  // const [isCreate, setIsCreate] = useState(false);
   const today = new Date();
   const minDate = subMonths(today, 1);
   const maxDate = addMonths(today, 1);
+
+  const checkButtonInfo: InputButtonInfo = {
+    type: 'checkbox',
+    size: 'circle',
+    backgroundColor: 'gray',
+    color: 'white',
+    fontWeight: 'bold',
+    value: repeatDays,
+    items: ['월', '화', '수', '목', '금', '토', '일'],
+    onClick: () => {
+      console.log('버튼이 클릭되었습니다!');
+    },
+    onChange: (e) => {
+      console.log('상태가 변경되었습니다:', e.target.value);
+    },
+  };
+
   // const todayString = format(today, 'yyyy.MM.dd부터~ 지정일까지');
 
   // eslint-disable-next-line react/display-name
@@ -57,7 +81,7 @@ const ExerciseModal = () => {
       onClick={onClick}
       ref={ref}
     >
-      {value ? value : '오늘부터 ~ 지정일까지'}
+      {value ? value : <GrayStyledSpan>오늘부터 ~ 지정일까지</GrayStyledSpan>}
     </StyledButton>
   ));
 
@@ -66,7 +90,7 @@ const ExerciseModal = () => {
       Custom Clear
     </button>
   );
-
+  console.log('dateRange2', dateRange, 'start', startDate, 'end', endDate);
   return (
     <div>
       <ModalCard
@@ -75,21 +99,27 @@ const ExerciseModal = () => {
           <>
             <InputStyledDiv>
               <Input
+                name="exerciseName"
                 width="80%"
                 height="4.5rem"
                 placeholder="운동 이름을 입력하세요"
+                value={inputValue}
+                onChange={(value) => {
+                  setInputValue(value);
+                  console.log(inputValue);
+                }}
               />
             </InputStyledDiv>
             <br />
           </>
         }
-        modalButton={true}
+        modalButton={(info && true) || false}
       >
         <FlexStyleDiv>
-          <SelectStyleDiv>
+          <RadioStyleDiv>
             <StyledLabel>반복</StyledLabel>
             <CheckButton info={checkButtonInfo} />
-          </SelectStyleDiv>
+          </RadioStyleDiv>
           <SelectStyleDiv>
             <StyledLabel>기간</StyledLabel>
             <CustomDatePickerWrapper>
@@ -100,6 +130,7 @@ const ExerciseModal = () => {
                 endDate={endDate}
                 onChange={(update: SetStateAction<null[]>) => {
                   setDateRange(update);
+                  console.log('dateRange', dateRange);
                 }}
                 minDate={minDate}
                 maxDate={maxDate}
@@ -109,43 +140,51 @@ const ExerciseModal = () => {
               />
             </CustomDatePickerWrapper>
           </SelectStyleDiv>
-          <br />
           <SelectStyleDiv>
             <StyledLabel>시간</StyledLabel>
             <MarginSetDiv>
               <SelectBox
-                options={hours}
+                ageOptions={hours}
                 placeholder="1시간"
                 width="100%"
                 height="4.5rem"
-                onChange={(event) => console.log(event)}
+                onChange={(targetValue) => {
+                  setSelectHour(targetValue);
+                  console.log(selectHour);
+                }}
               />
             </MarginSetDiv>
             <SelectBox
-              options={minutes}
+              ageOptions={minutes}
               placeholder="30분"
               width="35%"
               height="4.5rem"
-              onChange={(event) => console.log(event)}
+              onChange={(targetValue) => {
+                setSelectMinutes(targetValue);
+                console.log(selectMinutes);
+              }}
             />
           </SelectStyleDiv>
-          <SpacingDiv></SpacingDiv>
         </FlexStyleDiv>
       </ModalCard>
     </div>
   );
 };
 
+const GrayStyledSpan = styled.span`
+  color: var(--gray-color);
+`;
+
 const CustomDatePickerWrapper = styled.div`
-  .react-datepicker {
-    width: 30rem;
-    height: auto;
-    font-size: 1rem;
-  }
+  // .react-datepicker {
+  //   width: 30rem;
+  //   height: auto;
+  //   font-size: 1rem;
+  // }
 `;
 
 const StyledButton = styled.button`
-  width: 100%;
+  width: 22vw;
   height: 4.5rem;
   border: 1px solid #bebebe;
   outline: none;
@@ -162,7 +201,7 @@ const SpacingDiv = styled.div``;
 
 const MarginSetDiv = styled.span`
   width: 35%;
-  margin-right: 2rem;
+  margin-right: 1rem;
 `;
 
 const InputStyledDiv = styled.div`
@@ -185,14 +224,19 @@ const FlexStyleDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 3rem;
+`;
+const RadioStyleDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const SelectStyleDiv = styled.div`
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 83%;
   justify-content: center;
-  margin-bottom: 1rem;
 `;
 
 export default ExerciseModal;
