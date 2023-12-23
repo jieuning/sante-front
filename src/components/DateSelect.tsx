@@ -1,42 +1,46 @@
 import {
-  startOfMonth,
-  endOfMonth,
-  eachWeekOfInterval,
+  startOfWeek,
   format,
   addDays,
   getDay,
+  subWeeks,
+  addWeeks,
 } from 'date-fns';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { SlArrowLeft } from 'react-icons/sl';
 
 export const DateSelect = () => {
-  const [selectedDay, setSelectedDay] = useState<Date>(new Date());
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
   const oneWeek: string[] = ['일', '월', '화', '수', '목', '금', '토'];
 
-  const day = getDay(selectedDay);
+  const day = getDay(currentDate);
   const currentDayName = oneWeek[day];
 
   //해당 월의 주를 arr로 반환해줌
   //하지만 주를 전부 반환하는게 아니라 주의 첫번째 날짜(일요일)만 반환해줌..
-  const eachWeek = eachWeekOfInterval({
-    start: startOfMonth(new Date()),
-    end: endOfMonth(new Date()),
-  });
+  //해당 주의 날짜를 추가해 줘야함
+  const currentWeek = startOfWeek(currentDate);
 
   //날짜 클릭 이벤트
   const handleDayOnClick = (day: Date) => {
-    setSelectedDay(day);
+    setCurrentDate(day);
   };
 
-  console.log(selectedDay);
+  const handlePrevWeek = () => {
+    setCurrentDate(subWeeks(currentDate, 1));
+  };
+
+  const handleNextWeek = () => {
+    setCurrentDate(addWeeks(currentDate, 1));
+  };
 
   // 날짜 클릭시 해당 날짜 배경색 변경
   const getDayStyle = (day: Date) => {
     const isClicked =
-      selectedDay &&
-      format(selectedDay, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd');
+      currentDate &&
+      format(currentDate, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd');
     return {
       backgroundColor: isClicked
         ? 'var(--primary-color)'
@@ -47,32 +51,30 @@ export const DateSelect = () => {
   return (
     <DateSelectContainer>
       <DateTitle>
-        {format(selectedDay, `yyyy.MM.dd.${currentDayName}`)}
+        {format(currentDate, `yyyy.MM.dd.${currentDayName}`)}
       </DateTitle>
       <DateSelectWrap>
         {/* 네비게이션 버튼 */}
-        <Button arrowRight />
-        <Button arrowLeft rotation={180} />
+        <Button arrowRight onClick={handlePrevWeek} />
+        <Button arrowLeft rotation={180} onClick={handleNextWeek} />
         <DayOfMonthWrap>
-          {eachWeek.map((week, index) => (
-            <WeekOfMonth key={index}>
-              {oneWeek.map((_, dayIndex) => {
-                // 주에 dayIndex 만큼 날짜를 추가해 줌
-                // dayOfWeek가 일주일(7일)이기 때문에 7번 추가
-                const addDate = addDays(week, dayIndex);
-                return (
-                  <Day
-                    key={addDate.getTime()}
-                    style={getDayStyle(addDate)}
-                    onClick={() => handleDayOnClick(addDate)}
-                  >
-                    {/* 날짜만 렌더링 */}
-                    {format(addDate, 'd')}
-                  </Day>
-                );
-              })}
-            </WeekOfMonth>
-          ))}
+          <WeekOfMonth>
+            {oneWeek.map((week, index) => {
+              // 주에 dayIndex 만큼 날짜를 추가해 줌
+              // dayOfWeek가 일주일(7일)이기 때문에 7번 추가
+              const addDate = addDays(currentWeek, index);
+              return (
+                <Day
+                  key={addDate.getTime()}
+                  style={getDayStyle(addDate)}
+                  onClick={() => handleDayOnClick(addDate)}
+                >
+                  {/* 날짜만 렌더링 */}
+                  {format(addDate, 'd')}
+                </Day>
+              );
+            })}
+          </WeekOfMonth>
         </DayOfMonthWrap>
       </DateSelectWrap>
       <OneWeek>
@@ -140,7 +142,7 @@ const Day = styled.li`
   transition: all 0.4s;
 
   &:hover {
-    background-color: var(--primary-color);
+    background-color: var(--primary-color) !important;
   }
 `;
 
