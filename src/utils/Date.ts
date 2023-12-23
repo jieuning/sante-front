@@ -252,5 +252,8 @@ export {
   getMonthlyCaloryTotalStatistic,
   filterExerciseListByDateRange,
   filterFoodListByDateRange,
+  packingScheduledDate,
+  packingFoodList,
 };
+
 export type { ExerciseType };
