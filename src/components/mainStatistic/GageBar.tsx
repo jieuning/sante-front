@@ -12,7 +12,7 @@ interface GageProps {
   color?: string;
 }
 
-type GageStatus = {
+type GageStatusProp = {
   color: string;
   gageStatus: number;
 };
@@ -53,7 +53,7 @@ const Progress = styled.div`
   border-radius: 2rem;
 `;
 
-const GageStatus = styled.div<GageStatus>`
+const GageStatus = styled.div<GageStatusProp>`
   background-color: ${({ color }) => color};
   width: ${({ gageStatus }) => gageStatus + '%'};
   height: 100%;
