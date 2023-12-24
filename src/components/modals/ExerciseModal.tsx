@@ -70,7 +70,6 @@ const ExerciseModal = ({ info }: ExerciseModalProps) => {
       console.log('상태가 변경되었습니다:', e.target.value);
     },
   };
-
   // const todayString = format(today, 'yyyy.MM.dd부터~ 지정일까지');
 
   // eslint-disable-next-line react/display-name
@@ -176,11 +175,70 @@ const GrayStyledSpan = styled.span`
 `;
 
 const CustomDatePickerWrapper = styled.div`
-  // .react-datepicker {
-  //   width: 30rem;
-  //   height: auto;
-  //   font-size: 1rem;
-  // }
+  position: relative;
+  .react-datepicker {
+    transform: scale(1.4);
+    transform-origin: top left; 
+    position: absolute;
+    top: 100%; // 적절한 값으로 조정
+    left: 0; // 적절한 값으로 조정
+
+   
+  }
+
+  .react-datepicker__triangle,
+  .react-datepicker__triangle::before,
+  .react-datepicker__triangle::after {
+    display: none;
+  }
+
+  .react-datepicker input {
+    position: static;
+    transform: scale(0.833);
+    transform-origin: left center;
+  }
+
+  .react-datepicker__navigation {
+    transform: scale(0.5);
+  }
+
+  .react-datepicker__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    background-color: transparent;
+    border: none;
+  }
+
+  .react-datepicker__day:hover {
+    background-color: var(--secondary-purple-color);
+  }
+
+  .react-datepicker__current-month {
+    position: relative;
+    top: 0.3rem;
+  }
+
+  .react-datepicker__close-icon:: after{
+    background-color: var(--primary-color)
+  }
+
+  .react-datepicker__day--keyboard-selected,
+  .react-datepicker__day--in-range {
+    background-color: var(--primary-color);
+  }
+
+  .react-datepicker__day--outside-month {
+    color: #ababab !important;
+  }
+  .react-datepicker__day--keyboard-selected {
+   color: white;
+  }
+
+
+  }
 `;
 
 const StyledButton = styled.button`
@@ -197,7 +255,6 @@ const StyledButton = styled.button`
     border: 1px solid #81d8d0;
   }
 `;
-const SpacingDiv = styled.div``;
 
 const MarginSetDiv = styled.span`
   width: 35%;
