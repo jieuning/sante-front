@@ -10,6 +10,8 @@ import styled from 'styled-components';
 import { format } from 'date-fns';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import Header from '../../components/Header';
+import MonthlyDateSelector from '../../components/MonthlyDateSelector';
+import useMonthlyDateHandler from '../../hooks/useMonthlyDateHandler';
 //TODO - 여기서 백분율 계산해서 Card에 보내야함
 
 type ObjectType = {
@@ -20,15 +22,16 @@ const Statistic = () => {
   const user = useUserModel(new Date('2023-12-01'), new Date('2023-12-23'));
   const [exerciseRateList, setExerciseRateList] = useState<ObjectType>();
   const [exerciseCntList, setExerciseCntList] = useState<ObjectType>();
-  const [targetDate, setTargetDate] = useState<Date>(new Date());
+  const { targetDate, onLeftClick, onRightClick } = useMonthlyDateHandler(
+    new Date('2023-12-08')
+  );
   const [caloryList, setCaloryList] = useState<ObjectType>();
-  const arr = [100, 60, 30, 10, 50];
 
   //여기서 비율 + 총 평균치 구해서 Card에 보내야함
   useEffect(() => {
     const rate = getMonthlyExerciseRateStatistic(
       user?.userExerciseList,
-      new Date('2023-12-08'),
+      targetDate,
       'rate'
     );
 
@@ -38,31 +41,32 @@ const Statistic = () => {
 
     const cnt = getMonthlyExerciseRateStatistic(
       user?.userExerciseList,
-      new Date('2023-12-08'),
+      targetDate,
       'cnt'
     );
-    console.log(cnt?.list);
+    console.log();
     if (cnt) {
       setExerciseCntList(cnt);
     }
 
     const fst = getMonthlyCaloryTotalStatistic(
       user?.userFoodList,
-      new Date('2023-12-08')
+      targetDate,
+      25
     );
     console.log(cnt);
     setCaloryList(fst);
-  }, [user]);
+  }, [user, targetDate]);
 
   return (
     <>
       <Header />
       <Container>
-        <Title>
-          <IoChevronBack cursor="pointer" />
-          {format(targetDate, 'yyyy.MM')}
-          <IoChevronForward cursor="pointer" />
-        </Title>
+        <MonthlyDateSelector
+          targetDate={targetDate}
+          onLeftClick={onLeftClick}
+          onRightClick={onRightClick}
+        />
         <ContentsContainer>
           <Title>🏃 운동 통계</Title>
           <CardContainer>
