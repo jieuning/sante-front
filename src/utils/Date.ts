@@ -114,7 +114,8 @@ const getMonthlyExerciseRateStatistic = (
 
 const getMonthlyCaloryTotalStatistic = (
   userFoodList: Food[] | undefined,
-  targetDate: Date
+  targetDate: Date,
+  targetDayCount: number
 ) => {
   if (userFoodList === undefined) {
     return;
@@ -128,6 +129,7 @@ const getMonthlyCaloryTotalStatistic = (
   let maxMonthlyCaloryTotal = 0;
   let dayCount = 0;
   let max = 0;
+  let allCalory = 0;
   for (let i = 1; i <= lastDay; i++) {
     const thisDay = new Date(
       targetDate.getFullYear(),
@@ -153,6 +155,7 @@ const getMonthlyCaloryTotalStatistic = (
       if (Math.ceil(maxMonthlyCaloryTotal / dayCount) > max) {
         max = Math.ceil(maxMonthlyCaloryTotal / dayCount);
       }
+      allCalory += packedFoodList.get(format(thisDay, 'yyyy-MM-dd')) ?? 0;
 
       statistic[weekIndex] = {
         week: currWeek,
@@ -172,7 +175,7 @@ const getMonthlyCaloryTotalStatistic = (
 
   return {
     list: list,
-    result: Math.ceil(max / today.getDate()),
+    result: Math.ceil(allCalory / targetDayCount),
   };
 };
 
