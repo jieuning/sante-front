@@ -5,16 +5,6 @@ import { getMonth } from 'date-fns';
 import ColorChip from './ColorChip';
 import { Exercise, Food } from '../types/user';
 
-// export interface Diet {
-//   createdAt?: Date;
-//   todayCalory?: number;
-// }
-
-// export interface Exercise {
-//   createdAt?: Date;
-//   isDone?: boolean;
-// }
-
 interface MonthCalendarProps {
   exerciseList?: Exercise[] | undefined;
   foodList?: Food[] | undefined;
@@ -24,35 +14,8 @@ export const MonthCalendar = ({
   exerciseList,
   foodList,
 }: MonthCalendarProps) => {
-  // // 운동 테스트 데이터
-  // const exerciseDummyData: Exercise[] = [
-  //   { createdAt: new Date(), isDone: true },
-  //   { createdAt: new Date(), isDone: false },
-  //   { createdAt: new Date(), isDone: false },
-  //   { createdAt: new Date(), isDone: true },
-  // ];
-
-  // // 식단 테스트 데이터
-  // const dietDummyData: Diet[] = [
-  //   { createdAt: new Date(), todayCalory: 1500 },
-  //   { createdAt: new Date(), todayCalory: 1800 },
-  //   { createdAt: new Date(), todayCalory: 500 },
-  //   { createdAt: new Date(), todayCalory: 2300 },
-  // ];
-
-  // // exerciseDummyData createdAt에 생성 날짜 + 1씩 증가
-  // exerciseDummyData.forEach((exercise, index) => {
-  //   const nextDay = new Date();
-  //   nextDay.setDate(nextDay.getDate() + index);
-  //   exercise.createdAt = nextDay;
-  // });
-
-  // // dietDummyData createdAt에 생성 날짜 + 1씩 증가
-  // dietDummyData.forEach((diet, index) => {
-  //   const nextDay = new Date();
-  //   nextDay.setDate(nextDay.getDate() + index);
-  //   diet.createdAt = nextDay;
-  // });
+  console.log(exerciseList);
+  console.log(foodList);
 
   const months: string[] = [
     '1',
@@ -72,11 +35,32 @@ export const MonthCalendar = ({
   const currentMonth = getMonth(new Date());
   const currentMonthName = months[currentMonth];
 
-  const renderCustomDayContents = (dayOfMonth?: number) => {
+  const renderCustomDayContents = (dayOfMonth: number) => {
+    const exerciseColorChips = exerciseList?.flatMap((exercise) => {
+      return exercise.scheduledDate?.flatMap((scheduled) => {
+        const currentDay = Number(scheduled.date?.toString().slice(8, 10));
+        return currentDay === dayOfMonth ? (
+          <ColorChip
+            color={scheduled.isDone ? '#8699FF' : 'transparent'}
+            borderColor="#8699FF"
+          />
+        ) : null;
+      });
+    });
+
+    // const foodColorChips = dietDummyData?.map((food) => {
+    //   const currentDay = Number(food.createdAt?.toString().slice(8, 10));
+    //   const todayCalory = food.todayCalory;
+    //   return currentDay === dayOfMonth ? (
+    //     <ColorChip
+    //       color={todayCalory && todayCalory >= 1800 ? '#97F39A' : '#F39797'}
+    //     />
+    //   ) : null;
+    // });
     return (
       <>
         <span>{dayOfMonth}</span>
-        <ColorChipWrap></ColorChipWrap>
+        <ColorChipWrap>{exerciseColorChips}</ColorChipWrap>
       </>
     );
   };
