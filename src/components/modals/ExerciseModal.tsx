@@ -43,31 +43,75 @@ const minutes = [
   { value: '50분', label: '50분' },
 ];
 
+const exerciseList: Exercise[] = [
+  {
+    exerciseName: '운동1',
+    exerciseId: 'abc1',
+    exerciseStartDate: new Date('2023-9-18'),
+    exerciseEndDate: new Date('2024-1-25'),
+    repeatDate: ['월', '수'],
+    scheduledDate: [
+      { date: new Date('2023-11-30'), isDone: false },
+      { date: new Date('2023-12-02'), isDone: true },
+      { date: new Date('2023-12-03'), isDone: false },
+    ],
+  },
+  {
+    exerciseName: '운동2',
+    exerciseId: 'abc13',
+    exerciseStartDate: new Date('2023-9-18'),
+    exerciseEndDate: new Date('2024-1-25'),
+    repeatDate: ['월', '수'],
+    scheduledDate: [
+      { date: new Date('2023-11-30'), isDone: true },
+      { date: new Date('2023-12-02'), isDone: true },
+      { date: new Date('2023-12-03'), isDone: false },
+    ],
+  },
+  // 다른 운동
+];
+
 const ExerciseModal = ({ info }: ExerciseModalProps) => {
   const [inputValue, setInputValue] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
   const [selectHour, setSelectHour] = useState<string>('0시간');
   const [selectMinutes, setSelectMinutes] = useState<string>('0분');
-  const [repeatDays, setRepeatDays] = useState<string[]>([]);
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
   // const [isCreate, setIsCreate] = useState(false);
   const today = new Date();
   const minDate = subMonths(today, 1);
   const maxDate = addMonths(today, 1);
 
+  const items = ['월', '화', '수', '목', '금', '토', '일'];
   const checkButtonInfo: InputButtonInfo = {
     type: 'checkbox',
     size: 'circle',
     backgroundColor: 'gray',
     color: 'white',
     fontWeight: 'bold',
-    value: repeatDays,
-    items: ['월', '화', '수', '목', '금', '토', '일'],
+    value: selectedDays,
+    items: items,
     onClick: () => {
-      console.log('버튼이 클릭되었습니다!');
+      // 매일 버튼 클릭 처리 로
     },
-    onChange: (e) => {
-      console.log('상태가 변경되었습니다:', e.target.value);
+    onChange: (day) => {
+      console.log('whatday', day);
+
+      if (selectedDays.includes(day)) {
+        setSelectedDays(
+          selectedDays.filter((selectedDay) => selectedDay !== day)
+        );
+      } else {
+        const daysOfWeek = ['월', '화', '수', '목', '금', '토', '일'];
+
+        if (daysOfWeek.includes(day)) {
+          console.log(`${day} 들어갔다`);
+          setSelectedDays([...selectedDays, day]);
+        }
+      }
+
+      console.log('=====selected====', selectedDays);
     },
   };
   // const todayString = format(today, 'yyyy.MM.dd부터~ 지정일까지');
@@ -117,7 +161,10 @@ const ExerciseModal = ({ info }: ExerciseModalProps) => {
         <FlexStyleDiv>
           <RadioStyleDiv>
             <StyledLabel>반복</StyledLabel>
-            <CheckButton info={checkButtonInfo} />
+            <CheckButton
+              info={checkButtonInfo}
+              style={{ backgroundColor: 'blue' }}
+            />
           </RadioStyleDiv>
           <SelectStyleDiv>
             <StyledLabel>기간</StyledLabel>
