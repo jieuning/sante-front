@@ -58,7 +58,7 @@ const getButtonSize = (size: ButtonSize) => {
       return {
         width: '18.75rem',
         height: '6.62rem',
-        fontSize: 'var(--font-size-large)',
+        fontSize: '16px',
       };
     case 'xlarge':
       return {

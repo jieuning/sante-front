@@ -5,7 +5,8 @@ import Home from '../pages/home/Home';
 import Statistic from '../pages/Statistic';
 import Main from '../pages/Main';
 import Login from '../pages/login';
-import List from '../pages/List'
+import List from '../pages/List';
+import Intro from '../pages/intro';
 const AppRoutes = () => (
   <Router>
     <GlobalStyles />
@@ -16,6 +17,7 @@ const AppRoutes = () => (
       <Route path="/main" element={<Main />} />
       <Route path="/login" element={<Login />} />
       <Route path="/list" element={<List />} />
+      <Route path="/intro" element={<Intro />} />
     </Routes>
   </Router>
 );

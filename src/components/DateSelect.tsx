@@ -6,13 +6,20 @@ import {
   subWeeks,
   addWeeks,
 } from 'date-fns';
-import { useState } from 'react';
 import styled from 'styled-components';
 import { SlArrowLeft } from 'react-icons/sl';
 
-export const DateSelect = () => {
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+interface DateSelectProps {
+  currentDate: Date;
+  setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
+  onClick: (e?: any) => void;
+}
 
+export const DateSelect = ({
+  currentDate,
+  setCurrentDate,
+  onClick,
+}: DateSelectProps) => {
   const oneWeek: string[] = ['일', '월', '화', '수', '목', '금', '토'];
 
   const day = getDay(currentDate);
@@ -22,11 +29,6 @@ export const DateSelect = () => {
   //하지만 주를 전부 반환하는게 아니라 주의 첫번째 날짜(일요일)만 반환해줌..
   //해당 주의 날짜를 추가해 줘야함
   const currentWeek = startOfWeek(currentDate);
-
-  //날짜 클릭 이벤트
-  const handleDayOnClick = (day: Date) => {
-    setCurrentDate(day);
-  };
 
   const handlePrevWeek = () => {
     setCurrentDate(subWeeks(currentDate, 1));
@@ -67,7 +69,7 @@ export const DateSelect = () => {
                 <Day
                   key={addDate.getTime()}
                   style={getDayStyle(addDate)}
-                  onClick={() => handleDayOnClick(addDate)}
+                  onClick={() => onClick(addDate)}
                 >
                   {/* 날짜만 렌더링 */}
                   {format(addDate, 'd')}
