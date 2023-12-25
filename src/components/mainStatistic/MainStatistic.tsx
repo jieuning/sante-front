@@ -54,6 +54,46 @@ const MainStatistic = ({
   console.log('foodgage', foodGage);
   console.log('usercalory', userCalory);
 
+  const handleCalory = (userFoodData?: Food[]) => {
+    if (userFoodData) {
+      const todayFoods = userFoodData?.find((food: Food) => {
+        return isSameDay(today, new Date(food.createdAt));
+      });
+      if (todayFoods) {
+        const calculatedCalory = todayFoods.foodList.reduce(
+          (acc: number, item: FoodList) => {
+            console.log('item', item);
+            return acc + item.totalCalory;
+          },
+          0
+        );
+        setFoodGage(calculatedCalory);
+      }
+    }
+  };
+
+  const handleExercise = (userExerciseData?: Exercise[]) => {
+    if (userExerciseData) {
+      const scheduledDateOnlyArray = userExerciseData?.map((exercise) => {
+        return exercise.scheduledDate;
+      });
+      let totalExercise = 0;
+      let doneExercise = 0;
+
+      if (scheduledDateOnlyArray?.length) {
+        scheduledDateOnlyArray.forEach((exercise) => {
+          totalExercise += exercise?.length || 0;
+          const doneExerciseFiltered = exercise?.filter((data) => {
+            return data.isDone === true;
+          });
+          doneExercise = doneExerciseFiltered?.length || 0;
+        });
+      }
+      setExerciseMaxGage(totalExercise);
+      setExerciseGage(doneExercise);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       console.log('-------thisIsUser------', user);
@@ -61,44 +101,8 @@ const MainStatistic = ({
       const userFoodData = user.userFoodList;
       const userExerciseData = user.userExerciseList;
 
-      const handleCalory = () => {
-        const todayFoods = userFoodData.find((food: Food) => {
-          return isSameDay(today, new Date(food.createdAt));
-        });
-        if (todayFoods) {
-          const calculatedCalory = todayFoods.foodList.reduce(
-            (acc: number, item: FoodList) => {
-              console.log('item', item);
-              return acc + item.totalCalory;
-            },
-            0
-          );
-          setFoodGage(calculatedCalory);
-        }
-      };
-
-      const handleExercise = () => {
-        const scheduledDateOnlyArray = userExerciseData?.map((exercise) => {
-          return exercise.scheduledDate;
-        });
-        let totalExercise = 0;
-        let doneExercise = 0;
-
-        if (scheduledDateOnlyArray?.length) {
-          scheduledDateOnlyArray.forEach((exercise) => {
-            totalExercise += exercise?.length || 0;
-            const doneExerciseFiltered = exercise?.filter((data) => {
-              return data.isDone === true;
-            });
-            doneExercise = doneExerciseFiltered?.length || 0;
-          });
-        }
-        setExerciseMaxGage(totalExercise);
-        setExerciseGage(doneExercise);
-      };
-
-      handleCalory(); //TODO: 클릭했던 날짜 값 받아오기
-      handleExercise();
+      handleCalory(userFoodData); //TODO: 클릭했던 날짜 값 받아오기
+      handleExercise(userExerciseData);
     }
     console.log('--userCalory', userCalory);
     console.log('--food', foodGage);
@@ -113,13 +117,16 @@ const MainStatistic = ({
     onClick: () => console.log('Button clicked!'),
   };
 
+  const MIN_LIMIT = 80;
+  const MAX_LIMIT = 100;
+
   const handleCaloryGage = (currentGage: number) => {
     let newCaloryMood = { ...caloryMood };
-    if (currentGage >= 80 && currentGage <= 100) {
+    if (currentGage >= MIN_LIMIT && currentGage <= MAX_LIMIT) {
       newCaloryMood = caloryMoods.enough;
-    } else if (currentGage > 100) {
+    } else if (currentGage > MAX_LIMIT) {
       newCaloryMood = caloryMoods.tooMuch;
-    } else if (currentGage < 100) {
+    } else if (currentGage < MIN_LIMIT) {
       newCaloryMood = caloryMoods.notEnough;
     } else {
       newCaloryMood = { ...newCaloryMood, color: 'red' };
