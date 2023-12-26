@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import Input from '../../components/Input';
@@ -6,25 +6,60 @@ import {
   DynamicButton,
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
+import useUserLogin from './hooks/useUserLogin';
+import { User } from '../../types/user';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string | number>('');
+  const [password, setPassword] = useState<string | number>('');
 
-  const handleEmailChange = (event) => {
-    const newEmail = event.target.value;
-    setEmail(newEmail);
+  const [emailValid, setEmailValid] = useState<boolean>(false);
+  const [pwValid, setPwValid] = useState<boolean>(false);
+
+  const { onLoginButton } = useUserLogin();
+
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    console.log('Email:', email);
+    const emailRegex = /^\S+@\S+.\S+$/;
+    if (emailRegex.test(email)) {
+      setEmailValid(true);
+    } else {
+      setEmailValid(false);
+    }
+  }, [email]);
+
+  useEffect(() => {
+    console.log('Password:', password);
+    const pwRegex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (pwRegex.test(password)) {
+      setPwValid(true);
+    } else {
+      setPwValid(false);
+    }
+  }, [password]);
+
+  const handleEmailChange = (value: string | number) => {
+    setEmail(value);
   };
 
-  const handlePasswordChange = (event) => {
-    const newPassword = event.target.value;
-    setPassword(newPassword);
+  const handlePasswordChange = (value: string | number) => {
+    setPassword(value);
   };
 
-  const handleLogin = () => {
-    // 로그인 버튼 클릭 시 실행되는 로직을 추가하세요.
-    console.log('로그인 버튼이 클릭되었습니다.');
-    // 여기에 실제 로그인 로직을 구현하세요.
+  const handleLoginButton = () => {
+    let status = onLoginButton(email, password);
+    console.log('status', status);
+    if (status === 200) {
+      navigate('/main');
+    }
+  };
+
+  const handleRegisterButton = () => {
+    navigate('/register');
   };
 
   const buttonInfoLogin: DynamicButtonInfo = {
@@ -32,8 +67,7 @@ const Login = () => {
     size: 'medium',
     text: '로그인',
     fontWeight: 'bold',
-    margin: '10px',
-    onClick: handleLogin,
+    onClick: handleLoginButton,
   };
 
   const buttonInfoSignUp: DynamicButtonInfo = {
@@ -41,8 +75,7 @@ const Login = () => {
     size: 'medium',
     text: '회원가입',
     fontWeight: 'bold',
-    margin: '10px',
-    onClick: handleLogin,
+    onClick: handleRegisterButton,
   };
 
   return (
@@ -58,7 +91,11 @@ const Login = () => {
           height="40px"
           value={email}
           onChange={handleEmailChange}
-          errorMessage={'유효성 검사 멘트'}
+          errorMessage={
+            !emailValid && email.length > 0
+              ? '올바른 이메일 형식으로 입력해주세요.'
+              : undefined
+          }
         />
         <Input
           type="password"
@@ -68,6 +105,11 @@ const Login = () => {
           height="40px"
           value={password}
           onChange={handlePasswordChange}
+          errorMessage={
+            !pwValid && password.length > 0
+              ? '8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.'
+              : undefined
+          }
         />
         <StyledButton>
           <DynamicButton info={buttonInfoLogin} />

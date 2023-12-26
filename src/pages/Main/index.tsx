@@ -57,18 +57,15 @@ const Main = () => {
           />
           <Blank />
           {isModalExerciseOpen && (
-            <ExerciseModal
-              handleClick={() => {
-                setIsModalExerciseOpen(false);
-                console.log('하하하 나는 엑싯한다');
-              }}
-            ></ExerciseModal>
+            <ExerciseModal></ExerciseModal>
           )}
           {isModalFoodOpen && <FoodModal></FoodModal>}
           <ContentsContainer>
             <MonthCalendar
-              exerciseList={user?.userExerciseList}
-              foodList={user?.userFoodList}
+            exerciseList={user?.userExerciseList}
+            foodList={user?.userFoodList}
+            userData={user}
+            currentDate={currentDate}
             />
             <CardContainer>
               <RoutineCard
