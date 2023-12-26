@@ -14,33 +14,34 @@ import {
 } from '../../components/RadioButton';
 import { addMonths, subMonths, isAfter, isBefore, format } from 'date-fns';
 import { Exercise } from '../../types/user';
+import useButtonHandler from '../../hooks/useButtonHandlerExercise';
 
 interface ExerciseModalProps {
   // exercise?: Exercise;
 }
 
 const hours = [
-  { value: '1시간', label: '1시간' },
-  { value: '2시간', label: '2시간' },
-  { value: '3시간', label: '3시간' },
-  { value: '4시간', label: '4시간' },
-  { value: '5시간', label: '5시간' },
-  { value: '6시간', label: '6시간' },
-  { value: '7시간', label: '7시간' },
-  { value: '8시간', label: '8시간' },
-  { value: '9시간', label: '9시간' },
-  { value: '10시간', label: '10시간' },
-  { value: '11시간', label: '11시간' },
-  { value: '12시간', label: '12시간' },
+  { value: 1, label: '1시간' },
+  { value: 2, label: '2시간' },
+  { value: 3, label: '3시간' },
+  { value: 4, label: '4시간' },
+  { value: 5, label: '5시간' },
+  { value: 6, label: '6시간' },
+  { value: 7, label: '7시간' },
+  { value: 8, label: '8시간' },
+  { value: 9, label: '9시간' },
+  { value: 10, label: '10시간' },
+  { value: 11, label: '11시간' },
+  { value: 12, label: '12시간' },
 ];
 
 const minutes = [
-  { value: '0분', label: '0분' },
-  { value: '10분', label: '10분' },
-  { value: '20분', label: '20분' },
-  { value: '30분', label: '30분' },
-  { value: '40분', label: '40분' },
-  { value: '50분', label: '50분' },
+  { value: 0, label: '0분' },
+  { value: 10, label: '10분' },
+  { value: 20, label: '20분' },
+  { value: 30, label: '30분' },
+  { value: 40, label: '40분' },
+  { value: 50, label: '50분' },
 ];
 
 // const exercise: Exercise = {
@@ -48,6 +49,7 @@ const minutes = [
 //   exerciseId: 'abc1',
 //   exerciseStartDate: new Date('2023-9-18'),
 //   exerciseEndDate: new Date('2024-1-25'),
+//   exerciseTime: 60,
 //   repeatDate: ['월', '수'],
 //   scheduledDate: [
 //     { date: new Date('2023-11-30'), isDone: false },
@@ -84,29 +86,103 @@ const minutes = [
 //   // 다른 운동
 // ];
 
-const exercise = null;
-
 // { exercise }: ExerciseModalProps
 
-const ExerciseModal = () => {
+const ExerciseModal = (exercise?: Exercise) => {
   const [inputValue, setInputValue] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
-  const [selectHour, setSelectHour] = useState<string>('0시간');
-  const [selectMinutes, setSelectMinutes] = useState<string>('0분');
+  const [selectHour, setSelectHour] = useState<number>(0);
+  const [selectMinutes, setSelectMinutes] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState([]);
+  const days: Record<number, string> = {
+    0: '일',
+    1: '월',
+    2: '화',
+    3: '수',
+    4: '목',
+    5: '금',
+    6: '토',
+  };
 
-  const filterExercisesByName = (exercises: Exercise[], name: string) => {
-    return exercises.filter((exercise) => exercise.exerciseName === name);
+  const generateScheduledDates = (
+    startDate: Date,
+    endDate: Date,
+    repeatDays: string[]
+  ) => {
+    const scheduledDates: ScheduledDate[] = [];
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dayOfWeek = days[currentDate.getDay()];
+      const formattedDate = format(currentDate, 'yyyy-MM-dd');
+
+      if (repeatDays.includes(dayOfWeek)) {
+        scheduledDates.push({ date: new Date(formattedDate), isDone: false });
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+      console.log('currr', formattedDate);
+    }
+
+    return scheduledDates;
+  };
+  const handleButtonClick = () => {
+    const scheduleList: ScheduledDate[] = generateScheduledDates(
+      startDate,
+      endDate,
+      selectedDays
+    );
+
+    const payload = {
+      exerciseName: inputValue,
+      exerciseStartDate: new Date(startDate),
+      exerciseEndDate: new Date(endDate),
+      exerciseTime: timeToMinute({
+        exerciseHour: selectHour,
+        exerciseMinute: selectMinutes,
+      }),
+      repeatDate: selectedDays,
+      scheduledDate: scheduleList,
+    };
+    console.log('sccccheduleList', scheduleList);
+    console.log('paaayload', payload);
+
+    const { handleCreate } = useButtonHandler({ exercise: payload });
+    handleCreate();
+  };
+
+  // const filterExercisesByName = (exercises: Exercise[], name: string) => {
+  //   return exercises.filter((exercise) => exercise.exerciseName === name);
+  // };
+
+  const HOUR_IN_MINUTES = 60;
+  const divideMinutesAndHour = (exerciseTime: number) => {
+    const hour = Math.floor(exerciseTime / HOUR_IN_MINUTES);
+    const minutes = exerciseTime % HOUR_IN_MINUTES;
+    setSelectHour(hour);
+    setSelectMinutes(minutes);
+  };
+
+  type exerciseTimeProps = {
+    exerciseHour: number;
+    exerciseMinute: number;
+  };
+
+  const timeToMinute = ({
+    exerciseHour,
+    exerciseMinute,
+  }: exerciseTimeProps) => {
+    return exerciseHour * HOUR_IN_MINUTES + exerciseMinute;
   };
 
   // useEffect(() => {
-  // if (user) {
-  //   const userExerciseData = user.userExerciseList;
-  //   filterExercisesByName(userExerciseData);
-  // }
+  //   // if (user) {
+  //   //   const userExerciseData = user.userExerciseList;
+  //   //   filterExercisesByName(userExerciseData);
+  //   // }
 
-  // props로 전달된 data가 있을 경우, 해당 데이터를 input에 설정
+  //   // props로 전달된 data가 있을 경우, 해당 데이터를 input에 설정
   //   if (exercise?.exerciseId) {
   //     exercise?.exerciseName && setInputValue(exercise.exerciseName);
   //     const newDateRange = [
@@ -114,7 +190,8 @@ const ExerciseModal = () => {
   //       exercise.exerciseEndDate,
   //     ];
   //     setDateRange(newDateRange);
-  //     setSelectedDays(exercise.repeatDate); //시간이 없는데?
+  //     setSelectedDays(exercise.repeatDate);
+  //     divideMinutesAndHour(exercise.exerciseTime);
   //   } else {
   //     // 생성 모드에서는 빈 input으로 초기화
   //     setInputValue('');
@@ -162,6 +239,11 @@ const ExerciseModal = () => {
   };
   // const todayString = format(today, 'yyyy.MM.dd부터~ 지정일까지');
 
+  interface ScheduledDate {
+    date: Date;
+    isDone: boolean;
+  }
+
   // eslint-disable-next-line react/display-name
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <StyledButton
@@ -197,7 +279,17 @@ const ExerciseModal = () => {
             <br />
           </>
         }
-        modalButton={(exercise && true) || false}
+        onClickCreate={() => {
+          handleButtonClick();
+          console.log('created');
+        }}
+        onClickRemove={() => {
+          console.log('removed');
+        }}
+        onClickUpdate={() => {
+          console.log('updated');
+        }}
+        modalButton={exercise ? true : false}
       >
         <FlexStyleDiv>
           <RadioStyleDiv>
@@ -236,8 +328,8 @@ const ExerciseModal = () => {
                 width="100%"
                 height="4.5rem"
                 onChange={(targetValue) => {
-                  setSelectHour(targetValue);
-                  console.log(selectHour);
+                  setSelectHour(Number(targetValue));
+                  console.log('what is your type', typeof selectHour);
                 }}
                 externalValue={selectHour}
               />
@@ -248,7 +340,7 @@ const ExerciseModal = () => {
               width="35%"
               height="4.5rem"
               onChange={(targetValue) => {
-                setSelectMinutes(targetValue);
+                setSelectMinutes(Number(targetValue));
                 console.log(selectMinutes);
               }}
               externalValue={selectMinutes}
@@ -322,7 +414,8 @@ const CustomDatePickerWrapper = styled.div`
 
   .react-datepicker__day--outside-month {
     color: #ababab !important;
-  }
+  }import useButtonHandler from './../../hooks/useButtonHandler';
+
   .react-datepicker__day--keyboard-selected {
    color: white;
   }
