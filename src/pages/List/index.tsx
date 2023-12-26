@@ -17,6 +17,8 @@ const List = () => {
     new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
   );
   console.log('user:', user);
+  console.log('user?.userExerciseList:', user?.userExerciseList);
+  console.log('user?.userFoodList:', user?.userFoodList);
 
   const dateArray = [];
   for (
@@ -24,11 +26,11 @@ const List = () => {
     date <= new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0);
     date.setDate(date.getDate() + 1)
   ) {
-    dateArray.push(new Date(date));
+    dateArray.push(new Date(date)); // 각 날짜에 대해 새로운 Date 객체 생성
   }
   console.log(dateArray);
 
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState('운동');
 
   const radioCategoryButtonInfo: InputButtonInfo = {
     type: 'shortOvalRadio',
@@ -42,12 +44,6 @@ const List = () => {
     onChange: (selectedCategory) => {
       console.log('선택된 값:', selectedCategory);
       setSelectedValue(selectedCategory);
-      // TODO - 선택된 운동/식단에 따른 로직 작성
-      if (selectedCategory === '운동') {
-        console.log('운동');
-      } else {
-        console.log('식단');
-      }
     },
   };
 
