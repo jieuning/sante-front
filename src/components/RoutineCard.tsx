@@ -54,6 +54,7 @@ const RoutineCard = ({
     });
   }
 
+  const [isExist, setIsExist] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [checkboxStates, handleCheckboxChange] =
     useCheckboxHandler(initialCheckboxState);
@@ -71,15 +72,19 @@ const RoutineCard = ({
   useEffect(() => {
     if (type === 'food' && foodList) {
       const filtered = filterFoodListByDateRange(foodList, date, date);
+      setIsExist(filtered.length > 0);
       setFilteredFoods(filtered);
     }
     if (type === 'exercise' && exerciseList) {
       const filtered = filterExerciseListByDateRange(exerciseList, date, date);
+      setIsExist(filtered.length > 0);
       setFilteredExercises(filtered);
     }
 
     //handleCheckboxChange(initialCheckboxState); // 여기서 상태 업데이트
   }, [exerciseList, foodList]);
+
+  if (!isExist && !isMain) return null;
 
   return (
     <Container>
