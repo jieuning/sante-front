@@ -8,15 +8,19 @@ import {
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
 import styled from 'styled-components';
+import axios from 'axios';
+import { format } from 'date-fns';
+
+const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 const FoodModal = () => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedValue, setSelectedValue] = useState('');
   const [foodItems, setFoodItems] = useState([
-    { id: 1, food: '', calorie: '' },
+    { id: 1, food: '', calorie: '', foodCategory: '' },
   ]);
 
-  // 입력창
+  // input값 관리
   const [food, setFood] = useState('');
   const [calorie, setCalorie] = useState('');
 
@@ -26,32 +30,125 @@ const FoodModal = () => {
 
   // 추가
   const handleAddFoodItem = () => {
-    setFoodItems([...foodItems, { id: 1, food: '', calorie: '' }]);
+    // 새로운 음식 항목 생성
+    const newFoodItem = {
+      id: new Date().getTime(), // 고유한 id 생성
+      food: food,
+      calorie: calorie,
+      foodCategory: selectedValue, // 새로운 항목의 foodCategory 추가
+    };
+
+    // foodItems 상태 업데이트
+    setFoodItems((prevFoodItems) => [...prevFoodItems, newFoodItem]);
   };
 
   // 삭제
   const handleRemoveFoodItem = (index: number) => {
-    const filterdItem = [...foodItems];
-    filterdItem.splice(index, 1);
-    setFoodItems(filterdItem);
+    const filteredItem = [...foodItems];
+    filteredItem.splice(index, 1);
+    setFoodItems(filteredItem);
   };
 
-  const handleChange = (
-    index: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const list = [...foodItems] as any;
-    list[index][e.target.id] = e.target.value;
-    setFoodItems(list);
+  // 각 음식 항목의 food 값 업데이트
+  const handleFoodChange = (value: string, index: number) => {
+    const updatedFoodItems = [...foodItems];
+    updatedFoodItems[index].food = value;
+    setFoodItems(updatedFoodItems);
   };
 
-  const handleFoodChange = (value: string | number) => {
-    setFood(value)
-  }
-  const handleCalorieChange = (value: string | number) => {
-    setCalorie(value)
-  }
+  // 각 음식 항목의 calorie 값 업데이트
+  const handleCalorieChange = (value: string, index: number) => {
+    const updatedFoodItems = [...foodItems];
+    updatedFoodItems[index].calorie = value;
+    setFoodItems(updatedFoodItems);
+  };
 
+  const handleSendDataToServer = async () => {
+    try {
+      const response = await axios.post(`${URL}/check`, {
+        email: 'email@email.com',
+        password: 'sdfdsf',
+      });
+      let user = removeIdField(response.data.user);
+      delete user.__v;
+
+      // ... 이전 코드 ...
+
+      // 여기에 userFoodList 업데이트 로직 추가
+      const newUserFoodList = user.userFoodList ? [...user.userFoodList] : [];
+
+      // 이미 있는 foodCategory에 해당하는 배열이 있으면 추가
+      const existingFoodIndex = newUserFoodList.findIndex(
+        (item) => item.foodList[0].foodCategory === selectedValue
+      );
+
+      if (existingFoodIndex !== -1) {
+        newUserFoodList[existingFoodIndex].foodList.push({
+          foodCategory: selectedValue,
+          totalCalory: foodItems.reduce(
+            (total, foodItem) => total + parseInt(foodItem.calorie),
+            0
+          ),
+          menu: foodItems.map((foodItem) => ({
+            name: foodItem.food,
+            calory: parseInt(foodItem.calorie),
+          })),
+        });
+      } else {
+        // 새로운 음식 항목 생성
+        const newFoodList = foodItems.map((foodItem) => ({
+          foodCategory: selectedValue,
+          totalCalory: parseInt(foodItem.calorie),
+          menu: [
+            {
+              name: foodItem.food,
+              calory: parseInt(foodItem.calorie),
+            },
+          ],
+        }));
+
+        // 새로운 음식 항목을 추가
+        newUserFoodList.push({
+          foodList: newFoodList,
+          foodId: new Date().getTime(),
+          createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+        });
+      }
+
+      user.userFoodList = newUserFoodList;
+
+      // 변경된 유저 그대로 업데이트
+      console.log('user', user);
+
+      await axios.put(`${URL}`, user, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('에러 발생:', error);
+    }
+  };
+
+  function removeIdField<T>(obj: T): T {
+    if (Array.isArray(obj)) {
+      // 배열인 경우 각 요소에 대해 재귀적으로 호출
+      return obj.map((item) => removeIdField(item)) as unknown as T;
+    } else if (obj !== null && typeof obj === 'object') {
+      // 객체인 경우
+      const newObj: any = { ...obj };
+      delete newObj._id; // _id 필드 제거
+
+      // 객체의 각 키에 대해 재귀적으로 호출
+      Object.keys(newObj).forEach((key) => {
+        newObj[key] = removeIdField(newObj[key]);
+      });
+
+      return newObj as T;
+    }
+    // 배열이나 객체가 아닌 경우 그대로 반환
+    return obj;
+  }
 
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
@@ -64,16 +161,6 @@ const FoodModal = () => {
     onChange: (selectedTime) => {
       console.log('선택된 값:', selectedTime);
       setSelectedValue(selectedTime);
-      // 선택된 아점저간에 따른 로직 수행
-      if (selectedTime === '아침') {
-        console.log('아침');
-      } else if (selectedTime === '점심') {
-        console.log('점심');
-      } else if (selectedTime === '저녁') {
-        console.log('저녁');
-      } else {
-        console.log('간식');
-      }
     },
   };
 
@@ -83,7 +170,9 @@ const FoodModal = () => {
     text: '+식단추가',
     color: 'orange',
     fontWeight: 'bold',
-    onClick: handleAddFoodItem,
+    onClick: () => {
+      handleAddFoodItem();
+    },
   };
 
   return (
@@ -102,48 +191,57 @@ const FoodModal = () => {
               하루 권장 칼로리 1800Kcal
             </p>
           }
+          modalButton={true}
           onClick={closeModal}
+          onClickCreate={() => {
+            handleSendDataToServer();
+            closeModal();
+          }}
+          onClickRemove={() => {
+            console.log('삭제');
+          }}
+          onClickUpdate={() => {
+            console.log('수정');
+          }}
         >
-          <div style={{ margin: '0px 20px 20px 25px' }}>
+          <div style={{ marginLeft: '10%' }}>
             <RadioButton info={radioButtonInfo} />
           </div>
 
           <ScrollBarDiv>
             {foodItems.map((item, index) => (
-              <>
-                <div
-                  key={item.id}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    columnGap: '10px',
-                    margin: '10px 15px',
-                  }}
-                >
-                  <div onClick={() => handleRemoveFoodItem(index)}>
-                    <Remove />
-                  </div>
-                  <Input
-                    type="text"
-                    placeholder="음식 이름을 입력하세요."
-                    width="40%"
-                    height="30px"
-                    value={food}
-                    onChange={handleFoodChange}
-                    id="food"
-                  />
-                  <Input
-                    type="number"
-                    placeholder="칼로리를 입력하세요."
-                    width="40%"
-                    height="30px"
-                    value={calorie}
-                    onChange={handleCalorieChange}
-                    id="calorie"
-                  />
-                  <p style={{ fontSize: '15px' }}>Kcal</p>
+              <div
+                key={item.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  columnGap: '5px',
+                  margin: '0px 10px',
+                }}
+              >
+                <div onClick={() => handleRemoveFoodItem(index)}>
+                  <Remove />
                 </div>
-              </>
+                <Input
+                  type="text"
+                  placeholder="음식 이름을 입력하세요."
+                  width="50%"
+                  height="35px"
+                  value={item.food}
+                  onChange={(value) => handleFoodChange(value, index)}
+                  id={`food-${index}`}
+                />
+                <Input
+                  type="number"
+                  placeholder="칼로리를 입력하세요."
+                  width="30%"
+                  height="35px"
+                  value={item.calorie}
+                  onChange={(value) => handleCalorieChange(value, index)}
+                  id={`calorie-${index}`}
+                />
+                <p style={{ fontSize: '15px' }}>Kcal</p>
+              </div>
             ))}
           </ScrollBarDiv>
           <div
@@ -163,8 +261,9 @@ const FoodModal = () => {
 
 const ScrollBarDiv = styled.div`
   margin-bottom: 10px;
+  margin-right: 5px;
   overflow-y: auto;
-  max-height: 130px;
+  max-height: 160px;
   &::-webkit-scrollbar {
     width: 10px; // Chrome 및 Safari에서 스크롤 너비 조절
   }
