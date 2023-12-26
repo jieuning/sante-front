@@ -1,6 +1,7 @@
-const setUser = (email: string, password: string) => {
+const setUser = (email: string, password: string, gender: string) => {
   localStorage.setItem('email', email);
   localStorage.setItem('password', password);
+  localStorage.setItem('gender', gender);
 };
 
 const getEmail = () => {

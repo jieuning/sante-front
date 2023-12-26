@@ -20,10 +20,10 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin());
 
   //테스트 데이터
-  // useEffect(() => {
-  //   setUser('test@test.com', 'test1111!');
-  //   setIsLoggedIn(isLogin());
-  // }, []);
+  useEffect(() => {
+    setUser('test@test.com', 'test1111!', '여성');
+    setIsLoggedIn(isLogin());
+  }, []);
 
   const Logout = {
     onClick: () => {
