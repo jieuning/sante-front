@@ -40,7 +40,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   width,
   height,
 }) => {
-  const [selectedValue, setSelectedValue] = useState<string>('');
+  const [selectedValue, setSelectedValue] = useState('');
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
