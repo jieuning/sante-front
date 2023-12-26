@@ -179,13 +179,11 @@ const Register = () => {
     fontWeight: 'regular',
     onChange: (selectedGender) => {
       console.log('selectedValue:', selectedGender);
-      setSelectedValue(selectedGender);
+      setSelectedGender(selectedGender);
       if (selectedGender === '남성') {
-        //남성에 대한 처리
         // console.log('남성');
         setSelectedGender('남성');
       } else {
-        //여성에 대한 처리
         // console.log('여성');
         setSelectedGender('여성');
       }
