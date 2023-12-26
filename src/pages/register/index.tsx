@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import Input from '../../components/Input';
@@ -32,19 +33,29 @@ const RadioButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const buttonInfo: DynamicButtonInfo = {
-  type: 'solid',
-  size: 'medium',
-  text: '가입하기',
-  fontWeight: 'bold',
-  onClick: () => alert('가입이 완료되었습니다!'),
-};
+// const buttonInfo: DynamicButtonInfo = {
+//   type: 'solid',
+//   size: 'medium',
+//   text: '가입하기',
+//   fontWeight: 'bold',
+//   onClick: () => {
+//     const apiUrl = '/register';
+//     const requestData = {
+//       email,
+//       password: pw,
+//       gender: selectedGender,
+//       age: selectedValue,
+//     }
+
+//   },
+// };
 
 const Register = () => {
   const [email, setEmail] = useState<string | number>('');
   const [pw, setPw] = useState<string | number>('');
   const [pwConfirm, setPwConfirm] = useState('');
   const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedGender, setSelectedGender] = useState('');
 //   const [age, setAge] = useState('');
 
   const [emailValid, setEmailValid] = useState<boolean>(false);
@@ -52,12 +63,12 @@ const Register = () => {
   const [pwCheck, setPwCheck] = useState<boolean>(false);
 
   const ageOptions: Option[] = [
-    { value: '12~14세', label: '12~14세' },
-    { value: '15~18세', label: '15~18세' },
-    { value: 'option3', label: '19~29세' },
-    { value: 'option4', label: '30~49세' },
-    { value: 'option5', label: '50~64세' },
-    { value: 'option6', label: '65세 이상' },
+    { value: '1', label: '12~14세' },
+    { value: '2', label: '15~18세' },
+    { value: '3', label: '19~29세' },
+    { value: '4', label: '30~49세' },
+    { value: '5', label: '50~64세' },
+    { value: '6', label: '65세 이상' },
   ];
 
   useEffect(() => {
@@ -105,12 +116,62 @@ const Register = () => {
   const handleAgeSelectChange = (selectedValue: string) => {
     //setAge 할 필요 없이 selectedValue에 선택한 나이가 이미 들어있음
     console.log('Selected value:', selectedValue);
+    console.log('selectedGender:', selectedGender);
+    let recommendCalory: number = 0;
+    switch (selectedGender) {
+      case '남성':
+        switch (selectedValue) {
+          case '1':
+            recommendCalory = 2500;
+            break;
+          case '2':
+            recommendCalory = 3000;
+            break;
+          case '3':
+            recommendCalory = 3000;
+            break;
+          case '4':
+            recommendCalory = 2500;
+            break;
+          case '5':
+            recommendCalory = 2300;
+            break;
+          case '6':
+            recommendCalory = 2000;
+            break;
+        }
+        break;
+      case '여성':
+        switch (selectedValue) {
+          case '1':
+            recommendCalory = 2200;
+            break;
+          case '2':
+            recommendCalory = 2300;
+            break;
+          case '3':
+            recommendCalory = 2200;
+            break;
+          case '4':
+            recommendCalory = 2000;
+            break;
+          case '5':
+            recommendCalory = 1800;
+            break;
+          case '6':
+            recommendCalory = 1500;
+            break;
+        }
+        break;
+    }
+    console.log(recommendCalory);
+    return recommendCalory;
   };
 
   const radioGenderButtonInfo: InputButtonInfo = {
     type: 'longOvalRadio',
     size: 'long-oval',
-    value: selectedValue,
+    value: selectedGender,
     items: ['남성', '여성'],
     backgroundColor: 'white',
     border: 'primary',
@@ -121,11 +182,38 @@ const Register = () => {
       setSelectedValue(selectedGender);
       if (selectedGender === '남성') {
         //남성에 대한 처리
-        console.log('남성');
+        // console.log('남성');
+        setSelectedGender('남성');
       } else {
         //여성에 대한 처리
-        console.log('여성');
+        // console.log('여성');
+        setSelectedGender('여성');
       }
+    },
+  };
+
+  const buttonInfo: DynamicButtonInfo = {
+    type: 'solid',
+    size: 'medium',
+    text: '가입하기',
+    fontWeight: 'bold',
+    onClick: () => {
+      const apiUrl = 'http://kdt-sw-7-team04.elicecoding.com/api/register';
+      const requestData = {
+        email,
+        password: pw,
+        gender: selectedGender,
+        age: selectedValue,
+        //recommendCalory 추가
+      };
+      axios
+        .post(apiUrl, requestData)
+        .then((response) => {
+          console.log('성공', response.data);
+        })
+        .catch((error) => {
+          console.error('실패', error);
+        });
     },
   };
 
