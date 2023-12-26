@@ -31,6 +31,9 @@ const ModalCard = ({
   modalButton,
   inputElement,
   payload,
+  onClickCreate,
+  onClickRemove,
+  onClickUpdate,
 }: ModalCardProps) => {
   const { closeExerciseModal, closeFoodModal } = useContext(MainContext);
   const buttonCreateInfo: DynamicButtonInfo = {
@@ -40,9 +43,7 @@ const ModalCard = ({
     backgroundColor: 'primary',
     color: 'white',
     fontWeight: 'bold',
-    onClick: () => {
-      //api호출??
-    },
+    onClick: onClickCreate,
   };
   const buttonDeleteInfo: DynamicButtonInfo = {
     type: 'solid',
@@ -51,7 +52,16 @@ const ModalCard = ({
     backgroundColor: 'gray',
     color: 'white',
     fontWeight: 'bold',
-    onClick: () => console.log('Button clicked!'),
+    onClick: onClickRemove,
+  };
+  const buttonUpdateInfo: DynamicButtonInfo = {
+    type: 'solid',
+    size: 'medium',
+    text: '수정하기',
+    backgroundColor: 'primary',
+    color: 'white',
+    fontWeight: 'bold',
+    onClick: onClickUpdate,
   };
 
   return (
@@ -77,7 +87,7 @@ const ModalCard = ({
             <DynamicButton info={buttonCreateInfo} />
           ) : (
             <>
-              <DynamicButton info={buttonCreateInfo} />
+              <DynamicButton info={buttonUpdateInfo} />
               <DynamicButton info={buttonDeleteInfo} />
             </>
           )}
