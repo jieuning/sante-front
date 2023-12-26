@@ -49,7 +49,6 @@ const RoutineCard = ({
       item.scheduledDate?.forEach((scheduled) => {
         const dateKey = format(scheduled.date, 'yyyy-MM-dd');
         const checkboxKey = `${item.exerciseId}-${dateKey}`;
-        console.log(dateKey, scheduled.isDone);
         initialCheckboxState[checkboxKey] = scheduled.isDone ? true : false;
       });
     });

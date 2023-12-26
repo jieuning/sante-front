@@ -1,7 +1,9 @@
 import styled from 'styled-components';
-import { ReactNode } from 'react';
+import { ReactNode, useContext } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import Closed from '../icons/Closed';
+import { User, Exercise, Food, FoodList, Menu } from '../../types/user';
+import { MainContext } from '../../pages/Main/MainContext';
 
 export interface ModalCardProps {
   modalTitle: string;
@@ -11,12 +13,26 @@ export interface ModalCardProps {
   onClick?: (e?: any) => void;
 }
 
+export interface payloadProps {
+  exerciseName?: string;
+  exerciseId?: string;
+  exerciseStartDate?: Date;
+  exerciseEndDate?: Date;
+  repeatDate?: string[];
+  scheduledDate?: Menu[];
+  foodId?: string;
+  foodList?: FoodList[];
+  createdAt?: Date;
+}
+
 const ModalCard = ({
   modalTitle,
   children,
   modalButton,
   inputElement,
+  payload,
 }: ModalCardProps) => {
+  const { closeExerciseModal, closeFoodModal } = useContext(MainContext);
   const buttonCreateInfo: DynamicButtonInfo = {
     type: 'solid',
     size: 'medium',
@@ -24,7 +40,9 @@ const ModalCard = ({
     backgroundColor: 'primary',
     color: 'white',
     fontWeight: 'bold',
-    onClick: () => console.log('Button clicked!'),
+    onClick: () => {
+      //api호출??
+    },
   };
   const buttonDeleteInfo: DynamicButtonInfo = {
     type: 'solid',
@@ -37,32 +55,57 @@ const ModalCard = ({
   };
 
   return (
-    <ModalCardContainer>
-      <ModalTitle>
-        {modalTitle}
-        <div>
-          <Closed />
-        </div>
-      </ModalTitle>
-      {inputElement}
-      <ModalLine />
-      {children}
-      <ModalLine />
-      <ButtonContainer>
-        {modalButton ? (
-          <DynamicButton info={buttonCreateInfo} />
-        ) : (
-          <>
+    <Background>
+      <ModalCardContainer>
+        <ModalTitle>
+          {modalTitle}
+          <div
+            onClick={() => {
+              closeExerciseModal(false);
+              closeFoodModal(false);
+            }}
+          >
+            <Closed />
+          </div>
+        </ModalTitle>
+        {inputElement}
+        <ModalLine />
+        {children}
+        <ModalLine />
+        <ButtonContainer>
+          {modalButton ? (
             <DynamicButton info={buttonCreateInfo} />
-            <DynamicButton info={buttonDeleteInfo} />
-          </>
-        )}
-      </ButtonContainer>
-    </ModalCardContainer>
+          ) : (
+            <>
+              <DynamicButton info={buttonCreateInfo} />
+              <DynamicButton info={buttonDeleteInfo} />
+            </>
+          )}
+        </ButtonContainer>
+      </ModalCardContainer>
+    </Background>
   );
 };
 
 export default ModalCard;
+const Background = styled.div`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  animation: modal-bg-show 1s;
+  @keyframes modal-bg-show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  z-index: 100;
+`;
 
 const ModalCardContainer = styled.section`
   position: fixed;
@@ -75,13 +118,15 @@ const ModalCardContainer = styled.section`
   border: 1px solid #ababab;
   border-radius: 6px;
   color: #0f0f0f;
+  background: white;
+  z-index: 100;
 `; //NOTE: width 추가.
 
 const ModalTitle = styled.h2`
   font-weight: 600;
   font-size: 18px;
   margin: 0;
-  padding: 30px 25px 20px 25px; 
+  padding: 30px 25px 20px 25px;
   display: flex;
   justify-content: space-between;
 `;
