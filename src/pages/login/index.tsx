@@ -9,6 +9,10 @@ import {
 import useUserLogin from './hooks/useUserLogin';
 import { User } from '../../types/user';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { setUser } from '../../utils/WebStorageControl';
+
+const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 const Login = () => {
   const [email, setEmail] = useState<string | number>('');
@@ -51,11 +55,24 @@ const Login = () => {
   };
 
   const handleLoginButton = () => {
-    let status = onLoginButton(email, password);
-    console.log('status', status);
-    if (status === 200) {
-      navigate('/main');
-    }
+    axios
+      .post(`${URL}/check`, {
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setUser(email.toString(), password.toString());
+          navigate('/main');
+        } else if (res.status === 404) {
+          alert('아이디 또는 비밀번호를 확인해주세요.');
+        }
+        console.log('status', res.data.message);
+        return res.status;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleRegisterButton = () => {
@@ -88,7 +105,7 @@ const Login = () => {
           name="email"
           placeholder="이메일을 입력해주세요."
           width="400px"
-          height="40px"
+          height="50px"
           value={email}
           onChange={handleEmailChange}
           errorMessage={
@@ -100,9 +117,9 @@ const Login = () => {
         <Input
           type="password"
           name="password"
-          placeholder="비밀번호를 입력해주세요. 영문 소문자, 숫자, 특수문자를 포함한 8자리 이상 포함해야 합니다."
+          placeholder="비밀번호를 입력해주세요."
           width="400px"
-          height="40px"
+          height="50px"
           value={password}
           onChange={handlePasswordChange}
           errorMessage={
@@ -126,7 +143,7 @@ const StyledButton = styled.div`
   justify-content: center;
   align-items: center;
   gap: 20px;
-  margin-top: 50px;
+  margin-top: 40px;
 `;
 
 const StyledTitle = styled.p`

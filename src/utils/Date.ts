@@ -110,7 +110,10 @@ const getMonthlyExerciseRateStatistic = (
   }, new Array<number>());
   return {
     list: list,
-    result: exerciseType === 'rate' ? getAvg(list) : getSum(statistic),
+    result:
+      exerciseType === 'rate'
+        ? calculateDoneRate(isDoneDate)
+        : getSum(statistic),
   };
 };
 
@@ -179,6 +182,22 @@ const getMonthlyCaloryTotalStatistic = (
     list: list,
     result: Math.ceil(allCalory / targetDayCount),
   };
+};
+
+const calculateDoneRate = (scheduledData: Map<string, Boolean[]>) => {
+  let total = 0;
+  let doneCount = 0;
+
+  scheduledData.forEach((doneArray) => {
+    doneArray.forEach((isDone) => {
+      if (isDone) {
+        doneCount++;
+      }
+      total++;
+    });
+  });
+
+  return total > 0 ? Math.ceil((doneCount / total) * 100) : 0;
 };
 
 const packingScheduledDate = (userExerciseList: Exercise[]) => {
