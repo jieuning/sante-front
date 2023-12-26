@@ -6,6 +6,8 @@ import {
   lastDayOfMonth,
   endOfMonth,
   format,
+  startOfDay,
+  isWithinInterval,
 } from 'date-fns';
 
 interface StatisticType {
@@ -212,12 +214,12 @@ function filterFoodListByDateRange(
   startDate: Date,
   endDate: Date
 ) {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = startOfDay(startDate);
+  const end = startOfDay(endDate);
 
   return foodList.filter((food) => {
-    const foodDate = new Date(food.createdAt);
-    return foodDate >= start && foodDate <= end;
+    const foodDate = startOfDay(new Date(food.createdAt));
+    return isWithinInterval(foodDate, { start, end });
   });
 }
 
@@ -226,16 +228,16 @@ function filterExerciseListByDateRange(
   startDate: Date,
   endDate: Date
 ): Exercise[] {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
+  const start = startOfDay(startDate);
+  const end = startOfDay(endDate);
 
   return exerciseList
     .map((exercise) => {
       // 날짜 범위에 맞는 scheduledDate만 필터링
       const filteredScheduledDates = exercise.scheduledDate?.filter(
         (scheduledItem) => {
-          const scheduledDate = new Date(scheduledItem.date);
-          return scheduledDate >= start && scheduledDate <= end;
+          const scheduledDate = startOfDay(new Date(scheduledItem.date));
+          return isWithinInterval(scheduledDate, { start, end });
         }
       );
 
