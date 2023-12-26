@@ -132,7 +132,7 @@ const RoutineCard = ({
                   type="button"
                   cursor="pointer"
                   color="var(--black-color)"
-                  onClick={onClickEdit}
+                  onClick={() => onClickEdit(item)}
                 />
               </ContentsName>
               <TagContainer>
@@ -172,7 +172,7 @@ const RoutineCard = ({
                     type="button"
                     cursor="pointer"
                     color="var(--black-color)"
-                    onClick={onClickEdit}
+                    onClick={() => onClickEdit(foodItem)}
                   />
                 </ContentsName>
                 <TagContainer>

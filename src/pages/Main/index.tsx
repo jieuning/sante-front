@@ -26,6 +26,7 @@ const Main = () => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
+  const [exerciseData, setExerciseData] = useState(null);
   // const modalBackground = useRef();
   //DateSelect 날짜 클릭 이벤트
   const handleDayOnClick = (day: Date) => {
@@ -56,16 +57,12 @@ const Main = () => {
             onClick={handleDayOnClick}
           />
           <Blank />
-          {isModalExerciseOpen && (
-            <ExerciseModal></ExerciseModal>
-          )}
-          {isModalFoodOpen && <FoodModal></FoodModal>}
+          {isModalExerciseOpen && <ExerciseModal />}
+          {isModalFoodOpen && <FoodModal />}
           <ContentsContainer>
             <MonthCalendar
-            exerciseList={user?.userExerciseList}
-            foodList={user?.userFoodList}
-            userData={user}
-            currentDate={currentDate}
+              exerciseList={user?.userExerciseList}
+              foodList={user?.userFoodList}
             />
             <CardContainer>
               <RoutineCard
@@ -73,7 +70,15 @@ const Main = () => {
                 exerciseList={user?.userExerciseList}
                 isMain={true}
                 onClickMore={() => console.log('more click')}
-                onClickAdd={() => setIsModalExerciseOpen(true)}
+                onClickAdd={() => {
+                  setExerciseData(null);
+                  setIsModalExerciseOpen(true);
+                }}
+                onClickEdit={(value) => {
+                  setExerciseData(value);
+                  setIsModalExerciseOpen(true);
+                  console.log('이것은 받아온 운동', value);
+                }}
                 date={new Date(today)}
               ></RoutineCard>
               <Blank />
@@ -84,6 +89,10 @@ const Main = () => {
                 date={new Date(TODAY)}
                 onClickMore={() => console.log('more click')}
                 onClickAdd={() => setIsModalFoodOpen(true)}
+                onClickEdit={(value) => {
+                  setIsModalFoodOpen(true);
+                  console.log('이것은 받아온 value', value);
+                }}
               ></RoutineCard>
               <Blank />
               <RoutineCard
