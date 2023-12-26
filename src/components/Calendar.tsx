@@ -1,18 +1,28 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { getMonth } from 'date-fns';
+import {
+  getMonth,
+  getDate,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+} from 'date-fns';
 import ColorChip from './ColorChip';
-import { Exercise, Food } from '../types/user';
+import { Exercise, Food, User } from '../types/user';
 
 interface MonthCalendarProps {
   exerciseList?: Exercise[] | undefined;
   foodList?: Food[] | undefined;
+  userData: User;
+  currentDate: Date;
 }
 
 export const MonthCalendar = ({
   exerciseList,
   foodList,
+  userData,
+  currentDate,
 }: MonthCalendarProps) => {
   console.log(exerciseList);
   console.log(foodList);
@@ -32,35 +42,64 @@ export const MonthCalendar = ({
     '12',
   ];
 
-  const currentMonth = getMonth(new Date());
-  const currentMonthName = months[currentMonth];
+  const tagsData = [
+    { type: 'register', label: '운동 등록' },
+    { type: 'complete', label: '운동 완료' },
+    { type: 'normal', label: '칼로리 적정' },
+    { type: 'excess', label: '칼로리 초과' },
+  ];
 
-  const renderCustomDayContents = (dayOfMonth: number) => {
-    const exerciseColorChips = exerciseList?.flatMap((exercise) => {
-      return exercise.scheduledDate?.flatMap((scheduled) => {
-        const currentDay = Number(scheduled.date?.toString().slice(8, 10));
-        return currentDay === dayOfMonth ? (
+  const currentMonth = getMonth(currentDate);
+  const currentMonthName = months[currentMonth];
+  const userCalory = userData?.todayCalory;
+  // const date = getDate(currentDate);
+
+  // 해당 월의 시작일과 종료일을 계산
+  const startOfCurrentMonth = startOfMonth(currentDate);
+  const endOfCurrentMonth = endOfMonth(currentDate);
+
+  // 해당 월의 모든 날짜
+  const allDatesInMonth = eachDayOfInterval({
+    start: startOfCurrentMonth,
+    end: endOfCurrentMonth,
+  }).map((allDate) => getDate(allDate));
+
+  const renderCustomDayContents = () => {
+    // 운동 컬러칩
+    const exerciseColorChips = exerciseList?.map((exercise) => {
+      return exercise.scheduledDate?.map((scheduled) => {
+        const exerciseCurrentDay = Number(
+          scheduled.date?.toString().slice(8, 10)
+        );
+        return exerciseCurrentDay === allDatesInMonth ? (
           <ColorChip
             color={scheduled.isDone ? '#8699FF' : 'transparent'}
             borderColor="#8699FF"
           />
-        ) : null;
+        ) : undefined;
       });
     });
-
-    // const foodColorChips = dietDummyData?.map((food) => {
-    //   const currentDay = Number(food.createdAt?.toString().slice(8, 10));
-    //   const todayCalory = food.todayCalory;
-    //   return currentDay === dayOfMonth ? (
-    //     <ColorChip
-    //       color={todayCalory && todayCalory >= 1800 ? '#97F39A' : '#F39797'}
-    //     />
-    //   ) : null;
-    // });
+    // 식단 컬러칩
+    const foodColorChips = foodList?.map((food) => {
+      const foodCurrentDay = Number(food.createdAt?.toString().slice(8, 10));
+      return food.foodList?.map((list) => {
+        const todayCalory = list.totalCalory;
+        return foodCurrentDay === allDatesInMonth ? (
+          <ColorChip
+            color={
+              todayCalory && todayCalory >= userCalory ? '#97F39A' : '#F39797'
+            }
+          />
+        ) : undefined;
+      });
+    });
     return (
       <>
-        <span>{dayOfMonth}</span>
-        <ColorChipWrap>{exerciseColorChips}</ColorChipWrap>
+        <span>{allDatesInMonth}</span>
+        <ColorChipWrap>
+          {exerciseColorChips}
+          {foodColorChips}
+        </ColorChipWrap>
       </>
     );
   };
@@ -76,6 +115,13 @@ export const MonthCalendar = ({
           <CustomHeader>{currentMonthName}월</CustomHeader>
         )}
       />
+      <ColorChipTagWrap>
+        {/* {tagsData.map((tag) => (
+          <Tag key={tag.type} type={tag.type}>
+            {tag.label}
+          </Tag>
+        ))} */}
+      </ColorChipTagWrap>
     </MainCalendarContainer>
   );
 };
@@ -169,4 +215,46 @@ const MainCalendarContainer = styled.div`
   .react-datepicker__navigation {
     display: none;
   }
+`;
+
+const ColorChipTagWrap = styled.div`
+  display: flex;
+`;
+
+const Tag = styled.span`
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  display: inline-block;
+  margin-right: 8px;
+
+  ${(props) =>
+    props.type === 'register' &&
+    css`
+      background-color: #3498db;
+      color: #fff;
+    `}
+
+  ${(props) =>
+    props.type === 'complete' &&
+    css`
+      background-color: #2ecc71;
+      color: #fff;
+    `}
+
+  ${(props) =>
+    props.type === 'normal' &&
+    css`
+      background-color: #e67e22;
+      color: #fff;
+    `}
+
+  ${(props) =>
+    props.type === 'excess' &&
+    css`
+      background-color: #e74c3c;
+      color: #fff;
+    `}
 `;

@@ -44,6 +44,8 @@ const Main = () => {
           <MonthCalendar
             exerciseList={user?.userExerciseList}
             foodList={user?.userFoodList}
+            userData={user}
+            currentDate={currentDate}
           />
           <CardContainer>
             <RoutineCard
