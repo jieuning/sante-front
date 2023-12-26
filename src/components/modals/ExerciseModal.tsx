@@ -15,6 +15,7 @@ import {
 import { addMonths, subMonths, isAfter, isBefore, format } from 'date-fns';
 import { Exercise } from '../../types/user';
 import useButtonHandler from '../../hooks/useButtonHandlerExercise';
+import useModifyExercise from '../../hooks/useModifyExercise';
 
 interface ExerciseModalProps {
   // exercise?: Exercise;
@@ -44,51 +45,23 @@ const minutes = [
   { value: 50, label: '50분' },
 ];
 
-// const exercise: Exercise = {
-//   exerciseName: '운동1',
-//   exerciseId: 'abc1',
-//   exerciseStartDate: new Date('2023-9-18'),
-//   exerciseEndDate: new Date('2024-1-25'),
-//   exerciseTime: 60,
-//   repeatDate: ['월', '수'],
-//   scheduledDate: [
-//     { date: new Date('2023-11-30'), isDone: false },
-//     { date: new Date('2023-12-02'), isDone: true },
-//     { date: new Date('2023-12-03'), isDone: false },
-//   ],
-// };
+const exercise: Exercise = {
+  exerciseName: '운동1',
+  exerciseId: 'exercise-20231201',
+  exerciseStartDate: new Date('2023-9-18'),
+  exerciseEndDate: new Date('2024-1-25'),
+  exerciseTime: 60,
+  repeatDate: ['월', '수'],
+  scheduledDate: [
+    { date: new Date('2023-11-30'), isDone: false },
+    { date: new Date('2023-12-02'), isDone: true },
+    { date: new Date('2023-12-03'), isDone: false },
+  ],
+};
 
-// const exerciseList: Exercise[] = [
-//   {
-//     exerciseName: '운동1',
-//     exerciseId: 'abc1',
-//     exerciseStartDate: new Date('2023-9-18'),
-//     exerciseEndDate: new Date('2024-1-25'),
-//     repeatDate: ['월', '수'],
-//     scheduledDate: [
-//       { date: new Date('2023-11-30'), isDone: false },
-//       { date: new Date('2023-12-02'), isDone: true },
-//       { date: new Date('2023-12-03'), isDone: false },
-//     ],
-//   },
-//   {
-//     exerciseName: '운동2',
-//     exerciseId: 'abc13',
-//     exerciseStartDate: new Date('2023-9-18'),
-//     exerciseEndDate: new Date('2024-1-25'),
-//     repeatDate: ['월', '수'],
-//     scheduledDate: [
-//       { date: new Date('2023-11-30'), isDone: true },
-//       { date: new Date('2023-12-02'), isDone: true },
-//       { date: new Date('2023-12-03'), isDone: false },
-//     ],
-//   },
-//   // 다른 운동
-// ];
-
-// { exercise }: ExerciseModalProps
-
-const ExerciseModal = (exercise?: Exercise) => {
+// const exercise = null;
+// exercise?: Exercise
+const ExerciseModal = () => {
   const [inputValue, setInputValue] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
@@ -127,7 +100,34 @@ const ExerciseModal = (exercise?: Exercise) => {
 
     return scheduledDates;
   };
-  const handleButtonClick = () => {
+
+  const handleModifyButtonClick = () => {
+    const scheduleList: ScheduledDate[] = generateScheduledDates(
+      startDate,
+      endDate,
+      selectedDays
+    );
+
+    const payload = {
+      exerciseId: exercise?.exerciseId,
+      exerciseName: inputValue,
+      exerciseStartDate: new Date(startDate),
+      exerciseEndDate: new Date(endDate),
+      exerciseTime: timeToMinute({
+        exerciseHour: selectHour,
+        exerciseMinute: selectMinutes,
+      }),
+      repeatDate: selectedDays,
+      scheduledDate: scheduleList,
+    };
+    console.log('sccccheduleList', scheduleList);
+    console.log('paaayload', payload);
+
+    const { handleModify } = useModifyExercise({ exercise: payload });
+    handleModify();
+  };
+
+  const handleCreateButtonClick = () => {
     const scheduleList: ScheduledDate[] = generateScheduledDates(
       startDate,
       endDate,
@@ -152,10 +152,6 @@ const ExerciseModal = (exercise?: Exercise) => {
     handleCreate();
   };
 
-  // const filterExercisesByName = (exercises: Exercise[], name: string) => {
-  //   return exercises.filter((exercise) => exercise.exerciseName === name);
-  // };
-
   const HOUR_IN_MINUTES = 60;
   const divideMinutesAndHour = (exerciseTime: number) => {
     const hour = Math.floor(exerciseTime / HOUR_IN_MINUTES);
@@ -176,27 +172,21 @@ const ExerciseModal = (exercise?: Exercise) => {
     return exerciseHour * HOUR_IN_MINUTES + exerciseMinute;
   };
 
-  // useEffect(() => {
-  //   // if (user) {
-  //   //   const userExerciseData = user.userExerciseList;
-  //   //   filterExercisesByName(userExerciseData);
-  //   // }
-
-  //   // props로 전달된 data가 있을 경우, 해당 데이터를 input에 설정
-  //   if (exercise?.exerciseId) {
-  //     exercise?.exerciseName && setInputValue(exercise.exerciseName);
-  //     const newDateRange = [
-  //       exercise.exerciseStartDate,
-  //       exercise.exerciseEndDate,
-  //     ];
-  //     setDateRange(newDateRange);
-  //     setSelectedDays(exercise.repeatDate);
-  //     divideMinutesAndHour(exercise.exerciseTime);
-  //   } else {
-  //     // 생성 모드에서는 빈 input으로 초기화
-  //     setInputValue('');
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (exercise?.exerciseId) {
+      exercise?.exerciseName && setInputValue(exercise.exerciseName);
+      const newDateRange = [
+        exercise.exerciseStartDate,
+        exercise.exerciseEndDate,
+      ];
+      setDateRange(newDateRange);
+      setSelectedDays(exercise.repeatDate);
+      divideMinutesAndHour(exercise.exerciseTime);
+    } else {
+      // 생성 모드에서는 빈 input으로 초기화
+      setInputValue('');
+    }
+  }, []);
 
   const today = new Date();
   const minDate = subMonths(today, 1);
@@ -280,16 +270,17 @@ const ExerciseModal = (exercise?: Exercise) => {
           </>
         }
         onClickCreate={() => {
-          handleButtonClick();
+          handleCreateButtonClick();
           console.log('created');
         }}
         onClickRemove={() => {
           console.log('removed');
         }}
         onClickUpdate={() => {
+          handleModifyButtonClick();
           console.log('updated');
         }}
-        modalButton={exercise ? true : false}
+        modalButton={exercise ? false : true}
       >
         <FlexStyleDiv>
           <RadioStyleDiv>
