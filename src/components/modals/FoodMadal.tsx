@@ -26,7 +26,19 @@ const FoodModal = () => {
 
   // 추가
   const handleAddFoodItem = () => {
-    setFoodItems([...foodItems, { id: 1, food: '', calorie: '' }]);
+    // 새로운 음식 항목 생성
+    const newFoodItem = {
+      id: foodItems.length + 1,
+      food: food,
+      calorie: calorie,
+    };
+
+    // foodItems 상태 업데이트
+    setFoodItems([...foodItems, newFoodItem]);
+
+    // 입력창 초기화
+    setFood('');
+    setCalorie('');
   };
 
   // 삭제
@@ -46,12 +58,11 @@ const FoodModal = () => {
   };
 
   const handleFoodChange = (value: string | number) => {
-    setFood(value)
-  }
+    setFood(value);
+  };
   const handleCalorieChange = (value: string | number) => {
-    setCalorie(value)
-  }
-
+    setCalorie(value);
+  };
 
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
@@ -104,7 +115,7 @@ const FoodModal = () => {
           }
           onClick={closeModal}
         >
-          <div style={{ margin: '0px 20px 20px 25px' }}>
+          <div style={{ marginLeft: '10%' }}>
             <RadioButton info={radioButtonInfo} />
           </div>
 
@@ -116,8 +127,8 @@ const FoodModal = () => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    columnGap: '10px',
-                    margin: '10px 15px',
+                    columnGap: '5px',
+                    margin: '0px 10px',
                   }}
                 >
                   <div onClick={() => handleRemoveFoodItem(index)}>
@@ -126,8 +137,8 @@ const FoodModal = () => {
                   <Input
                     type="text"
                     placeholder="음식 이름을 입력하세요."
-                    width="40%"
-                    height="30px"
+                    width="50%"
+                    height="35px"
                     value={food}
                     onChange={handleFoodChange}
                     id="food"
@@ -135,8 +146,8 @@ const FoodModal = () => {
                   <Input
                     type="number"
                     placeholder="칼로리를 입력하세요."
-                    width="40%"
-                    height="30px"
+                    width="30%"
+                    height="35px"
                     value={calorie}
                     onChange={handleCalorieChange}
                     id="calorie"
@@ -163,8 +174,9 @@ const FoodModal = () => {
 
 const ScrollBarDiv = styled.div`
   margin-bottom: 10px;
+  margin-right: 5px;
   overflow-y: auto;
-  max-height: 130px;
+  max-height: 160px;
   &::-webkit-scrollbar {
     width: 10px; // Chrome 및 Safari에서 스크롤 너비 조절
   }
