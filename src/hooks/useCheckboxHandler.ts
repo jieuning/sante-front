@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import useUserModelAll from './useUserModelAll';
 import { format } from 'date-fns';
-import { User } from '../types/user';
+import { Exercise, User } from '../types/user';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
@@ -19,7 +19,7 @@ const useCheckboxHandler = (
   const [checkboxStates, setCheckboxStates] = useState<{
     [key: string]: boolean;
   }>(initialState);
-  const [user, setUser] = useState<User>();
+
   const handleCheckboxChange = async (
     checkboxKey: string,
     isChecked: boolean
@@ -29,41 +29,67 @@ const useCheckboxHandler = (
       [checkboxKey]: isChecked,
     }));
 
+    let user: User | undefined;
+
     //업데이트를 위해 유저 전체 정보를 가져옴
-    axios
-      .post(`${URL}/check`, {
+    try {
+      const response = await axios.post(`${URL}/check`, {
         email: 'email@email.com',
         password: 'sdfdsf',
-      })
-      .then((res) => res.data.user)
-      .then(setUser)
-      .catch((error) => {
-        console.error('There was an error!', error);
       });
-    console.log('user', user);
-    //업데이트할 데이터를 찾아 변경
-    user?.userExerciseList?.forEach((exercise) => {
-      exercise.scheduledDate?.forEach((scheduledDate) => {
-        const dateKey = format(scheduledDate.date, 'yyyy-MM-dd');
-        const key = `${exercise.exerciseId}-${dateKey}`;
-        if (key === checkboxKey) {
-          scheduledDate.isDone = isChecked;
-        }
-      });
-    });
+      let user = removeIdField(response.data.user);
+      delete user.__v;
 
-    //변경된 유저 그대로 업데이트
-    console.log(JSON.stringify(user));
-    axios.put(`${URL}`, JSON.stringify(user)).catch((error) => {
+      // 업데이트할 데이터를 찾아 변경
+      user.userExerciseList?.forEach((exercise: Exercise) => {
+        exercise.scheduledDate?.forEach((scheduledDate) => {
+          const dateKey = format(scheduledDate.date, 'yyyy-MM-dd');
+          const key = `${exercise.exerciseId}-${dateKey}`;
+          if (key === checkboxKey) {
+            scheduledDate.isDone = isChecked;
+          }
+        });
+      });
+
+      // 변경된 유저 그대로 업데이트
+      console.log('user', JSON.stringify(user));
+
+      // 서버에 변경 사항 업데이트
+      await axios.put(`${URL}`, JSON.stringify(user), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
       console.error('checkboxHook error', error);
       setCheckboxStates((prevStates) => ({
         ...prevStates,
         [checkboxKey]: !isChecked,
       }));
-    });
+    }
   };
 
   return [checkboxStates, handleCheckboxChange];
 };
+
+function removeIdField<T>(obj: T): T {
+  if (Array.isArray(obj)) {
+    // 배열인 경우 각 요소에 대해 재귀적으로 호출
+    return obj.map((item) => removeIdField(item)) as unknown as T;
+  } else if (obj !== null && typeof obj === 'object') {
+    // 객체인 경우
+    const newObj = { ...obj } as any;
+    delete newObj._id; // _id 필드 제거
+
+    // 객체의 각 키에 대해 재귀적으로 호출
+    Object.keys(newObj).forEach((key) => {
+      newObj[key] = removeIdField(newObj[key]);
+    });
+
+    return newObj as T;
+  }
+  // 배열이나 객체가 아닌 경우 그대로 반환
+  return obj;
+}
 
 export default useCheckboxHandler;

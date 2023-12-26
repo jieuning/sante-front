@@ -153,7 +153,9 @@ const InputradioButtonBox = styled.div`
 `;
 const CheckLabel = styled.label<InputButtonInfo>`
   width: ${(props) =>
-    props.value.includes('매일') ? '55px' : getButtonSize(props.size).width};
+    (Array.isArray(props.value) ? props.value : [props.value]).includes('매일')
+      ? '55px'
+      : getButtonSize(props.size).width};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -194,6 +196,9 @@ const CheckButton = ({ info }: InputButtonProps) => {
 
   const handleDayClick = (day: string) => {
     // 각 요일 클릭 처리 로직
+    if (info.onChange) {
+      info.onChange(day);
+    }
     console.log(`${day}이(가) 클릭되었습니다!`);
   };
 
@@ -228,7 +233,6 @@ const CheckButton = ({ info }: InputButtonProps) => {
 };
 
 const RadioButton = ({ info }: InputButtonProps) => {
-
   const handleRadioChange = (value: any) => {
     if (info.onChange) {
       info.onChange(value);

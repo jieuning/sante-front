@@ -49,7 +49,6 @@ const RoutineCard = ({
       item.scheduledDate?.forEach((scheduled) => {
         const dateKey = format(scheduled.date, 'yyyy-MM-dd');
         const checkboxKey = `${item.exerciseId}-${dateKey}`;
-        console.log(dateKey, scheduled.isDone);
         initialCheckboxState[checkboxKey] = scheduled.isDone ? true : false;
       });
     });
@@ -94,7 +93,8 @@ const RoutineCard = ({
       {type === 'food' && (
         <Title>
           <p>🍚 식단</p>
-          {!isMain && <DynamicButton info={buttonInfo} />}
+          {isMain && <DynamicButton info={buttonInfo} />}
+          {!isMain && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
         </Title>
       )}
       <Line />
