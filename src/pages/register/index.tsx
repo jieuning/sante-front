@@ -33,29 +33,13 @@ const RadioButtonContainer = styled.div`
   justify-content: center;
 `;
 
-// const buttonInfo: DynamicButtonInfo = {
-//   type: 'solid',
-//   size: 'medium',
-//   text: '가입하기',
-//   fontWeight: 'bold',
-//   onClick: () => {
-//     const apiUrl = '/register';
-//     const requestData = {
-//       email,
-//       password: pw,
-//       gender: selectedGender,
-//       age: selectedValue,
-//     }
-
-//   },
-// };
-
 const Register = () => {
   const [email, setEmail] = useState<string | number>('');
   const [pw, setPw] = useState<string | number>('');
   const [pwConfirm, setPwConfirm] = useState('');
   const [selectedValue, setSelectedValue] = useState(null);
   const [selectedGender, setSelectedGender] = useState('');
+  const [recommendCalory, setRecommendCalory] = useState<number>(0);
 //   const [age, setAge] = useState('');
 
   const [emailValid, setEmailValid] = useState<boolean>(false);
@@ -115,57 +99,58 @@ const Register = () => {
 
   const handleAgeSelectChange = (selectedValue: string) => {
     //setAge 할 필요 없이 selectedValue에 선택한 나이가 이미 들어있음
+    setSelectedValue(selectedValue);
     console.log('Selected value:', selectedValue);
     console.log('selectedGender:', selectedGender);
-    let recommendCalory: number = 0;
+    let calory: number = 0;
     switch (selectedGender) {
       case '남성':
         switch (selectedValue) {
           case '1':
-            recommendCalory = 2500;
+            calory = 2500;
             break;
           case '2':
-            recommendCalory = 3000;
+            calory = 3000;
             break;
           case '3':
-            recommendCalory = 3000;
+            calory = 3000;
             break;
           case '4':
-            recommendCalory = 2500;
+            calory = 2500;
             break;
           case '5':
-            recommendCalory = 2300;
+            calory = 2300;
             break;
           case '6':
-            recommendCalory = 2000;
+            calory = 2000;
             break;
         }
         break;
       case '여성':
         switch (selectedValue) {
           case '1':
-            recommendCalory = 2200;
+            calory = 2200;
             break;
           case '2':
-            recommendCalory = 2300;
+            calory = 2300;
             break;
           case '3':
-            recommendCalory = 2200;
+            calory = 2200;
             break;
           case '4':
-            recommendCalory = 2000;
+            calory = 2000;
             break;
           case '5':
-            recommendCalory = 1800;
+            calory = 1800;
             break;
           case '6':
-            recommendCalory = 1500;
+            calory = 1500;
             break;
         }
         break;
     }
-    console.log(recommendCalory);
-    return recommendCalory;
+    console.log(calory);
+    setRecommendCalory(calory);
   };
 
   const radioGenderButtonInfo: InputButtonInfo = {
@@ -181,10 +166,8 @@ const Register = () => {
       console.log('selectedValue:', selectedGender);
       setSelectedGender(selectedGender);
       if (selectedGender === '남성') {
-        // console.log('남성');
         setSelectedGender('남성');
       } else {
-        // console.log('여성');
         setSelectedGender('여성');
       }
     },
@@ -202,7 +185,7 @@ const Register = () => {
         password: pw,
         gender: selectedGender,
         age: selectedValue,
-        //recommendCalory 추가
+        recommendCalory,
       };
       axios
         .post(apiUrl, requestData)

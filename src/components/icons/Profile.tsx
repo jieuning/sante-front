@@ -6,6 +6,7 @@ const Profile = () => {
       type="button"
       cursor="pointer"
       color="#81D8D0"
+      size="33"
       onClick={() => {
         alert("안녕");
       }}
