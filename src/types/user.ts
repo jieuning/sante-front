@@ -1,12 +1,14 @@
 interface Menu {
   name: string;
   calory: number;
+  _id?: string;
 }
 
 interface FoodList {
   foodCategory: string;
   totalCalory: number;
   menu: Menu[];
+  _id?: string;
 }
 
 interface Food extends Document {
@@ -14,11 +16,13 @@ interface Food extends Document {
   foodId: string;
   createdAt: Date;
   lastUpdated: Date | null;
+  _id?: string;
 }
 
 interface ScheduledDate {
   date: Date;
   isDone: Boolean;
+  _id?: string;
 }
 
 interface Exercise {
@@ -31,6 +35,7 @@ interface Exercise {
   createdAt?: Date;
   lastUpdated?: Date;
   scheduledDate?: ScheduledDate[];
+  _id?: string;
 }
 interface User {
   email: string;
@@ -41,6 +46,7 @@ interface User {
   lastUpdated?: Date;
   todayCalory?: number;
   joinedAt?: Date;
+  _id?: string;
 }
 
 export type { User, Exercise, Food, FoodList, Menu };
