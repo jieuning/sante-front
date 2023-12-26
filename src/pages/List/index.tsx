@@ -1,17 +1,34 @@
 import Header from '../../components/Header';
 import { RadioButton, InputButtonInfo } from '../../components/RadioButton';
-import Arrow from '../../components/icons/Arrow';
 import RoutineCard from '../../components/RoutineCard';
 import styled from 'styled-components';
 import { useState } from 'react';
-import useUserModel from '../../hooks/useUserModel';
-
-const TODAY = '2023-12-08';
+import useUserModel from '../../hooks/useUserModel'; // 수정된 부분
+import MonthlyDateSelector from '../../components/MonthlyDateSelector';
+import useMonthlyDateHandler from '../../hooks/useMonthlyDateHandler';
 
 const List = () => {
+  const { targetDate, onLeftClick, onRightClick } = useMonthlyDateHandler(
+    new Date()
+  );
+
+  const user = useUserModel(
+    new Date(targetDate.getFullYear(), targetDate.getMonth(), 1),
+    new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
+  );
+  console.log('user:', user);
+
+  const dateArray = [];
+  for (
+    let date = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+    date <= new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0);
+    date.setDate(date.getDate() + 1)
+  ) {
+    dateArray.push(new Date(date));
+  }
+  console.log(dateArray);
+
   const [selectedValue, setSelectedValue] = useState('');
-  const today = new Date(TODAY); // 현재 날짜를 가져옵니다.
-  const user = useUserModel(today);
 
   const radioCategoryButtonInfo: InputButtonInfo = {
     type: 'shortOvalRadio',
@@ -25,7 +42,7 @@ const List = () => {
     onChange: (selectedCategory) => {
       console.log('선택된 값:', selectedCategory);
       setSelectedValue(selectedCategory);
-      // 선택된 아점저간에 따른 로직 수행
+      // TODO - 선택된 운동/식단에 따른 로직 작성
       if (selectedCategory === '운동') {
         console.log('운동');
       } else {
@@ -43,23 +60,43 @@ const List = () => {
       </RadioBtnContainer>
 
       <WeeklyContainer>
-        <div>
-          <Arrow type="left" size="35" cursor="pointer"></Arrow>
-        </div>
-        <DateBox>2023.12</DateBox>
-        <div>
-          <Arrow type="right" size="35" cursor="pointer"></Arrow>
-        </div>
+        <MonthlyDateSelector
+          targetDate={targetDate}
+          onLeftClick={onLeftClick}
+          onRightClick={onRightClick}
+        />
       </WeeklyContainer>
 
-      <RoutineCardContainer>
-        <RoutineCard
-          type="exercise"
-          exerciseList={user?.userExerciseList}
-          date={new Date(TODAY)}
-          onClickEdit={() => console.log('edit click')}
-        ></RoutineCard>
-      </RoutineCardContainer>
+      <AllRoutineCardContainer>
+        {selectedValue === '운동' && (
+          <>
+            {dateArray.map((date, index) => (
+              <RoutineCardContainer key={`exercise-${index}`}>
+                <RoutineCard
+                  key={`exercise-${index}`}
+                  type="exercise"
+                  exerciseList={user?.userExerciseList}
+                  date={date}
+                ></RoutineCard>
+              </RoutineCardContainer>
+            ))}
+          </>
+        )}
+        {selectedValue === '식단' && (
+          <>
+            {dateArray.map((date, index) => (
+              <RoutineCardContainer key={`food-${index}`}>
+                <RoutineCard
+                  key={`food-${index}`}
+                  type="food"
+                  foodList={user?.userFoodList}
+                  date={date}
+                ></RoutineCard>
+              </RoutineCardContainer>
+            ))}
+          </>
+        )}
+      </AllRoutineCardContainer>
     </>
   );
 };
@@ -69,20 +106,20 @@ const RadioBtnContainer = styled.div`
   justify-content: center;
   margin: 30px 0;
 `;
+
 const WeeklyContainer = styled.div`
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
 `;
-const DateBox = styled.p`
-  display: flex;
-  align-items: center;
-  font-size: 25px;
-  font-weight: bold;
-  margin: 0 10px;
-`;
+
 const RoutineCardContainer = styled.div`
+  margin: 10px 0;
+`;
+
+const AllRoutineCardContainer = styled.div`
   width: 50%;
   margin: auto;
 `;
+
 export default List;

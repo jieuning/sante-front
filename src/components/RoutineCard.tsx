@@ -94,7 +94,8 @@ const RoutineCard = ({
       {type === 'food' && (
         <Title>
           <p>🍚 식단</p>
-          {!isMain && <DynamicButton info={buttonInfo} />}
+          {isMain && <DynamicButton info={buttonInfo} />}
+          {!isMain && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
         </Title>
       )}
       <Line />
