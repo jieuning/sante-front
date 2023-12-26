@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { DynamicButton, DynamicButtonInfo } from '../components/DynamicButton';
 import { useEffect, useState } from 'react';
 import { setUser, isLogin, logOut } from '../utils/WebStorageControl';
+import Profile from '../components/icons/Profile';
 
 const LogoImage = () => {
   return <StyledLogoImage src="./logo.png" alt="logoImage" />;
@@ -19,10 +20,10 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin());
 
   //테스트 데이터
-  useEffect(() => {
-    setUser('test@test.com', 'test1111!');
-    setIsLoggedIn(isLogin());
-  }, []);
+  // useEffect(() => {
+  //   setUser('test@test.com', 'test1111!');
+  //   setIsLoggedIn(isLogin());
+  // }, []);
 
   const Logout = {
     onClick: () => {
@@ -35,12 +36,18 @@ const Header = () => {
   return (
     <StyledHeader>
       <LogoImage></LogoImage>
-      {isLogin() ? (
-        <StyledLogoutText onClick={Logout.onClick}>로그아웃</StyledLogoutText>
-        
-      ) : (
-        <DynamicButton info={loginButtonInfo} />
-      )}
+      <StyledRightSection>
+        {isLogin() ? (
+          <>
+            <StyledLogoutText onClick={Logout.onClick}>
+              로그아웃
+            </StyledLogoutText>
+            <Profile />
+          </>
+        ) : (
+          <DynamicButton info={loginButtonInfo} />
+        )}
+      </StyledRightSection>
     </StyledHeader>
   );
 };
@@ -62,6 +69,16 @@ const StyledLogoImage = styled.img`
 
 const StyledLogoutText = styled.h3`
   color: var(--primary-color);
+  font-size: 12px;
   cursor: pointer;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
 `;
+
+const StyledRightSection = styled.div`
+  display: flex;
+  align-itmes: center;
+`;
+
 export default Header;
