@@ -27,6 +27,9 @@ const Main = () => {
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
   const [exerciseData, setExerciseData] = useState(null);
+  const [foodData, setFoodData] = useState(null);
+
+  const [isCreateMode, setIsCreateMode] = useState(true);
   // const modalBackground = useRef();
   //DateSelect 날짜 클릭 이벤트
   const handleDayOnClick = (day: Date) => {
@@ -37,6 +40,18 @@ const Main = () => {
   };
   const closeExerciseModal = () => {
     setIsModalExerciseOpen(false);
+  };
+
+  const handleCreateClick = () => {
+    setIsCreateMode(true);
+    setIsModalFoodOpen(true);
+  };
+
+  // "편집하기" 클릭을 처리하는 함수 내부에서
+  const handleEditClick = (value) => {
+    setFoodData(value);
+    setIsCreateMode(false);
+    setIsModalFoodOpen(true);
   };
   //NOTE: mainStatistics는 이번주차 데이터를 불러와야합니다
   console.log(user);
@@ -58,7 +73,12 @@ const Main = () => {
           />
           <Blank />
           {isModalExerciseOpen && <ExerciseModal />}
-          {isModalFoodOpen && <FoodModal />}
+          {isModalFoodOpen && (
+            <FoodModal
+              modalButton={isCreateMode} // 모달Button 속성으로 상태 전달
+              // ... 다른 속성들
+            />
+          )}
           <ContentsContainer>
             <MonthCalendar
               exerciseList={user?.userExerciseList}
@@ -72,10 +92,12 @@ const Main = () => {
                 onClickMore={() => console.log('more click')}
                 onClickAdd={() => {
                   setExerciseData(null);
+                  handleCreateClick();
                   setIsModalExerciseOpen(true);
                 }}
                 onClickEdit={(value) => {
                   setExerciseData(value);
+                  handleEditClick(value);
                   setIsModalExerciseOpen(true);
                   console.log('이것은 받아온 운동', value);
                 }}
@@ -88,8 +110,13 @@ const Main = () => {
                 isMain={true}
                 date={new Date(TODAY)}
                 onClickMore={() => console.log('more click')}
-                onClickAdd={() => setIsModalFoodOpen(true)}
+                onClickAdd={() => {
+                  handleCreateClick();
+                  setIsModalFoodOpen(true);
+                }}
                 onClickEdit={(value) => {
+                  setFoodData(value);
+                  handleEditClick(value);
                   setIsModalFoodOpen(true);
                   console.log('이것은 받아온 value', value);
                 }}

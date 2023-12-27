@@ -13,7 +13,7 @@ import { format } from 'date-fns';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
-const FoodModal = () => {
+const FoodModal = ({modalButton}) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedValue, setSelectedValue] = useState('');
   const [foodItems, setFoodItems] = useState([
@@ -191,7 +191,7 @@ const FoodModal = () => {
               하루 권장 칼로리 1800Kcal
             </p>
           }
-          modalButton={true}
+          modalButton={modalButton}
           onClick={closeModal}
           onClickCreate={() => {
             handleSendDataToServer();
