@@ -18,8 +18,8 @@ type InputButtonInfo = {
   fontSize?: string | number;
   value: string[] | string;
   items: string[];
+  onClickAll?: (e?: any) => void;
   onClick?: (e?: any) => void;
-  onChange?: (e?: any) => void;
 };
 
 interface InputButtonProps {
@@ -105,11 +105,6 @@ const CheckInput = styled.input`
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-
-  &:checked + label {
-    background-color: var(--primary-color);
-    color: white;
-  }
 `;
 
 const RadioInput = styled.input`
@@ -161,14 +156,17 @@ const CheckLabel = styled.label<InputButtonInfo>`
   justify-content: center;
   padding: 0.5rem 1rem;
   margin-bottom: 5px;
-  margin-left: 5px;
+  margin-left: 8px;
   border-radius: 3rem;
   background-color: ${(props) =>
-    getColorValue(props.backgroundColor ?? 'gray')};
+    props.isSelected
+      ? 'var(--primary-color)'
+      : getColorValue(props.backgroundColor ?? 'gray')};
   color: ${(props) => getColorValue(props.color ?? 'white')};
   cursor: pointer;
   height: ${(props) => getButtonSize(props.size).height};
   font-size: ${(props) => getButtonSize(props.size).fontSize};
+  transform: scale(0.9);
 `;
 
 const CheckAllDayLabel = styled.label<InputButtonInfo>`
@@ -176,56 +174,67 @@ const CheckAllDayLabel = styled.label<InputButtonInfo>`
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem;
-  margin-bottom: 5px;
-  margin-left: 5px;
+  margin-top: 5px;
+  margin-left: 9px;
+  border: ${(props) =>
+    props.isSelected ? 'none' : `1px solid ${getColorValue('primary')}`};
   border-radius: 3rem;
   background-color: ${(props) =>
-    getColorValue(props.backgroundColor ?? 'gray')};
-  color: ${(props) => getColorValue(props.color ?? 'white')};
+    props.isSelected ? getColorValue('primary') : 'white'};
+  color: ${(props) => (props.isSelected ? 'white' : getColorValue('primary'))};
   cursor: pointer;
   width: 60px;
-  height: ${(props) => getButtonSize(props.size).height};
+  height: 30px;
   font-size: ${(props) => getButtonSize(props.size).fontSize};
 `;
 
 const CheckButton = ({ info }: InputButtonProps) => {
-  const handleCheckAll = () => {
-    // 매일 버튼 클릭 처리 로직
-    console.log('매일 버튼이 클릭되었습니다!');
-  };
+  const { onClick, onClickAll, value, items, ...restInfo } = info;
 
   const handleDayClick = (day: string) => {
     // 각 요일 클릭 처리 로직
-    if (info.onChange) {
-      info.onChange(day);
+    if (onClick) {
+      onClick(day);
     }
-    console.log(`${day}이(가) 클릭되었습니다!`);
   };
 
   return (
     <InputButtonContainer>
       {info.type === 'checkbox' && (
         <>
-          <InputcheckButtonBox key="everyday" onClick={handleCheckAll}>
-            <CheckInput type="checkbox" id="everyday" name="check-group" />
-            <CheckAllDayLabel htmlFor="everyday" {...info}>
-              <span>매일</span>
-            </CheckAllDayLabel>
-          </InputcheckButtonBox>
-
           {info.items.map((item, index) => (
-            <InputcheckButtonBox key={index} {...info}>
+            <InputcheckButtonBox key={index} {...restInfo}>
               <CheckInput
                 type="checkbox"
                 id={`check-${index}`}
                 name="check-group"
-                onChange={() => handleDayClick(item)}
+                onClick={() => handleDayClick(item)}
               />
-              <CheckLabel htmlFor={`check-${index}`} {...info}>
+              <CheckLabel
+                htmlFor={`check-${index}`}
+                {...restInfo}
+                isSelected={value.includes(item)}
+              >
                 <span>{item}</span>
               </CheckLabel>
             </InputcheckButtonBox>
           ))}
+
+          <InputcheckButtonBox key="everyday">
+            <CheckInput
+              type="checkbox"
+              id="everyday"
+              name="check-group"
+              onClick={onClickAll}
+            />
+            <CheckAllDayLabel
+              htmlFor="everyday"
+              {...restInfo}
+              isSelected={value.length === items.length}
+            >
+              <span>매일</span>
+            </CheckAllDayLabel>
+          </InputcheckButtonBox>
         </>
       )}
     </InputButtonContainer>
