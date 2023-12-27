@@ -13,6 +13,7 @@ interface SelectBoxProps {
   width: string;
   height: string;
   // value: string;
+  externalValue?: number;
 }
 
 const StyledSelect = styled.select<{
@@ -39,9 +40,9 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   placeholder,
   width,
   height,
+  externalValue,
 }) => {
-  const [selectedValue, setSelectedValue] = useState('');
-
+  const [selectedValue, setSelectedValue] = useState(externalValue || '');
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value;
     setSelectedValue(selectedValue);
@@ -55,7 +56,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
       value={selectedValue}
       onChange={handleSelectChange}
     >
-      <option value="" disabled>
+      <option value={selectedValue} disabled>
         {placeholder}
       </option>
       {ageOptions.map((option) => (

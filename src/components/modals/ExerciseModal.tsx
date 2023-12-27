@@ -16,6 +16,7 @@ import { addMonths, subMonths, isAfter, isBefore, format } from 'date-fns';
 import { Exercise } from '../../types/user';
 import useButtonHandler from '../../hooks/useButtonHandlerExercise';
 import useModifyExercise from '../../hooks/useModifyExercise';
+import useDeleteExercise from '../../hooks/useDeleteExercise';
 
 interface ExerciseModalProps {
   exercise?: Exercise;
@@ -63,10 +64,7 @@ const minutes = [
 
 const ExerciseModal = (exerciseData?: Exercise) => {
   console.log('check mic test', exerciseData);
-  // console.log('콘솔에 찍어봐용', exerciseData?.exerciseData.exerciseStartDate);
   const exercise = exerciseData?.exerciseData;
-  console.log('Imma exercise', exerciseData);
-  // console.log('뭐야 이건', exerciseData.exercise);
   const [inputValue, setInputValue] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
@@ -106,8 +104,9 @@ const ExerciseModal = (exerciseData?: Exercise) => {
 
     return scheduledDates;
   };
-
-  const handleModifyButtonClick = () => {
+  const { handleModify } = useModifyExercise();
+  const { handleDelete } = useDeleteExercise();
+  const handleModifyButtonClick = async () => {
     const scheduleList: ScheduledDate[] = generateScheduledDates(
       startDate,
       endDate,
@@ -129,8 +128,8 @@ const ExerciseModal = (exerciseData?: Exercise) => {
     console.log('sccccheduleList', scheduleList);
     console.log('paaayload', payload);
 
-    const { handleModify } = useModifyExercise({ exercise: payload });
-    handleModify();
+    await handleModify({ exercise: payload });
+    console.log('created');
   };
 
   const handleCreateButtonClick = () => {
@@ -156,6 +155,12 @@ const ExerciseModal = (exerciseData?: Exercise) => {
 
     const { handleCreate } = useButtonHandler({ exercise: payload });
     handleCreate();
+  };
+
+  const handleDeleteButtonClick = () => {
+    const exerciseId = exercise?.exerciseId;
+    console.log('this is ma ID', exerciseId);
+    handleDelete(exerciseId);
   };
 
   const HOUR_IN_MINUTES = 60;
@@ -187,10 +192,14 @@ const ExerciseModal = (exerciseData?: Exercise) => {
       ];
       setDateRange(newDateRange);
       setSelectedDays(exercise.repeatDate);
+      console.log(exercise.exerciseTime);
       divideMinutesAndHour(exercise.exerciseTime);
     } else {
       // 생성 모드에서는 빈 input으로 초기화
       setInputValue('');
+      setDateRange([null, null]);
+      // setSelectHour(0);
+      // setSelectMinutes(0);
     }
   }, [exercise]);
 
@@ -277,16 +286,14 @@ const ExerciseModal = (exerciseData?: Exercise) => {
         }
         onClickCreate={() => {
           handleCreateButtonClick();
-          console.log('created');
         }}
         onClickRemove={() => {
-          console.log('removed');
+          handleDeleteButtonClick();
         }}
         onClickUpdate={() => {
           handleModifyButtonClick();
-          console.log('updated');
         }}
-        modalButton={true}
+        modalButton={false}
       >
         <FlexStyleDiv>
           <RadioStyleDiv>
@@ -321,24 +328,24 @@ const ExerciseModal = (exerciseData?: Exercise) => {
             <MarginSetDiv>
               <SelectBox
                 ageOptions={hours}
-                placeholder="1시간"
+                placeholder={`${selectHour}시간`}
                 width="100%"
                 height="4.5rem"
                 onChange={(targetValue) => {
                   setSelectHour(Number(targetValue));
-                  console.log('what is your type', typeof selectHour);
+                  console.log('hours', selectHour);
                 }}
                 externalValue={selectHour}
               />
             </MarginSetDiv>
             <SelectBox
               ageOptions={minutes}
-              placeholder="30분"
+              placeholder={`${selectMinutes}분`}
               width="35%"
               height="4.5rem"
               onChange={(targetValue) => {
                 setSelectMinutes(Number(targetValue));
-                console.log(selectMinutes);
+                console.log('minutes', selectMinutes);
               }}
               externalValue={selectMinutes}
             />
