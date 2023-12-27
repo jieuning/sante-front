@@ -80,17 +80,21 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
   useEffect(() => {
     const newFoodItems: ModalFoodItem[] = [];
 
-    foodData.menu.forEach((item: Menu) => {
-      newFoodItems.push({
-        id:
-          foodId.toString() +
-          foodData.foodCategory +
-          item.name +
-          format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
-        name: item.name,
-        calorie: item.calory,
+    // FIXME - 반복문 null처리
+    if (foodData !== null) {
+      foodData.menu.forEach((item: Menu) => {
+        newFoodItems.push({
+          id:
+            foodId.toString() +
+            foodData.foodCategory +
+            item.name +
+            format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
+          name: item.name,
+          calorie: item.calory,
+        });
       });
-    });
+    }
+
     setFoodItems(newFoodItems);
   }, []);
 
