@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { Exercise } from '../types/user';
+import { getEmail, getPassword } from '../utils/WebStorageControl';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
@@ -31,8 +32,8 @@ const useCheckboxHandler = (
     //업데이트를 위해 유저 전체 정보를 가져옴
     try {
       const response = await axios.post(`${URL}/check`, {
-        email: 'email@email.com',
-        password: 'sdfdsf',
+        email: getEmail(),
+        password: getPassword(),
       });
       let user = removeIdField(response.data.user);
       delete user.__v;

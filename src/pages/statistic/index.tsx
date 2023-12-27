@@ -30,7 +30,6 @@ const Statistic = () => {
 
   //여기서 비율 + 총 평균치 구해서 Card에 보내야함
   useEffect(() => {
-    console.log(targetDate);
     const startDate = startOfMonth(targetDate);
     const endDate = endOfMonth(targetDate);
 
@@ -51,7 +50,7 @@ const Statistic = () => {
       targetDate,
       'cnt'
     );
-    console.log();
+
     if (cnt) {
       setExerciseCntList(cnt);
     }
@@ -62,7 +61,6 @@ const Statistic = () => {
       targetDate,
       25
     );
-    console.log(cnt);
     setCaloryList(fst);
   }, [user, targetDate]);
 
