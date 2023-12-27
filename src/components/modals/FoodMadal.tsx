@@ -19,9 +19,9 @@ const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 interface FoodModalProps {
   modalButton: any;
   foodData?: FoodList | null;
-  foodId?: string | null;  // 날짜
+  foodId?: string | null; // 날짜
   modalType: ModalMode;
-  name?: string  // 음식이름
+  name?: string; // 음식이름
 }
 
 interface ModalFoodItem {
@@ -224,18 +224,46 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
       let user = removeIdField(response.data.user);
       delete user.__v;
 
-      // 삭제할 데이터의 정보를 수집
-      // const categoryToDelete = selectedValue;
+      // 삭제할 음식 항목 찾기
+      const updatedUserFoodList = (user.userFoodList || []).map(
+        (food: {
+          foodId: string | null | undefined;
+          foodList: { foodCategory: string | undefined; menu: any[] }[];
+        }) => {
+          if (food.foodId === foodId) {
+            // 찾은 음식 항목의 foodList에서 특정 조건에 맞는 항목을 제외
+            food.foodList = food.foodList.filter(
+              (item: { foodCategory: string | undefined; menu: any[] }) => {
+                return item.foodCategory !== foodData?.foodCategory; // 수정된 부분
+              }
+            );
+          }
+          return food;
+        }
+      );
 
-      // 서버에서 데이터 삭제 요청
-      await axios.delete(`${URL}`, {
+      user.userFoodList = updatedUserFoodList;
+
+      // 변경된 유저 그대로 업데이트
+      console.log('user', user);
+
+      // 서버에 변경 사항 업데이트
+      const putResponse = await axios.put(`${URL}`, JSON.stringify(user), {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-      // 성공적으로 삭제되면 UI를 업데이트합니다.
-      // 여기서는 간단히 모달을 닫아버리지만, 필요에 따라 다양한 업데이트 로직을 추가할 수 있습니다.
+      if (putResponse.status === 200) {
+        console.log('PUT 요청이 성공적으로 완료되었습니다.');
+      } else {
+        console.error(
+          'PUT 요청이 실패했습니다. HTTP 상태 코드:',
+          putResponse.status
+        );
+      }
+
+      // 서버에서 데이터 삭제 요청
       closeModal();
     } catch (error) {
       console.error('에러 발생:', error);
