@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Exercise, Food } from '../types/user';
 import { removeIdField } from '../utils/RemoveIdField';
+import { getEmail, getPassword } from '../utils/WebStorageControl';
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 interface ListProps {
@@ -14,8 +15,8 @@ const useCreateExercise = () => {
       //업데이트를 위해 유저 전체 정보를 가져옴
       try {
         const response = await axios.post(`${URL}/check`, {
-          email: 'email123123@email.com',
-          password: 'sdfdsf',
+          email: getEmail(),
+          password: getPassword(),
         });
         const user = removeIdField(response.data.user);
         delete user.__v;
