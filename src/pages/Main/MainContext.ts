@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 
 interface MainContextValue {
-  closeFoodModal: () => void;
-  closeExerciseModal: () => void;
+  closeFoodModal: (value: boolean) => void;
+  closeExerciseModal: (value: boolean) => void;
 }
 
 export const MainContext = createContext<MainContextValue | null>(null);
