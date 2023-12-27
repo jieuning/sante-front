@@ -29,12 +29,13 @@ const Main = () => {
   const today = new Date(TODAY); // 현재 날짜를 가져옵니다.
 
   const [user, setUser] = useState<User>();
-  const startOfThisWeek = startOfWeek(today); // 이번 주의 시작 날짜를 계산합니다.
-  const endOfThisWeek = endOfWeek(today); // 이번 주의 종료 날짜를 계산합니다.
-  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
   const [currentDate, setCurrentDate] = useState<Date>(today);
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
+
+  const startOfThisWeek = startOfWeek(currentDate); // 이번 주의 시작 날짜를 계산합니다.
+  const endOfThisWeek = endOfWeek(currentDate); // 이번 주의 종료 날짜를 계산합니다.
+  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
 
   const [exerciseData, setExerciseData] = useState<Exercise>();
   const [foodData, setFoodData] = useState<FoodList>();
