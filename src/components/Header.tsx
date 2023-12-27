@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { DynamicButton, DynamicButtonInfo } from '../components/DynamicButton';
-import { useEffect, useState } from 'react';
-import { setUser, isLogin, logOut } from '../utils/WebStorageControl';
+import { useState } from 'react';
+import { isLogin, logOut } from '../utils/WebStorageControl';
 import Profile from '../components/icons/Profile';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,19 +9,9 @@ const LogoImage = () => {
   return <StyledLogoImage src="./logo.png" alt="logoImage" />;
 };
 
-// const loginButtonInfo: DynamicButtonInfo = {
-//   type: 'solid',
-//   size: 'small',
-//   text: '로그인',
-//   fontWeight: 'bold',
-//   onClick: () => {
-//     console.log('Login Button clicked!');
-//     history.push('/login');
-//   },
-// };
-
 const Header = () => {
   const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin());
 
   //테스트 데이터
