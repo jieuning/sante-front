@@ -2,76 +2,59 @@ import ModalCard from './ModalCard';
 import Input from '../Input';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { SetStateAction, useState, forwardRef, useEffect } from 'react';
+import { useState, forwardRef, useEffect } from 'react';
 import styled from 'styled-components';
 import SelectBox from '../SelectBox';
 import ko from 'date-fns/locale/ko';
 
-import {
-  CheckButton,
-  RadioButton,
-  InputButtonInfo,
-} from '../../components/RadioButton';
-import { addMonths, subMonths, isAfter, isBefore, format } from 'date-fns';
+import { CheckButton, InputButtonInfo } from '../../components/RadioButton';
+import { addMonths, subMonths, format } from 'date-fns';
 import { Exercise } from '../../types/user';
-import useButtonHandler from '../../hooks/useButtonHandlerExercise';
+import useCreateExercise from '../../hooks/useCreateExercise';
 import useModifyExercise from '../../hooks/useModifyExercise';
 import useDeleteExercise from '../../hooks/useDeleteExercise';
-
-interface ExerciseModalProps {
-  exercise?: Exercise;
-  isCreateMode: boolean;
-}
-
-const hours = [
-  { value: 1, label: '1시간' },
-  { value: 2, label: '2시간' },
-  { value: 3, label: '3시간' },
-  { value: 4, label: '4시간' },
-  { value: 5, label: '5시간' },
-  { value: 6, label: '6시간' },
-  { value: 7, label: '7시간' },
-  { value: 8, label: '8시간' },
-  { value: 9, label: '9시간' },
-  { value: 10, label: '10시간' },
-  { value: 11, label: '11시간' },
-  { value: 12, label: '12시간' },
+type Option = {
+  value: string;
+  label: string;
+};
+const hours: Option[] = [
+  { value: '1', label: '1시간' },
+  { value: '2', label: '2시간' },
+  { value: '3', label: '3시간' },
+  { value: '4', label: '4시간' },
+  { value: '5', label: '5시간' },
+  { value: '6', label: '6시간' },
+  { value: '7', label: '7시간' },
+  { value: '8', label: '8시간' },
+  { value: '9', label: '9시간' },
+  { value: '10', label: '10시간' },
+  { value: '11', label: '11시간' },
+  { value: '12', label: '12시간' },
 ];
 
 const minutes = [
-  { value: 0, label: '0분' },
-  { value: 10, label: '10분' },
-  { value: 20, label: '20분' },
-  { value: 30, label: '30분' },
-  { value: 40, label: '40분' },
-  { value: 50, label: '50분' },
+  { value: '0', label: '0분' },
+  { value: '10', label: '10분' },
+  { value: '20', label: '20분' },
+  { value: '30', label: '30분' },
+  { value: '40', label: '40분' },
+  { value: '50', label: '50분' },
 ];
 
-// const exercise: Exercise = {
-//   exerciseName: '운동1',
-//   exerciseId: 'exercise-20231201',
-//   exerciseStartDate: new Date('2023-9-18'),
-//   exerciseEndDate: new Date('2024-1-25'),
-//   exerciseTime: 60,
-//   repeatDate: ['월', '수'],
-//   scheduledDate: [
-//     { date: new Date('2023-11-30'), isDone: false },
-//     { date: new Date('2023-12-02'), isDone: true },
-//     { date: new Date('2023-12-03'), isDone: false },
-//   ],
-// };
-
-// const exercise = null;
+interface ExerciseModalProps {
+  exerciseData?: Exercise;
+  modalButton: boolean;
+}
 
 const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
   console.log('check mic test', exerciseData);
   const exercise = exerciseData;
-  const [inputValue, setInputValue] = useState('');
-  const [dateRange, setDateRange] = useState([null, null]);
+  const [inputValue, setInputValue] = useState<string | undefined>('');
+  const [dateRange, setDateRange] = useState<(Date | null)[]>([null, null]);
   const [startDate, endDate] = dateRange;
   const [selectHour, setSelectHour] = useState<number>(0);
   const [selectMinutes, setSelectMinutes] = useState<number>(0);
-  const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
   const days: Record<number, string> = {
     0: '일',
@@ -106,62 +89,60 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
     return scheduledDates;
   };
   const { handleModify } = useModifyExercise();
+  const { handleCreate } = useCreateExercise();
   const { handleDelete } = useDeleteExercise();
   const handleModifyButtonClick = async () => {
-    const scheduleList: ScheduledDate[] = generateScheduledDates(
-      startDate,
-      endDate,
-      selectedDays
-    );
+    if (startDate !== null && endDate !== null && selectedDays !== null) {
+      const scheduleList: ScheduledDate[] = generateScheduledDates(
+        startDate,
+        endDate,
+        selectedDays
+      );
 
-    const payload = {
-      exerciseId: exercise?.exerciseId,
-      exerciseName: inputValue,
-      exerciseStartDate: new Date(startDate),
-      exerciseEndDate: new Date(endDate),
-      exerciseTime: timeToMinute({
-        exerciseHour: selectHour,
-        exerciseMinute: selectMinutes,
-      }),
-      repeatDate: selectedDays,
-      scheduledDate: scheduleList,
-    };
-    console.log('sccccheduleList', scheduleList);
-    console.log('paaayload', payload);
-
-    await handleModify({ exercise: payload });
-    console.log('created');
+      const payload: Exercise = {
+        exerciseId: exercise?.exerciseId,
+        exerciseName: inputValue,
+        exerciseStartDate: new Date(startDate),
+        exerciseEndDate: new Date(endDate),
+        exerciseTime: timeToMinute({
+          exerciseHour: selectHour,
+          exerciseMinute: selectMinutes,
+        }),
+        repeatDate: selectedDays,
+        scheduledDate: scheduleList,
+      };
+      await handleModify({ exercise: payload });
+    }
   };
 
-  const handleCreateButtonClick = () => {
-    const scheduleList: ScheduledDate[] = generateScheduledDates(
-      startDate,
-      endDate,
-      selectedDays
-    );
+  const handleCreateButtonClick = async () => {
+    if (startDate !== null && endDate !== null && selectedDays !== null) {
+      const scheduleList: ScheduledDate[] = generateScheduledDates(
+        startDate,
+        endDate,
+        selectedDays
+      );
 
-    const payload = {
-      exerciseName: inputValue,
-      exerciseStartDate: new Date(startDate),
-      exerciseEndDate: new Date(endDate),
-      exerciseTime: timeToMinute({
-        exerciseHour: selectHour,
-        exerciseMinute: selectMinutes,
-      }),
-      repeatDate: selectedDays,
-      scheduledDate: scheduleList,
-    };
-    console.log('sccccheduleList', scheduleList);
-    console.log('paaayload', payload);
+      const payload = {
+        exerciseName: inputValue,
+        exerciseStartDate: new Date(startDate),
+        exerciseEndDate: new Date(endDate),
+        exerciseTime: timeToMinute({
+          exerciseHour: selectHour,
+          exerciseMinute: selectMinutes,
+        }),
+        repeatDate: selectedDays,
+        scheduledDate: scheduleList,
+      };
 
-    const { handleCreate } = useButtonHandler({ exercise: payload });
-    handleCreate();
+      await handleCreate({ exercise: payload });
+    }
   };
 
   const handleDeleteButtonClick = () => {
     const exerciseId = exercise?.exerciseId;
     console.log('this is ma ID', exerciseId);
-    handleDelete(exerciseId);
+    exerciseId && handleDelete(exerciseId);
   };
 
   const HOUR_IN_MINUTES = 60;
@@ -187,14 +168,21 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
   useEffect(() => {
     if (exercise?.exerciseId) {
       exercise?.exerciseName && setInputValue(exercise.exerciseName);
-      const newDateRange = [
-        new Date(exercise.exerciseStartDate),
-        new Date(exercise.exerciseEndDate),
-      ];
-      setDateRange(newDateRange);
-      setSelectedDays(exercise.repeatDate);
-      console.log(exercise.exerciseTime);
-      divideMinutesAndHour(exercise.exerciseTime);
+      if (
+        exercise.exerciseStartDate &&
+        exercise.repeatDate &&
+        exercise.exerciseEndDate &&
+        exercise.exerciseTime
+      ) {
+        const newDateRange = [
+          new Date(exercise.exerciseStartDate),
+          new Date(exercise.exerciseEndDate),
+        ];
+        setDateRange(newDateRange);
+        setSelectedDays(exercise.repeatDate);
+        console.log(exercise.exerciseTime);
+        divideMinutesAndHour(exercise.exerciseTime);
+      }
     } else {
       // 생성 모드에서는 빈 input으로 초기화
       setInputValue('');
@@ -245,8 +233,16 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
     isDone: boolean;
   }
 
-  // eslint-disable-next-line react/display-name
-  const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
+  interface ExampleCustomInputProps {
+    value?: string;
+    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  }
+
+  // eslint-disable-next-line react/display-name, react/prop-types
+  const ExampleCustomInput = forwardRef<
+    HTMLButtonElement,
+    ExampleCustomInputProps
+  >(({ value, onClick }, ref) => (
     <StyledButton
       value={value}
       className="example-custom-input"
@@ -268,11 +264,12 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
               <Input
                 name="exerciseName"
                 width="80%"
+                type="text"
                 height="4.5rem"
                 placeholder="운동 이름을 입력하세요"
                 value={inputValue}
                 onChange={(value) => {
-                  setInputValue(value);
+                  setInputValue(value.toString());
                   console.log(inputValue);
                 }}
               />
@@ -280,15 +277,9 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
             <br />
           </>
         }
-        onClickCreate={() => {
-          handleCreateButtonClick();
-        }}
-        onClickRemove={() => {
-          handleDeleteButtonClick();
-        }}
-        onClickUpdate={() => {
-          handleModifyButtonClick();
-        }}
+        onClickCreate={() => handleCreateButtonClick()}
+        onClickRemove={() => handleDeleteButtonClick()}
+        onClickUpdate={() => handleModifyButtonClick()}
         modalButton={modalButton}
       >
         <FlexStyleDiv>
@@ -304,7 +295,7 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
                 selectsRange={true}
                 startDate={startDate}
                 endDate={endDate}
-                onChange={(update: SetStateAction<null[]>) => {
+                onChange={(update) => {
                   setDateRange(update);
                   console.log('dateRange', dateRange);
                 }}
