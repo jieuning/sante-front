@@ -19,15 +19,16 @@ const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 interface FoodModalProps {
   modalButton: any;
   foodData?: FoodList | null;
-  foodId?: string | null;
+  foodId?: string | null;  // 날짜
   modalType: ModalMode;
+  name?: string  // 음식이름
 }
 
 interface ModalFoodItem {
+  id: number | string;
+  name: string;
   calory: number | string;
   food: any;
-  id: string;
-  name: string;
 }
 
 const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
@@ -50,8 +51,8 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
     // 새로운 음식 항목 생성
     const newFoodItem = {
       id: new Date().getTime(), // 고유한 id 생성
-      name: null,
-      calory: null,
+      name: '',
+      calory: '',
       foodCategory: selectedValue, // 새로운 항목의 foodCategory 추가
       food: null, // food 속성 추가
     };
@@ -74,8 +75,8 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
     setFoodItems(updatedFoodItems);
   };
 
-  // 각 음식 항목의 calorie 값 업데이트
-  const handleCalorieChange = (value: string, index: number) => {
+  // 각 음식 항목의 calory 값 업데이트
+  const handleCaloryChange = (value: string, index: number) => {
     const updatedFoodItems = [...foodItems];
     updatedFoodItems[index].calory = Number(value);
     setFoodItems(updatedFoodItems);
@@ -352,8 +353,8 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
                   width="30%"
                   height="35px"
                   value={item.calory}
-                  onChange={(value) => handleCalorieChange(value, index)}
-                  id={`calorie-${index}`}
+                  onChange={(value) => handleCaloryChange(value, index)}
+                  id={`calory-${index}`}
                 />
                 <p style={{ fontSize: '15px' }}>Kcal</p>
               </div>
