@@ -18,8 +18,8 @@ const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 interface FoodModalProps {
   modalButton: any;
-  foodData: FoodList;
-  foodId: string;
+  foodData: FoodList | null;
+  foodId: string | null;
   modalType: ModalMode;
 }
 
@@ -35,8 +35,8 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   console.log('fooddata', foodData);
-  console.log('해당식단카테고리', foodData.foodCategory);
-  const selectedCategory = foodData.foodCategory;
+  console.log('해당식단카테고리', foodData?.foodCategory);
+  const selectedCategory = foodData?.foodCategory;
   console.log('selectedCategory', selectedCategory);
   // const [selectedFoodCategory, setSelectedFoodCategory] =
   //   useState(selectedCategory);
@@ -88,12 +88,12 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
       foodData.menu.forEach((item: Menu) => {
         return newFoodItems.push({
           id:
-            foodId.toString() +
+            foodId?.toString() +
             foodData.foodCategory +
             item.name +
             format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
           name: item.name,
-          calory: item.calory.toString(),
+          calorie: item.calory.toString(),
           food: undefined,
         });
       });
@@ -116,7 +116,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
           if (item.name !== null) {
             return {
               name: item.name,
-              calory: item.calorie,
+              calorie: item.calorie,
             };
           }
         })
@@ -126,7 +126,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
       user.userFoodList?.forEach((food: Food) => {
         if (food.foodId === foodId) {
           food.foodList.forEach((item) => {
-            if (item.foodCategory === foodData.foodCategory) {
+            if (item.foodCategory === foodData?.foodCategory) {
               item.menu = newMenu ?? [];
             }
           });
