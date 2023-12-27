@@ -217,7 +217,7 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
     fontWeight: 'bold',
     value: selectedDays,
     items: items,
-    onClick: () => {
+    onClickAll: () => {
       if (selectedDays.length === items.length) {
         setSelectedDays([]);
       } else {
@@ -225,7 +225,7 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
       }
       console.log('매일 버튼이 클릭되었습니다.', selectedDays);
     },
-    onChange: (day) => {
+    onClick: (day) => {
       if (selectedDays.includes(day)) {
         setSelectedDays(
           selectedDays.filter((selectedDay) => selectedDay !== day)
