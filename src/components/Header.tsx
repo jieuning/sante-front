@@ -3,27 +3,43 @@ import { DynamicButton, DynamicButtonInfo } from '../components/DynamicButton';
 import { useEffect, useState } from 'react';
 import { setUser, isLogin, logOut } from '../utils/WebStorageControl';
 import Profile from '../components/icons/Profile';
+import { useNavigate } from 'react-router-dom';
 
 const LogoImage = () => {
   return <StyledLogoImage src="./logo.png" alt="logoImage" />;
 };
 
-const loginButtonInfo: DynamicButtonInfo = {
-  type: 'solid',
-  size: 'small',
-  text: '로그인',
-  fontWeight: 'bold',
-  onClick: () => console.log('Login Button clicked!'),
-};
+// const loginButtonInfo: DynamicButtonInfo = {
+//   type: 'solid',
+//   size: 'small',
+//   text: '로그인',
+//   fontWeight: 'bold',
+//   onClick: () => {
+//     console.log('Login Button clicked!');
+//     history.push('/login');
+//   },
+// };
 
 const Header = () => {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin());
 
   //테스트 데이터
-  useEffect(() => {
-    setUser('test@test.com', 'test1111!', '여성');
-    setIsLoggedIn(isLogin());
-  }, []);
+  // useEffect(() => {
+  //   setUser('test@test.com', 'test1111!', '여성');
+  //   setIsLoggedIn(isLogin());
+  // }, []);
+
+  const loginButtonInfo: DynamicButtonInfo = {
+    type: 'solid',
+    size: 'small',
+    text: '로그인',
+    fontWeight: 'bold',
+    onClick: () => {
+      console.log('Login Button clicked!');
+      navigate('/login');
+    },
+  };
 
   const Logout = {
     onClick: () => {
