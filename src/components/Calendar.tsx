@@ -7,9 +7,16 @@ import {
   startOfMonth,
   endOfMonth,
   eachDayOfInterval,
+  format,
 } from 'date-fns';
 import ColorChip from './ColorChip';
 import { Exercise, Food, User } from '../types/user';
+import {
+  filterExerciseListByDateRange,
+  filterFoodListByDateRange,
+  packingFoodList,
+  packingScheduledDate,
+} from '../utils/Date';
 
 interface MonthCalendarProps {
   exerciseList?: Exercise[] | undefined;
@@ -24,9 +31,6 @@ export const MonthCalendar = ({
   userData,
   currentDate,
 }: MonthCalendarProps) => {
-  console.log(exerciseList);
-  console.log(foodList);
-
   const months: string[] = [
     '1',
     '2',
@@ -51,7 +55,7 @@ export const MonthCalendar = ({
 
   const currentMonth = getMonth(currentDate);
   const currentMonthName = months[currentMonth];
-  const userCalory = userData?.todayCalory;
+  const userCalory = userData?.todayCalory ?? 2000;
   // const date = getDate(currentDate);
 
   // 해당 월의 시작일과 종료일을 계산
@@ -64,38 +68,66 @@ export const MonthCalendar = ({
     end: endOfCurrentMonth,
   }).map((allDate) => getDate(allDate));
 
-  const renderCustomDayContents = () => {
+  const renderCustomDayContents = (date: number) => {
     // 운동 컬러칩
-    const exerciseColorChips = exerciseList?.map((exercise) => {
-      return exercise.scheduledDate?.map((scheduled) => {
-        const exerciseCurrentDay = Number(
-          scheduled.date?.toString().slice(8, 10)
-        );
-        return exerciseCurrentDay === allDatesInMonth ? (
+    let exerciseColorChips: JSX.Element | undefined = undefined;
+    let foodColorChips: JSX.Element | undefined = undefined;
+
+    const tempDate = new Date(
+      `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${date}`
+    );
+    const dateKey = format(tempDate, 'yyyy-MM-dd');
+
+    if (exerciseList !== undefined) {
+      const filteredExerciseList = filterExerciseListByDateRange(
+        userData.userExerciseList ?? [],
+        startOfCurrentMonth,
+        endOfCurrentMonth
+      );
+
+      const packedExerciseList = packingScheduledDate(filteredExerciseList);
+
+      const result = packedExerciseList.get(dateKey)?.reduce((acc, curr) => {
+        return acc && curr;
+      }, true);
+      console.log('result', dateKey, result);
+      if (result === undefined) {
+        exerciseColorChips = undefined;
+      } else {
+        exerciseColorChips = (
           <ColorChip
-            color={scheduled.isDone ? '#8699FF' : 'transparent'}
+            color={result ? '#8699FF' : 'transparent'}
             borderColor="#8699FF"
           />
-        ) : undefined;
-      });
-    });
-    // 식단 컬러칩
-    const foodColorChips = foodList?.map((food) => {
-      const foodCurrentDay = Number(food.createdAt?.toString().slice(8, 10));
-      return food.foodList?.map((list) => {
-        const todayCalory = list.totalCalory;
-        return foodCurrentDay === allDatesInMonth ? (
+        );
+      }
+    }
+
+    if (foodList !== undefined) {
+      const filteredFoodList = filterFoodListByDateRange(
+        userData.userFoodList ?? [],
+        startOfCurrentMonth,
+        endOfCurrentMonth
+      );
+
+      const packedFoodList = packingFoodList(filteredFoodList);
+
+      const calory = packedFoodList.get(dateKey);
+
+      if (calory === undefined) {
+        foodColorChips = undefined;
+      } else {
+        foodColorChips = (
           <ColorChip
-            color={
-              todayCalory && todayCalory >= userCalory ? '#97F39A' : '#F39797'
-            }
+            color={calory && calory <= userCalory ? '#97F39A' : '#F39797'}
           />
-        ) : undefined;
-      });
-    });
+        );
+      }
+    }
+
     return (
       <>
-        <span>{allDatesInMonth}</span>
+        <span>{date}</span>
         <ColorChipWrap>
           {exerciseColorChips}
           {foodColorChips}
