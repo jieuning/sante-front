@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
-import useUserModelAll from './useUserModelAll';
 import { format } from 'date-fns';
-import { Exercise, User } from '../types/user';
+import { Exercise } from '../types/user';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
@@ -28,8 +27,6 @@ const useCheckboxHandler = (
       ...prevStates,
       [checkboxKey]: isChecked,
     }));
-
-    let user: User | undefined;
 
     //업데이트를 위해 유저 전체 정보를 가져옴
     try {

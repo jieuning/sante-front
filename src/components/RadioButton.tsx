@@ -18,7 +18,7 @@ type InputButtonInfo = {
   fontSize?: string | number;
   value: string[] | string;
   items: string[];
-  onClickAll?: (e?: any) => void;
+  onChange?: (e?: any) => void;
   onClick?: (e?: any) => void;
 };
 

@@ -158,7 +158,7 @@ const RoutineCard = ({
       {type === 'food' &&
         filteredFoods?.map((item) => (
           <ContentsContainer key={item.foodId}>
-            {item.foodList.map((foodItem, index) => (
+            {item.foodList.map((foodItem) => (
               <div key={foodItem.foodCategory}>
                 <ContentsName>
                   <p>
