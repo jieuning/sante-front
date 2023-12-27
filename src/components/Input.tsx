@@ -34,7 +34,7 @@ const ErrorMessage = styled.div`
 
 interface StyledInputProps {
   type: 'text' | 'number' | 'password';
-  name: string;
+  name?: string;
   placeholder: string;
   value?: string | number;
   width: string;
@@ -42,6 +42,7 @@ interface StyledInputProps {
   textAlign?: string;
   onChange: (v: string | number) => void;
   errorMessage?: string;
+  id?: string | number;
 }
 
 const Input = ({
