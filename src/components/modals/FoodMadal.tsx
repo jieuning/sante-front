@@ -10,22 +10,24 @@ import {
 import styled from 'styled-components';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { Food, FoodList, Menu } from '../../types/user';
-import { ModalMode } from '../../types/modalMode';
+import { Food, Menu } from '../../types/user';
+// import { ModalMode } from '../../types/modalMode';
+
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
-interface FoodModalProps {
-  modalButton: any;
-  foodData: FoodList;
-  foodId: string;
-  modalType: ModalMode;
-}
+// interface FoodModalProps {
+//   modalButton: any;
+//   foodData: FoodList;
+//   foodId: string;
+//   modalType: ModalMode;
+// }
 
 interface ModalFoodItem {
+  food: any;
   id: string;
   name: string;
-  calorie: number;
+  calorie: number | string;
 }
 
 const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
@@ -33,10 +35,11 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
   const [selectedValue, setSelectedValue] = useState('');
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>();
   console.log('fooddata', foodData);
-  console.log('foodId', foodId);
-  // input값 관리
-  const [food, setFood] = useState('');
-  const [calorie, setCalorie] = useState('');
+  console.log('해당식단카테고리', foodData.foodCategory);
+  const selectedCategory = foodData.foodCategory;
+  console.log('selectedCategory', selectedCategory);
+  // const [selectedFoodCategory, setSelectedFoodCategory] =
+  //   useState(selectedCategory);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -83,14 +86,14 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     // FIXME - 반복문 null처리
     if (foodData !== null) {
       foodData.menu.forEach((item: Menu) => {
-        newFoodItems.push({
-          id:
-            foodId.toString() +
+        return newFoodItems.push({
+          id: foodId.toString() +
             foodData.foodCategory +
             item.name +
             format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
           name: item.name,
           calorie: item.calory,
+          food: undefined
         });
       });
     }
@@ -152,8 +155,6 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
       let user = removeIdField(response.data.user);
       delete user.__v;
 
-      // ... 이전 코드 ...
-
       // 여기에 userFoodList 업데이트 로직 추가
       const newUserFoodList = user.userFoodList ? [...user.userFoodList] : [];
 
@@ -170,7 +171,7 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
             0
           ),
           menu: foodItems.map((foodItem) => ({
-            name: foodItem.food,
+            name: foodItem.name,
             calory: parseInt(foodItem.calorie),
           })),
         });
@@ -210,6 +211,34 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     }
   };
 
+  // 삭제
+  const handleDeleteClick = async () => {
+    try {
+      const response = await axios.post(`${URL}/check`, {
+        email: 'email@email.com',
+        password: 'sdfdsf',
+      });
+      let user = removeIdField(response.data.user);
+      delete user.__v;
+
+      // 삭제할 데이터의 정보를 수집
+      const categoryToDelete = selectedValue;
+
+      // 서버에서 데이터 삭제 요청
+      await axios.delete(`${URL}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // 성공적으로 삭제되면 UI를 업데이트합니다.
+      // 여기서는 간단히 모달을 닫아버리지만, 필요에 따라 다양한 업데이트 로직을 추가할 수 있습니다.
+      closeModal();
+    } catch (error) {
+      console.error('에러 발생:', error);
+    }
+  };
+
   function removeIdField<T>(obj: T): T {
     if (Array.isArray(obj)) {
       // 배열인 경우 각 요소에 대해 재귀적으로 호출
@@ -230,12 +259,14 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     return obj;
   }
 
+  // selectedValue
+  // selectedCategory
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
     size: 'short-oval',
-    value: selectedValue,
+    value: selectedCategory,
     items: ['아침', '점심', '저녁', '간식'],
-    backgroundColor: 'gray',
+    backgroundColor: 'gray', // 기본 색상
     color: 'white',
     fontWeight: 'bold',
     onChange: (selectedTime) => {
@@ -272,13 +303,13 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
             </p>
           }
           modalButton={modalButton}
-          onClick={closeModal}
+          onClick={()=>{closeModal()}}
           onClickCreate={() => {
             handleSendDataToServer();
             closeModal();
           }}
           onClickRemove={() => {
-            console.log('삭제');
+            handleDeleteClick();
           }}
           onClickUpdate={() => {
             handleEditClick();

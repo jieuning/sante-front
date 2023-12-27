@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { ReactNode, useContext } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import Closed from '../icons/Closed';
-import { User, Exercise, Food, FoodList, Menu } from '../../types/user';
+import { FoodList, Menu } from '../../types/user';
 import { MainContext } from '../../pages/Main/MainContext';
 
 export interface ModalCardProps {
@@ -11,6 +11,9 @@ export interface ModalCardProps {
   children?: ReactNode;
   modalButton: boolean;
   onClick?: (e?: any) => void;
+  onClickCreate?: (e?: any) => void;
+  onClickRemove: (e?: any) => void;
+  onClickUpdate: (e?: any) => void;
 }
 
 export interface payloadProps {
@@ -30,7 +33,6 @@ const ModalCard = ({
   children,
   modalButton,
   inputElement,
-  payload,
   onClickCreate,
   onClickRemove,
   onClickUpdate,
