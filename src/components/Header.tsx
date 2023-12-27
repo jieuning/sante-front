@@ -11,7 +11,6 @@ const LogoImage = () => {
 
 const Header = () => {
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin());
 
   //테스트 데이터
@@ -36,6 +35,7 @@ const Header = () => {
       logOut();
       setIsLoggedIn(false);
       console.log('로그아웃 클릭');
+      console.log(isLoggedIn);
     },
   };
 
