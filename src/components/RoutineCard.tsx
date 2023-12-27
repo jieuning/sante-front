@@ -82,7 +82,7 @@ const RoutineCard = ({
     }
 
     //handleCheckboxChange(initialCheckboxState); // 여기서 상태 업데이트
-  }, [exerciseList, foodList]);
+  }, [exerciseList, foodList, date]);
 
   if (!isExist && !isMain) return null;
 

@@ -2,7 +2,7 @@ import Header from '../../components/Header';
 import { RadioButton, InputButtonInfo } from '../../components/RadioButton';
 import RoutineCard from '../../components/RoutineCard';
 import styled from 'styled-components';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useUserModel from '../../hooks/useUserModel'; // 수정된 부분
 import MonthlyDateSelector from '../../components/MonthlyDateSelector';
 import useMonthlyDateHandler from '../../hooks/useMonthlyDateHandler';
@@ -16,11 +16,8 @@ const List = () => {
     new Date(targetDate.getFullYear(), targetDate.getMonth(), 1),
     new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
   );
-  console.log('user:', user);
-  console.log('user?.userExerciseList:', user?.userExerciseList);
-  console.log('user?.userFoodList:', user?.userFoodList);
 
-  const dateArray = [];
+  const dateArray: Date[] = [];
   for (
     let date = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
     date <= new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0);
@@ -28,9 +25,12 @@ const List = () => {
   ) {
     dateArray.push(new Date(date)); // 각 날짜에 대해 새로운 Date 객체 생성
   }
-  console.log(dateArray);
 
   const [selectedValue, setSelectedValue] = useState('운동');
+  const [loadedDates, setLoadedDates] = useState<Date[]>([]); // 로드된 날짜들을 저장
+  const loader = useRef(null);
+  const [loadIndex, setLoadIndex] = useState(0);
+  const LOAD_SIZE = 10;
 
   const radioCategoryButtonInfo: InputButtonInfo = {
     type: 'shortOvalRadio',
@@ -43,9 +43,46 @@ const List = () => {
     fontWeight: 'bold',
     onChange: (selectedCategory) => {
       console.log('선택된 값:', selectedCategory);
+      setLoadIndex(0);
+      setLoadedDates([]);
       setSelectedValue(selectedCategory);
     },
   };
+
+  const loadMoreItems = () => {
+    const nextLoadIndex = loadIndex + LOAD_SIZE;
+    const newLoadedDates = dateArray.slice(loadIndex, nextLoadIndex);
+    console.log('newLoadedDates:', newLoadedDates);
+    console.log('nextLoadIndex:', nextLoadIndex);
+    setLoadedDates((prevLoadedDates) => [
+      ...prevLoadedDates,
+      ...newLoadedDates,
+    ]);
+    setLoadIndex(nextLoadIndex);
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const firstEntry = entries[0];
+        if (firstEntry.isIntersecting) {
+          loadMoreItems();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    const currentLoader = loader.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [loadIndex]);
 
   return (
     <>
@@ -66,7 +103,7 @@ const List = () => {
       <AllRoutineCardContainer>
         {selectedValue === '운동' && (
           <>
-            {dateArray.map((date, index) => (
+            {loadedDates.map((date, index) => (
               <RoutineCardContainer key={`exercise-${index}`}>
                 <RoutineCard
                   key={`exercise-${index}`}
@@ -80,7 +117,7 @@ const List = () => {
         )}
         {selectedValue === '식단' && (
           <>
-            {dateArray.map((date, index) => (
+            {loadedDates.map((date, index) => (
               <RoutineCardContainer key={`food-${index}`}>
                 <RoutineCard
                   key={`food-${index}`}
@@ -93,6 +130,7 @@ const List = () => {
           </>
         )}
       </AllRoutineCardContainer>
+      <div ref={loader} />
     </>
   );
 };
@@ -110,11 +148,12 @@ const WeeklyContainer = styled.div`
 `;
 
 const RoutineCardContainer = styled.div`
-  margin: 10px 0;
+  margin: 10px auto;
+  max-width: 620px;
+  width: 480px;
 `;
 
 const AllRoutineCardContainer = styled.div`
-  width: 50%;
   margin: auto;
 `;
 

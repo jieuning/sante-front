@@ -4,12 +4,14 @@ import {
   DynamicButton,
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
+import { useNavigate } from 'react-router-dom';
 
 interface BlankProps {
   height?: number;
 }
 
 const Intro = () => {
+  const navigate = useNavigate();
   const registerButtonInfo: DynamicButtonInfo = {
     type: 'solid',
     size: 'large',
@@ -17,7 +19,9 @@ const Intro = () => {
     backgroundColor: 'primary',
     color: 'white',
     fontWeight: 'bold',
-    onClick: () => console.log('Button clicked!'),
+    onClick: () => {
+      navigate('/register');
+    },
   };
 
   const loginButtonInfo: DynamicButtonInfo = {
@@ -27,7 +31,9 @@ const Intro = () => {
     backgroundColor: 'primary',
     color: 'white',
     fontWeight: 'bold',
-    onClick: () => console.log('Button clicked!'),
+    onClick: () => {
+      navigate('/login');
+    },
   };
 
   return (

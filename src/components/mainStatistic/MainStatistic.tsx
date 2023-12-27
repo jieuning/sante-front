@@ -51,8 +51,8 @@ const MainStatistic = ({
   const [foodGage, setFoodGage] = useState(0);
   const [userCalory, setUserCalory] = useState<number>(0);
 
-  console.log('foodgage', foodGage);
-  console.log('usercalory', userCalory);
+  // console.log('foodgage', foodGage);
+  // console.log('usercalory', userCalory);
 
   const handleCalory = (userFoodData?: Food[]) => {
     if (userFoodData) {
@@ -62,7 +62,7 @@ const MainStatistic = ({
       if (todayFoods) {
         const calculatedCalory = todayFoods.foodList.reduce(
           (acc: number, item: FoodList) => {
-            console.log('item', item);
+            // console.log('item', item);
             return acc + item.totalCalory;
           },
           0
@@ -96,7 +96,7 @@ const MainStatistic = ({
 
   useEffect(() => {
     if (user) {
-      console.log('-------thisIsUser------', user);
+      //console.log('-------thisIsUser------', user);
       user.todayCalory && setUserCalory(user.todayCalory);
       const userFoodData = user.userFoodList;
       const userExerciseData = user.userExerciseList;
@@ -104,9 +104,9 @@ const MainStatistic = ({
       handleCalory(userFoodData); //TODO: 클릭했던 날짜 값 받아오기
       handleExercise(userExerciseData);
     }
-    console.log('--userCalory', userCalory);
-    console.log('--food', foodGage);
-    console.log('--exercise', exerciseGage / exerciseMaxGage);
+    // console.log('--userCalory', userCalory);
+    // console.log('--food', foodGage);
+    // console.log('--exercise', exerciseGage / exerciseMaxGage);
   }, [user]); //TODO: 나중에 userFoodData랑 userExerciseData 메모이제이션 따로 분리
 
   //NOTE: 기준 80%
