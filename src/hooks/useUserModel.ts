@@ -5,6 +5,7 @@ import {
   filterFoodListByDateRange,
 } from '../utils/Date';
 import axios from 'axios';
+import { getEmail, getPassword } from '../utils/WebStorageControl';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
@@ -17,8 +18,8 @@ const useUserModel = (startDate: Date, endDate?: Date) => {
   useEffect(() => {
     axios
       .post(`${URL}/check`, {
-        email: 'email@email.com',
-        password: 'sdfdsf',
+        email: getEmail(),
+        password: getPassword(),
       })
       .then((response) => {
         const userData = response.data.user;

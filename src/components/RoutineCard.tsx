@@ -12,6 +12,7 @@ import {
   filterFoodListByDateRange,
 } from '../utils/Date';
 import useCheckboxHandler from '../hooks/useCheckboxHandler';
+import { useNavigate } from 'react-router-dom';
 
 type RoutineType = 'exercise' | 'food';
 interface RoutineCardProps {
@@ -31,15 +32,17 @@ const RoutineCard = ({
   foodList,
   date,
   isMain,
-  onClickMore,
   onClickAdd,
   onClickEdit,
 }: RoutineCardProps) => {
+  const navigate = useNavigate();
   const buttonInfo: DynamicButtonInfo = {
     type: 'outline',
     text: '더보기',
     fontWeight: 'bold',
-    onClick: onClickMore,
+    onClick: () => {
+      navigate('/list');
+    },
   };
 
   if (type === 'exercise' && exerciseList) {
