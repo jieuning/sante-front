@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { GlobalStyles } from '../styles/GlobalStyle';
 import Test from '../pages/test/Test';
 import Home from '../pages/home/Home';
-import Statistic from '../pages/statistic/index';
+import Statistic from '../pages/statistic';
 import Main from '../pages/Main';
 import Login from '../pages/login';
 import List from '../pages/List';

@@ -61,7 +61,7 @@ export const DateSelect = ({
         <Button arrowLeft rotation={180} onClick={handleNextWeek} />
         <DayOfMonthWrap>
           <WeekOfMonth>
-            {oneWeek.map((week, index) => {
+            {oneWeek.map((_, index) => {
               // 주에 dayIndex 만큼 날짜를 추가해 줌
               // dayOfWeek가 일주일(7일)이기 때문에 7번 추가
               const addDate = addDays(currentWeek, index);

@@ -19,10 +19,6 @@ import ExerciseModal from '../../components/modals/ExerciseModal';
 import FoodModal from '../../components/modals/FoodMadal';
 import { MainContext } from './MainContext';
 import axios from 'axios';
-import {
-  filterExerciseListByDateRange,
-  filterFoodListByDateRange,
-} from '../../utils/Date';
 import { ModalMode } from '../../types/modalMode';
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 interface BalckProps {
@@ -52,20 +48,6 @@ const Main = () => {
   const [endOfCurrentMonth, setEndOfCurrentMonth] = useState(
     endOfMonth(currentDate)
   );
-  const firstUser = useUserModel(
-    startOfMonth(currentDate),
-    endOfMonth(currentDate)
-  );
-  // const [monthlyUser, setMonthlyUser] = useState<User | undefined>();
-  // const monthlyUserData = useUserModel(startOfCurrentMonth, endOfCurrentMonth);
-
-  // useEffect(() => {
-  //   setMonthlyUser(monthlyUserData);
-  //   console.log(monthlyUser);
-  // }, [monthlyUser]);
-
-  // const modalBackground = useRef();
-  //DateSelect 날짜 클릭 이벤트
 
   const handleDayOnClick = (day: Date) => {
     setCurrentDate(day);

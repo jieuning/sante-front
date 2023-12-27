@@ -1,14 +1,7 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import {
-  getMonth,
-  getDate,
-  startOfMonth,
-  endOfMonth,
-  eachDayOfInterval,
-  format,
-} from 'date-fns';
+import { getMonth, startOfMonth, endOfMonth, format } from 'date-fns';
 import ColorChip from './ColorChip';
 import { Exercise, Food, User } from '../types/user';
 import {
@@ -46,12 +39,12 @@ export const MonthCalendar = ({
     '12',
   ];
 
-  const tagsData = [
-    { type: 'register', label: '운동 등록' },
-    { type: 'complete', label: '운동 완료' },
-    { type: 'normal', label: '칼로리 적정' },
-    { type: 'excess', label: '칼로리 초과' },
-  ];
+  // const tagsData = [
+  //   { type: 'register', label: '운동 등록' },
+  //   { type: 'complete', label: '운동 완료' },
+  //   { type: 'normal', label: '칼로리 적정' },
+  //   { type: 'excess', label: '칼로리 초과' },
+  // ];
 
   const currentMonth = getMonth(currentDate);
   const currentMonthName = months[currentMonth];
@@ -63,10 +56,10 @@ export const MonthCalendar = ({
   const endOfCurrentMonth = endOfMonth(currentDate);
 
   // 해당 월의 모든 날짜
-  const allDatesInMonth = eachDayOfInterval({
-    start: startOfCurrentMonth,
-    end: endOfCurrentMonth,
-  }).map((allDate) => getDate(allDate));
+  // const allDatesInMonth = eachDayOfInterval({
+  //   start: startOfCurrentMonth,
+  //   end: endOfCurrentMonth,
+  // }).map((allDate) => getDate(allDate));
 
   const renderCustomDayContents = (date: number) => {
     // 운동 컬러칩
@@ -253,40 +246,40 @@ const ColorChipTagWrap = styled.div`
   display: flex;
 `;
 
-const Tag = styled.span`
-  padding: 8px 12px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-  display: inline-block;
-  margin-right: 8px;
+// const Tag = styled.span`
+//   padding: 8px 12px;
+//   border-radius: 4px;
+//   font-size: 14px;
+//   font-weight: bold;
+//   text-align: center;
+//   display: inline-block;
+//   margin-right: 8px;
 
-  ${(props) =>
-    props.type === 'register' &&
-    css`
-      background-color: #3498db;
-      color: #fff;
-    `}
+//   ${(props) =>
+//     props.type === 'register' &&
+//     css`
+//       background-color: #3498db;
+//       color: #fff;
+//     `}
 
-  ${(props) =>
-    props.type === 'complete' &&
-    css`
-      background-color: #2ecc71;
-      color: #fff;
-    `}
+//   ${(props) =>
+//     props.type === 'complete' &&
+//     css`
+//       background-color: #2ecc71;
+//       color: #fff;
+//     `}
 
-  ${(props) =>
-    props.type === 'normal' &&
-    css`
-      background-color: #e67e22;
-      color: #fff;
-    `}
+//   ${(props) =>
+//     props.type === 'normal' &&
+//     css`
+//       background-color: #e67e22;
+//       color: #fff;
+//     `}
 
-  ${(props) =>
-    props.type === 'excess' &&
-    css`
-      background-color: #e74c3c;
-      color: #fff;
-    `}
-`;
+//   ${(props) =>
+//     props.type === 'excess' &&
+//     css`
+//       background-color: #e74c3c;
+//       color: #fff;
+//     `}
+// `;
