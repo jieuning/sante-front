@@ -18,16 +18,16 @@ const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 interface FoodModalProps {
   modalButton: any;
-  foodData: FoodList | null;
-  foodId: string | null;
+  foodData?: FoodList | null;
+  foodId?: string | null;
   modalType: ModalMode;
 }
 
 interface ModalFoodItem {
+  calory: number | string;
   food: any;
   id: string;
   name: string;
-  calorie: string;
 }
 
 const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
@@ -51,8 +51,9 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
     const newFoodItem = {
       id: new Date().getTime(), // 고유한 id 생성
       name: null,
-      calorie: null,
+      calory: null,
       foodCategory: selectedValue, // 새로운 항목의 foodCategory 추가
+      food: null, // food 속성 추가
     };
 
     // foodItems 상태 업데이트
@@ -76,7 +77,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
   // 각 음식 항목의 calorie 값 업데이트
   const handleCalorieChange = (value: string, index: number) => {
     const updatedFoodItems = [...foodItems];
-    updatedFoodItems[index].calorie = Number(value);
+    updatedFoodItems[index].calory = Number(value);
     setFoodItems(updatedFoodItems);
   };
 
@@ -85,7 +86,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
 
     // FIXME - 반복문 null처리
     if (foodData !== null) {
-      foodData.menu.forEach((item: Menu) => {
+      foodData?.menu.forEach((item: Menu) => {
         return newFoodItems.push({
           id:
             foodId?.toString() +
@@ -93,7 +94,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
             item.name +
             format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
           name: item.name,
-          calorie: item.calory.toString(),
+          calory: item.calory,
           food: undefined,
         });
       });
@@ -116,7 +117,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
           if (item.name !== null) {
             return {
               name: item.name,
-              calorie: item.calorie,
+              calory: item.calory,
             };
           }
         })
@@ -168,23 +169,23 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
         newUserFoodList[existingFoodIndex].foodList.push({
           foodCategory: selectedValue,
           totalCalory: foodItems.reduce(
-            (total, foodItem) => total + parseInt(foodItem.calorie),
+            (total, foodItem) => total + Number(foodItem.calory),
             0
           ),
           menu: foodItems.map((foodItem) => ({
             name: foodItem.name,
-            calory: parseInt(foodItem.calorie),
+            calory: foodItem.calory,
           })),
         });
       } else {
         // 새로운 음식 항목 생성
         const newFoodList = foodItems.map((foodItem) => ({
           foodCategory: selectedValue,
-          totalCalory: parseInt(foodItem.calorie),
+          totalCalory: foodItem.calory,
           menu: [
             {
               name: foodItem.food,
-              calory: parseInt(foodItem.calorie),
+              calory: foodItem.calory,
             },
           ],
         }));
@@ -265,7 +266,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
     size: 'short-oval',
-    value: selectedCategory,
+    value: selectedValue,
     items: ['아침', '점심', '저녁', '간식'],
     backgroundColor: 'gray', // 기본 색상
     color: 'white',
@@ -350,7 +351,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
                   placeholder={'칼로리'}
                   width="30%"
                   height="35px"
-                  value={item.calorie}
+                  value={item.calory}
                   onChange={(value) => handleCalorieChange(value, index)}
                   id={`calorie-${index}`}
                 />

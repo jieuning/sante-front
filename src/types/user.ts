@@ -1,6 +1,6 @@
 interface Menu {
   name: string;
-  calory: number;
+  calory: number | string;
   _id?: string;
 }
 

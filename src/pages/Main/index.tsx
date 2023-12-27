@@ -38,7 +38,7 @@ const Main = () => {
 
   const [exerciseData, setExerciseData] = useState<Exercise>();
   const [foodData, setFoodData] = useState<FoodList>();
-  const [foodId, setFoodId] = useState(0);
+  const [foodId, setFoodId] = useState('');
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
 
   const [isCreateMode, setIsCreateMode] = useState(true);
