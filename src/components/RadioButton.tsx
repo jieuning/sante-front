@@ -20,6 +20,7 @@ type InputButtonInfo = {
   items: string[];
   onClickAll?: (e?: any) => void;
   onClick?: (e?: any) => void;
+  onChange?: (e?: any) => void;
 };
 
 interface InputButtonProps {
