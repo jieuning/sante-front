@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import useUserModel from '../../hooks/useUserModel';
 import {
   getMonthlyExerciseRateStatistic,
   getMonthlyCaloryTotalStatistic,
@@ -9,8 +8,7 @@ import {
 import '../../index.css';
 import Card from './Card';
 import styled from 'styled-components';
-import { endOfMonth, format, startOfMonth } from 'date-fns';
-import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import { endOfMonth, startOfMonth } from 'date-fns';
 import Header from '../../components/Header';
 import MonthlyDateSelector from '../../components/MonthlyDateSelector';
 import useMonthlyDateHandler from '../../hooks/useMonthlyDateHandler';

@@ -3,16 +3,14 @@ import { Exercise, Food } from '../types/user';
 import Tag from '../components/Tag';
 import { DynamicButton, DynamicButtonInfo } from './DynamicButton';
 import { GrEdit } from 'react-icons/gr';
-import { IoAddCircle, IoTerminalOutline } from 'react-icons/io5';
-import { MouseEventHandler, useEffect, useState } from 'react';
+import { IoAddCircle } from 'react-icons/io5';
+import { useEffect, useState } from 'react';
 import CheckBox from './CheckBox';
 import { format } from 'date-fns';
 import {
   filterExerciseListByDateRange,
   filterFoodListByDateRange,
 } from '../utils/Date';
-import useUserModel from '../hooks/useUserModel';
-import useUserModelAll from '../hooks/useUserModelAll';
 import useCheckboxHandler from '../hooks/useCheckboxHandler';
 
 type RoutineType = 'exercise' | 'food';
@@ -55,7 +53,6 @@ const RoutineCard = ({
   }
 
   const [isExist, setIsExist] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
   const [checkboxStates, handleCheckboxChange] =
     useCheckboxHandler(initialCheckboxState);
   const [filteredExercises, setFilteredExercises] = useState<Exercise[]>([]);
@@ -132,7 +129,7 @@ const RoutineCard = ({
                   type="button"
                   cursor="pointer"
                   color="var(--black-color)"
-                  onClick={() => onClickEdit(item)}
+                  onClick={() => onClickEdit && onClickEdit(item)}
                 />
               </ContentsName>
               <TagContainer>
@@ -172,7 +169,9 @@ const RoutineCard = ({
                     type="button"
                     cursor="pointer"
                     color="var(--black-color)"
-                    onClick={() => onClickEdit([foodItem, item.foodId])}
+                    onClick={() =>
+                      onClickEdit && onClickEdit([foodItem, item.foodId])
+                    }
                   />
                 </ContentsName>
                 <TagContainer>
