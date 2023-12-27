@@ -88,6 +88,17 @@ const Main = () => {
     setFoodModalType('create');
   };
 
+  const handleExerciseCreateClick = () => {
+    setIsCreateMode(true);
+    setIsModalExerciseOpen(true);
+  };
+
+  // "편집하기" 클릭을 처리하는 함수 내부에서
+  const handleExerciseEditClick = () => {
+    setIsCreateMode(false);
+    setIsModalExerciseOpen(true);
+  };
+
   // "편집하기" 클릭을 처리하는 함수 내부에서
   const handleEditClick = (value) => {
     setFoodData(value[0]);
@@ -134,7 +145,12 @@ const Main = () => {
             onClick={handleDayOnClick}
           />
           <Blank />
-          {isModalExerciseOpen && <ExerciseModal />}
+          {isModalExerciseOpen && (
+            <ExerciseModal
+              modalButton={isCreateMode}
+              exerciseData={exerciseData}
+            />
+          )}
           {isModalFoodOpen && (
             <FoodModal
               modalButton={isCreateMode} // 모달Button 속성으로 상태 전달
@@ -159,14 +175,11 @@ const Main = () => {
                 onClickMore={() => console.log('more click')}
                 onClickAdd={() => {
                   setExerciseData(null);
-                  handleCreateClick();
-                  setIsModalExerciseOpen(true);
+                  handleExerciseCreateClick();
                 }}
                 onClickEdit={(value) => {
                   setExerciseData(value);
-                  handleEditClick(value);
-                  setIsModalExerciseOpen(true);
-                  console.log('이것은 받아온 운동', value);
+                  handleExerciseEditClick(value);
                 }}
                 date={currentDate}
               ></RoutineCard>
