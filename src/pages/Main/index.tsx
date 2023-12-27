@@ -188,7 +188,7 @@ const Main = () => {
               <Blank />
             </CardContainer>
 
-            <MainStatistic user={weeklyUser} todayDate={today} />
+            <MainStatistic user={weeklyUser} todayDate={currentDate} />
           </ContentsContainer>
         </Container>
       </MainContext.Provider>
