@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import ModalCard from '../../components/modals/ModalCard';
 import Input from '../../components/Input';
 import Remove from '../icons/Remove';
@@ -10,30 +10,30 @@ import {
 import styled from 'styled-components';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { Food, Menu } from '../../types/user';
+import { Food, FoodList, Menu } from '../../types/user';
+import { ModalMode } from '../../types/modalMode';
 // import { ModalMode } from '../../types/modalMode';
-
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
-// interface FoodModalProps {
-//   modalButton: any;
-//   foodData: FoodList;
-//   foodId: string;
-//   modalType: ModalMode;
-// }
+interface FoodModalProps {
+  modalButton: any;
+  foodData: FoodList;
+  foodId: string;
+  modalType: ModalMode;
+}
 
 interface ModalFoodItem {
   food: any;
   id: string;
   name: string;
-  calorie: number | string;
+  calorie: string;
 }
 
-const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
+const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedValue, setSelectedValue] = useState('');
-  const [foodItems, setFoodItems] = useState<ModalFoodItem[]>();
+  const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   console.log('fooddata', foodData);
   console.log('해당식단카테고리', foodData.foodCategory);
   const selectedCategory = foodData.foodCategory;
@@ -87,13 +87,14 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     if (foodData !== null) {
       foodData.menu.forEach((item: Menu) => {
         return newFoodItems.push({
-          id: foodId.toString() +
+          id:
+            foodId.toString() +
             foodData.foodCategory +
             item.name +
             format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
           name: item.name,
           calorie: item.calory,
-          food: undefined
+          food: undefined,
         });
       });
     }
@@ -222,7 +223,7 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
       delete user.__v;
 
       // 삭제할 데이터의 정보를 수집
-      const categoryToDelete = selectedValue;
+      // const categoryToDelete = selectedValue;
 
       // 서버에서 데이터 삭제 요청
       await axios.delete(`${URL}`, {
@@ -269,7 +270,7 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     backgroundColor: 'gray', // 기본 색상
     color: 'white',
     fontWeight: 'bold',
-    onChange: (selectedTime) => {
+    onChange: (selectedTime: SetStateAction<string>) => {
       console.log('선택된 값:', selectedTime);
       setSelectedValue(selectedTime);
     },
@@ -303,7 +304,9 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
             </p>
           }
           modalButton={modalButton}
-          onClick={()=>{closeModal()}}
+          onClick={() => {
+            closeModal();
+          }}
           onClickCreate={() => {
             handleSendDataToServer();
             closeModal();
