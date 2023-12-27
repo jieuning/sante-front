@@ -10,10 +10,10 @@ export interface ModalCardProps {
   inputElement: ReactNode;
   children?: ReactNode;
   modalButton: boolean;
-  onClick?: (e?: any) => void;
-  onClickCreate?: (e?: any) => void;
-  onClickRemove: (e?: any) => void;
-  onClickUpdate: (e?: any) => void;
+  onClick?: () => void;
+  onClickCreate?: () => void;
+  onClickRemove: () => void;
+  onClickUpdate: () => void;
 }
 
 export interface payloadProps {
@@ -155,4 +155,6 @@ const ButtonContainer = styled.div`
   gap: 10px;
   padding: 0 40px;
   margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
 `;
