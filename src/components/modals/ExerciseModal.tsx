@@ -20,6 +20,7 @@ import useDeleteExercise from '../../hooks/useDeleteExercise';
 
 interface ExerciseModalProps {
   exercise?: Exercise;
+  isCreateMode: boolean;
 }
 
 const hours = [
@@ -62,9 +63,9 @@ const minutes = [
 
 // const exercise = null;
 
-const ExerciseModal = (exerciseData?: Exercise) => {
+const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
   console.log('check mic test', exerciseData);
-  const exercise = exerciseData?.exerciseData;
+  const exercise = exerciseData;
   const [inputValue, setInputValue] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
@@ -217,17 +218,14 @@ const ExerciseModal = (exerciseData?: Exercise) => {
     value: selectedDays,
     items: items,
     onClick: () => {
-      // 매일 버튼 클릭 처리 로직
-      // if (selectedDays.length === items.length) {
-      //   setSelectedDays([]);
-      // } else {
-      //   setSelectedDays([...items]);
-      // }
-      // console.log('매일 버튼이 클릭되었습니다.', selectedDays);
+      if (selectedDays.length === items.length) {
+        setSelectedDays([]);
+      } else {
+        setSelectedDays([...items]);
+      }
+      console.log('매일 버튼이 클릭되었습니다.', selectedDays);
     },
     onChange: (day) => {
-      console.log('whatday', day);
-
       if (selectedDays.includes(day)) {
         setSelectedDays(
           selectedDays.filter((selectedDay) => selectedDay !== day)
@@ -238,8 +236,6 @@ const ExerciseModal = (exerciseData?: Exercise) => {
           setSelectedDays([...selectedDays, day]);
         }
       }
-
-      console.log('=====selected====', selectedDays);
     },
   };
   // const todayString = format(today, 'yyyy.MM.dd부터~ 지정일까지');
@@ -293,15 +289,12 @@ const ExerciseModal = (exerciseData?: Exercise) => {
         onClickUpdate={() => {
           handleModifyButtonClick();
         }}
-        modalButton={false}
+        modalButton={modalButton}
       >
         <FlexStyleDiv>
           <RadioStyleDiv>
             <StyledLabel>반복</StyledLabel>
-            <CheckButton
-              info={checkButtonInfo}
-              style={{ backgroundColor: 'blue' }}
-            />
+            <CheckButton info={checkButtonInfo} />
           </RadioStyleDiv>
           <SelectStyleDiv>
             <StyledLabel>기간</StyledLabel>
