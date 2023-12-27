@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { Exercise } from '../types/user';
 import { removeIdField } from '../utils/RemoveIdField';
+import { getEmail, getPassword } from '../utils/WebStorageControl';
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 const useDeleteExercise = () => {
   const handleDelete = async (exerciseId: string) => {
     try {
       const response = await axios.post(`${URL}/check`, {
-        email: 'yeojin2@naver.com',
-        password: '1234',
+        email: getEmail(),
+        password: getPassword(),
       });
       //업데이트를 위해 유저 전체 정보를 가져옴
       const user = removeIdField(response.data.user);
