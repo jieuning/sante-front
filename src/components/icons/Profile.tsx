@@ -36,8 +36,8 @@ const UserInfoBox = () => {
 const Container = styled.div`
   position: absolute;
   //위치 + 사이즈 조정!!
-  left: 87%;
-  top: 25%;
+  left: 90%;
+  top: 18%;
   transform: translate(-50%, -50%);
   width: 250px;
   height: 150px;
@@ -98,11 +98,41 @@ const UserInfoData = styled.div`
   margin: 15px 0px 0px 15px;
 `;
 
-const Withdrawal = () => {
-  return <StyledWithdrawal>회원탈퇴</StyledWithdrawal>;
+const handleWithdrawal = async () => {
+  try {
+    const email = localStorage.getItem('email');
+    const apiUrl = `http://kdt-sw-7-team04.elicecoding.com/api/user/${email}`;
+    const response = await fetch(apiUrl, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      console.log('회원탈퇴 성공');
+      localStorage.removeItem('email');
+      localStorage.removeItem('password');
+      localStorage.removeItem('gender');
+      // localStorage.removeItem('age');
+      // localStorage.removeItem('recommendCalory');
+    } else {
+      console.error('회원탈퇴 실패');
+    }
+  } catch (error) {
+    console.log('회원탈퇴 중 오류 발생', error);
+  }
 };
 
-const StyledWithdrawal = styled.button`
+const Withdrawal = () => {
+  return (
+    <StyledWithdrawal onClick={handleWithdrawal}>회원탈퇴</StyledWithdrawal>
+  );
+};
+
+const StyledWithdrawal = styled.button<
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>`
   position: absolute;
   bottom: 10px;
   right: 8px;
