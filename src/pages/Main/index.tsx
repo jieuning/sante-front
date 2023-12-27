@@ -85,7 +85,7 @@ const Main = () => {
   // "편집하기" 클릭을 처리하는 함수 내부에서
   const handleEditClick = (value) => {
     setFoodData(value[0]);
-    setFoodId(value[1]);
+    setFoodId(value[1] || null);
     setFoodModalType('edit');
     setIsCreateMode(false);
     setIsModalFoodOpen(true);
