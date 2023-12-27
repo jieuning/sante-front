@@ -37,7 +37,7 @@ const ModalCard = ({
   onClickRemove,
   onClickUpdate,
 }: ModalCardProps) => {
-  const { closeExerciseModal, closeFoodModal } = useContext(MainContext);
+  const { closeExerciseModal, closeFoodModal } = useContext(MainContext)!;
   const buttonCreateInfo: DynamicButtonInfo = {
     type: 'solid',
     size: 'medium',
