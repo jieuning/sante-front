@@ -3,15 +3,18 @@ import useUserModel from '../../hooks/useUserModel';
 import {
   getMonthlyExerciseRateStatistic,
   getMonthlyCaloryTotalStatistic,
+  filterExerciseListByDateRange,
+  filterFoodListByDateRange,
 } from '../../utils/Date';
 import '../../index.css';
 import Card from './Card';
 import styled from 'styled-components';
-import { format } from 'date-fns';
+import { endOfMonth, format, startOfMonth } from 'date-fns';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import Header from '../../components/Header';
 import MonthlyDateSelector from '../../components/MonthlyDateSelector';
 import useMonthlyDateHandler from '../../hooks/useMonthlyDateHandler';
+import useUserModelAll from '../../hooks/useUserModelAll';
 //TODO - 여기서 백분율 계산해서 Card에 보내야함
 
 type ObjectType = {
@@ -19,18 +22,24 @@ type ObjectType = {
   result: number;
 };
 const Statistic = () => {
-  const user = useUserModel(new Date('2023-12-01'), new Date('2023-12-23'));
+  const user = useUserModelAll();
   const [exerciseRateList, setExerciseRateList] = useState<ObjectType>();
   const [exerciseCntList, setExerciseCntList] = useState<ObjectType>();
   const { targetDate, onLeftClick, onRightClick } = useMonthlyDateHandler(
-    new Date('2023-12-08')
+    new Date()
   );
   const [caloryList, setCaloryList] = useState<ObjectType>();
 
   //여기서 비율 + 총 평균치 구해서 Card에 보내야함
   useEffect(() => {
+    console.log(targetDate);
+    const startDate = startOfMonth(targetDate);
+    const endDate = endOfMonth(targetDate);
+
+    if (user?.userExerciseList === undefined) return;
+
     const rate = getMonthlyExerciseRateStatistic(
-      user?.userExerciseList,
+      filterExerciseListByDateRange(user?.userExerciseList, startDate, endDate),
       targetDate,
       'rate'
     );
@@ -40,7 +49,7 @@ const Statistic = () => {
     }
 
     const cnt = getMonthlyExerciseRateStatistic(
-      user?.userExerciseList,
+      filterExerciseListByDateRange(user?.userExerciseList, startDate, endDate),
       targetDate,
       'cnt'
     );
@@ -49,8 +58,9 @@ const Statistic = () => {
       setExerciseCntList(cnt);
     }
 
+    if (user?.userFoodList === undefined) return;
     const fst = getMonthlyCaloryTotalStatistic(
-      user?.userFoodList,
+      filterFoodListByDateRange(user?.userFoodList, startDate, endDate),
       targetDate,
       25
     );

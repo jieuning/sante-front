@@ -40,7 +40,7 @@ const getMonthlyExerciseRateStatistic = (
 
   // 계산하고 그 주차는 max가 해당 주차에서 그 날까지만임 그걸 위한 '이번 주'를 저장
   //const thisWeek = getWeekOfMonth(date);
-  const today = new Date();
+  const today = targetDate;
 
   //여기서 해당 날짜 isDone 체크되어있는지 확인
   //scheduled date 의 날짜와 존재하는 isDone을 키밸류로 저장
@@ -53,6 +53,7 @@ const getMonthlyExerciseRateStatistic = (
       targetDate.getMonth(),
       i
     );
+    //console.log(format(thisDay, 'yyyy-MM-dd'));
     const currWeek = getWeekOfMonth(thisDay);
     //주차가 증가하면 새로운 주차 추가
     if (statistic.length < currWeek) {
@@ -91,6 +92,7 @@ const getMonthlyExerciseRateStatistic = (
       if (statistic[weekIndex].curr + currCnt > max) {
         max = statistic[weekIndex].curr + currCnt;
       }
+
       statistic[weekIndex] = {
         week: currWeek,
         max: statistic[weekIndex].max + maxCnt,
@@ -98,7 +100,7 @@ const getMonthlyExerciseRateStatistic = (
       };
     }
   }
-
+  console.log(statistic);
   const list = statistic.reduce((acc, curr) => {
     if (exerciseType === 'rate') {
       const result = curr.max > 0 ? Math.ceil((curr.curr / curr.max) * 100) : 0;
@@ -170,7 +172,6 @@ const getMonthlyCaloryTotalStatistic = (
     }
   }
 
-  console.log(statistic);
   const list = statistic.reduce((acc, curr) => {
     const result = curr.max > 0 ? Math.ceil((curr.curr / max) * 100) : 0;
     acc.push(result ?? 0);

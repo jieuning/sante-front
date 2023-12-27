@@ -68,7 +68,7 @@ const RoutineCard = ({
     //여기서 put 작업을 해야하는데... get and put 하면 되려나
     handleCheckboxChange(checkboxKey, isChecked);
   };
-
+  console.log(foodList);
   useEffect(() => {
     if (type === 'food' && foodList) {
       const filtered = filterFoodListByDateRange(foodList, date, date);
