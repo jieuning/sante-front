@@ -18,7 +18,7 @@ import useButtonHandler from '../../hooks/useButtonHandlerExercise';
 import useModifyExercise from '../../hooks/useModifyExercise';
 
 interface ExerciseModalProps {
-  // exercise?: Exercise;
+  exercise?: Exercise;
 }
 
 const hours = [
@@ -45,29 +45,35 @@ const minutes = [
   { value: 50, label: '50분' },
 ];
 
-const exercise: Exercise = {
-  exerciseName: '운동1',
-  exerciseId: 'exercise-20231201',
-  exerciseStartDate: new Date('2023-9-18'),
-  exerciseEndDate: new Date('2024-1-25'),
-  exerciseTime: 60,
-  repeatDate: ['월', '수'],
-  scheduledDate: [
-    { date: new Date('2023-11-30'), isDone: false },
-    { date: new Date('2023-12-02'), isDone: true },
-    { date: new Date('2023-12-03'), isDone: false },
-  ],
-};
+// const exercise: Exercise = {
+//   exerciseName: '운동1',
+//   exerciseId: 'exercise-20231201',
+//   exerciseStartDate: new Date('2023-9-18'),
+//   exerciseEndDate: new Date('2024-1-25'),
+//   exerciseTime: 60,
+//   repeatDate: ['월', '수'],
+//   scheduledDate: [
+//     { date: new Date('2023-11-30'), isDone: false },
+//     { date: new Date('2023-12-02'), isDone: true },
+//     { date: new Date('2023-12-03'), isDone: false },
+//   ],
+// };
 
 // const exercise = null;
-// exercise?: Exercise
-const ExerciseModal = () => {
+
+const ExerciseModal = (exerciseData?: Exercise) => {
+  console.log('check mic test', exerciseData);
+  // console.log('콘솔에 찍어봐용', exerciseData?.exerciseData.exerciseStartDate);
+  const exercise = exerciseData?.exerciseData;
+  console.log('Imma exercise', exerciseData);
+  // console.log('뭐야 이건', exerciseData.exercise);
   const [inputValue, setInputValue] = useState('');
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
   const [selectHour, setSelectHour] = useState<number>(0);
   const [selectMinutes, setSelectMinutes] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState([]);
+
   const days: Record<number, string> = {
     0: '일',
     1: '월',
@@ -176,8 +182,8 @@ const ExerciseModal = () => {
     if (exercise?.exerciseId) {
       exercise?.exerciseName && setInputValue(exercise.exerciseName);
       const newDateRange = [
-        exercise.exerciseStartDate,
-        exercise.exerciseEndDate,
+        new Date(exercise.exerciseStartDate),
+        new Date(exercise.exerciseEndDate),
       ];
       setDateRange(newDateRange);
       setSelectedDays(exercise.repeatDate);
@@ -186,7 +192,7 @@ const ExerciseModal = () => {
       // 생성 모드에서는 빈 input으로 초기화
       setInputValue('');
     }
-  }, []);
+  }, [exercise]);
 
   const today = new Date();
   const minDate = subMonths(today, 1);
@@ -280,7 +286,7 @@ const ExerciseModal = () => {
           handleModifyButtonClick();
           console.log('updated');
         }}
-        modalButton={exercise ? false : true}
+        modalButton={true}
       >
         <FlexStyleDiv>
           <RadioStyleDiv>
