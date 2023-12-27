@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import RoutineCard from '../../components/RoutineCard';
-import { Exercise, Food, FoodList, User } from '../../types/user';
+import { Exercise, FoodList, User } from '../../types/user';
 import styled from 'styled-components';
 import useUserModel from '../../hooks/useUserModel';
 import Header from '../../components/Header';
@@ -28,7 +28,7 @@ interface BalckProps {
 const Main = () => {
   const today = new Date(TODAY); // 현재 날짜를 가져옵니다.
 
-  const [user, setUser] = useState<User | undefined>();
+  const [user, setUser] = useState<User>();
   const startOfThisWeek = startOfWeek(today); // 이번 주의 시작 날짜를 계산합니다.
   const endOfThisWeek = endOfWeek(today); // 이번 주의 종료 날짜를 계산합니다.
   const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
@@ -83,9 +83,9 @@ const Main = () => {
   };
 
   // "편집하기" 클릭을 처리하는 함수 내부에서
-  const handleEditClick = (value) => {
+  const handleEditClick = (value: [FoodList, string]) => {
     setFoodData(value[0]);
-    setFoodId(value[1] || null);
+    setFoodId(value[1]);
     setFoodModalType('edit');
     setIsCreateMode(false);
     setIsModalFoodOpen(true);
@@ -157,12 +157,12 @@ const Main = () => {
                 isMain={true}
                 onClickMore={() => console.log('more click')}
                 onClickAdd={() => {
-                  setExerciseData(null);
+                  setExerciseData(undefined);
                   handleExerciseCreateClick();
                 }}
                 onClickEdit={(value) => {
                   setExerciseData(value);
-                  handleExerciseEditClick(value);
+                  handleExerciseEditClick();
                 }}
                 date={currentDate}
               ></RoutineCard>

@@ -14,7 +14,7 @@ import {
 interface MonthCalendarProps {
   exerciseList?: Exercise[] | undefined;
   foodList?: Food[] | undefined;
-  userData: User;
+  userData: User | undefined;
   currentDate: Date;
 }
 
