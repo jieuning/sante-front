@@ -73,7 +73,7 @@ export const MonthCalendar = ({
 
     if (exerciseList !== undefined) {
       const filteredExerciseList = filterExerciseListByDateRange(
-        userData.userExerciseList ?? [],
+        userData?.userExerciseList ?? [],
         startOfCurrentMonth,
         endOfCurrentMonth
       );
@@ -98,7 +98,7 @@ export const MonthCalendar = ({
 
     if (foodList !== undefined) {
       const filteredFoodList = filterFoodListByDateRange(
-        userData.userFoodList ?? [],
+        userData?.userFoodList ?? [],
         startOfCurrentMonth,
         endOfCurrentMonth
       );
