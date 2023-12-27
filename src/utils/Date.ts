@@ -1,9 +1,7 @@
-import { User, Exercise, Food, FoodList } from '../types/user';
+import { Exercise, Food } from '../types/user';
 import {
   startOfMonth,
   getDay,
-  addDays,
-  lastDayOfMonth,
   endOfMonth,
   format,
   startOfDay,
@@ -221,10 +219,6 @@ const packingFoodList = (userFoodList: Food[]) => {
     return acc.set(formattedDate, sum);
   }, new Map<string, number>());
 };
-const getAvg = (arr: number[]): number => {
-  return Math.ceil(arr.reduce((acc, curr) => acc + curr, 0) / arr.length);
-};
-
 const getSum = (arr: StatisticType[]): number => {
   return arr.reduce((acc, curr) => acc + curr.curr, 0);
 };
