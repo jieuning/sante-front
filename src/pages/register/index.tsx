@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction } from 'react';
 import axios from 'axios';
 import Header from '../../components/Header';
 import styled from 'styled-components';
@@ -34,13 +34,13 @@ const RadioButtonContainer = styled.div`
 `;
 
 const Register = () => {
-  const [email, setEmail] = useState<string | number>('');
-  const [pw, setPw] = useState<string | number>('');
-  const [pwConfirm, setPwConfirm] = useState('');
-  const [selectedValue, setSelectedValue] = useState(null);
+  const [email, setEmail] = useState<string>('');
+  const [pw, setPw] = useState<string>('');
+  const [pwConfirm, setPwConfirm] = useState<string>('');
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [selectedGender, setSelectedGender] = useState('');
   const [recommendCalory, setRecommendCalory] = useState<number>(0);
-//   const [age, setAge] = useState('');
+  //const [age, setAge] = useState('');
 
   const [emailValid, setEmailValid] = useState<boolean>(false);
   const [pwValid, setPwValid] = useState<boolean>(false);
@@ -65,7 +65,7 @@ const Register = () => {
     }
   }, [email]);
 
-  const handleEmailChange = (value: string | number) => {
+  const handleEmailChange = (value: string) => {
     setEmail(value);
   };
 
@@ -80,7 +80,7 @@ const Register = () => {
     }
   }, [pw]);
 
-  const handlePwChange = (value: string | number) => {
+  const handlePwChange = (value: string) => {
     setPw(value);
   };
 
@@ -93,7 +93,7 @@ const Register = () => {
     }
   }, [pw, pwConfirm]);
 
-  const handlePwConfirmChange = (value: string | number) => {
+  const handlePwConfirmChange = (value: string) => {
     setPwConfirm(value);
   };
 
@@ -153,7 +153,9 @@ const Register = () => {
     setRecommendCalory(calory);
   };
 
-  const radioGenderButtonInfo: InputButtonInfo = {
+  const radioGenderButtonInfo: InputButtonInfo & {
+    onChange: (selectedGender: string) => void;
+  } = {
     type: 'longOvalRadio',
     size: 'long-oval',
     value: selectedGender,
@@ -162,7 +164,7 @@ const Register = () => {
     border: 'primary',
     color: 'inputText',
     fontWeight: 'regular',
-    onChange: (selectedGender) => {
+    onChange: (selectedGender: SetStateAction<string>) => {
       console.log('selectedValue:', selectedGender);
       setSelectedGender(selectedGender);
       if (selectedGender === '남성') {

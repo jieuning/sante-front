@@ -40,7 +40,7 @@ interface StyledInputProps {
   width: string;
   height: string;
   textAlign?: string;
-  onChange: (v: string | number) => void;
+  onChange: (v: string) => void;
   errorMessage?: string;
 }
 
