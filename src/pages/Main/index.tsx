@@ -23,6 +23,7 @@ import {
   filterExerciseListByDateRange,
   filterFoodListByDateRange,
 } from '../../utils/Date';
+import { ModalMode } from '../../types/modalMode';
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 interface BalckProps {
   height?: string;
@@ -40,6 +41,8 @@ const Main = () => {
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
   const [exerciseData, setExerciseData] = useState(null);
   const [foodData, setFoodData] = useState(null);
+  const [foodId, setFoodId] = useState(null);
+  const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
 
   const [isCreateMode, setIsCreateMode] = useState(true);
 
@@ -82,11 +85,14 @@ const Main = () => {
   const handleCreateClick = () => {
     setIsCreateMode(true);
     setIsModalFoodOpen(true);
+    setFoodModalType('create');
   };
 
   // "편집하기" 클릭을 처리하는 함수 내부에서
   const handleEditClick = (value) => {
-    setFoodData(value);
+    setFoodData(value[0]);
+    setFoodId(value[1]);
+    setFoodModalType('edit');
     setIsCreateMode(false);
     setIsModalFoodOpen(true);
   };
@@ -132,6 +138,9 @@ const Main = () => {
           {isModalFoodOpen && (
             <FoodModal
               modalButton={isCreateMode} // 모달Button 속성으로 상태 전달
+              foodData={foodData}
+              foodId={foodId}
+              modalType={foodModalType}
               // ... 다른 속성들
             />
           )}
@@ -164,19 +173,20 @@ const Main = () => {
               <Blank />
               <RoutineCard
                 type="food"
-                foodList={user?.userFoodList}
+                foodList={user?.userFoodList ?? []}
                 isMain={true}
-                date={new Date(TODAY)}
+                date={currentDate}
                 onClickMore={() => console.log('more click')}
                 onClickAdd={() => {
                   handleCreateClick();
                   setIsModalFoodOpen(true);
                 }}
                 onClickEdit={(value) => {
-                  setFoodData(value);
+                  console.log('main data', value[0]);
+                  setFoodData(value[0]);
                   handleEditClick(value);
                   setIsModalFoodOpen(true);
-                  console.log('이것은 받아온 value', value);
+                  console.log('이것은 받아온 value', value[0]);
                 }}
               ></RoutineCard>
               <Blank />
