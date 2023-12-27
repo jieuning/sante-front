@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useUserModelAll from './useUserModelAll';
 import { format } from 'date-fns';
 import { Exercise, User, Food } from '../types/user';
@@ -10,16 +10,14 @@ interface ListProps {
   exercise: Exercise;
 }
 
-const useModifyExercise = async ({ exercise }: ListProps) => {
-  {
-    let user: User | undefined;
-
-    //업데이트를 위해 유저 전체 정보를 가져옴
+const useModifyExercise = () => {
+  const handleModify = async ({ exercise }: ListProps) => {
     try {
       const response = await axios.post(`${URL}/check`, {
         email: 'yeojin2@naver.com',
         password: '1234',
       });
+      //업데이트를 위해 유저 전체 정보를 가져옴
       const user = removeIdField(response.data.user);
       delete user.__v;
 
@@ -64,6 +62,7 @@ const useModifyExercise = async ({ exercise }: ListProps) => {
     } catch (error) {
       console.error('checkboxHook error', error);
     }
-  }
+  };
+  return { handleModify };
 };
 export default useModifyExercise;
