@@ -18,13 +18,22 @@ type InputButtonInfo = {
   fontSize?: string | number;
   value: string[] | string;
   items: string[];
-  onChange?: (e?: any) => void;
-  onClick?: (e?: any) => void;
+  onChange?: (value: string) => void;
+  onClick?: (value: string) => void;
+  onClickAll?: () => void;
 };
 
+type ReducedButtonInfo = Omit<
+  InputButtonInfo,
+  'onClick' | 'onClickAll' | 'value' | 'items'
+>;
 interface InputButtonProps {
   info: InputButtonInfo;
 }
+
+type isSelectedType = {
+  isSelected: boolean;
+};
 
 const getButtonSize = (size: InputSize) => {
   switch (size) {
@@ -133,7 +142,7 @@ const InputButtonContainer = styled.div`
   display: flex;
 `;
 
-const InputcheckButtonBox = styled.div`
+const InputcheckButtonBox = styled.div<Partial<ReducedButtonInfo>>`
   display: flex;
   cursor: pointer;
 `;
@@ -146,11 +155,8 @@ const InputradioButtonBox = styled.div`
     margin-left: 0px;
   }
 `;
-const CheckLabel = styled.label<InputButtonInfo>`
-  width: ${(props) =>
-    (Array.isArray(props.value) ? props.value : [props.value]).includes('매일')
-      ? '55px'
-      : getButtonSize(props.size).width};
+const CheckLabel = styled.label<isSelectedType & ReducedButtonInfo>`
+  width: ${(props) => getButtonSize(props.size).width};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,7 +175,7 @@ const CheckLabel = styled.label<InputButtonInfo>`
   transform: scale(0.9);
 `;
 
-const CheckAllDayLabel = styled.label<InputButtonInfo>`
+const CheckAllDayLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -242,7 +248,7 @@ const CheckButton = ({ info }: InputButtonProps) => {
 };
 
 const RadioButton = ({ info }: InputButtonProps) => {
-  const handleRadioChange = (value: any) => {
+  const handleRadioChange = (value: string) => {
     if (info.onChange) {
       info.onChange(value);
     }
