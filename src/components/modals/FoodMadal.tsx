@@ -93,7 +93,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
             item.name +
             format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
           name: item.name,
-          calorie: item.calory,
+          calory: item.calory.toString(),
           food: undefined,
         });
       });
