@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
-import { FoodList, User, Food, Exercise } from '../types/user';
-import {
-  filterExerciseListByDateRange,
-  filterFoodListByDateRange,
-} from '../utils/Date';
+import { User } from '../types/user';
+
 import axios from 'axios';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';

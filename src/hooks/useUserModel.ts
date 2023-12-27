@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FoodList, User, Food, Exercise } from '../types/user';
+import { User, Food, Exercise } from '../types/user';
 import {
   filterExerciseListByDateRange,
   filterFoodListByDateRange,
