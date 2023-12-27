@@ -1,8 +1,5 @@
 import axios from 'axios';
-import { useCallback, useState } from 'react';
-import useUserModelAll from './useUserModelAll';
-import { format } from 'date-fns';
-import { Exercise, User, Food } from '../types/user';
+import { Exercise } from '../types/user';
 import { removeIdField } from '../utils/RemoveIdField';
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
