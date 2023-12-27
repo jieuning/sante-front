@@ -90,7 +90,7 @@ export const MonthCalendar = ({
       const result = packedExerciseList.get(dateKey)?.reduce((acc, curr) => {
         return acc && curr;
       }, true);
-      console.log('result', dateKey, result);
+      //console.log('result', dateKey, result);
       if (result === undefined) {
         exerciseColorChips = undefined;
       } else {

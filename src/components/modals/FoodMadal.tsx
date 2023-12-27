@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModalCard from '../../components/modals/ModalCard';
 import Input from '../../components/Input';
 import Remove from '../icons/Remove';
@@ -10,16 +10,30 @@ import {
 import styled from 'styled-components';
 import axios from 'axios';
 import { format } from 'date-fns';
+import { Food, FoodList, Menu } from '../../types/user';
+import { ModalMode } from '../../types/modalMode';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
-const FoodModal = ({modalButton}) => {
+interface FoodModalProps {
+  modalButton: any;
+  foodData: FoodList;
+  foodId: string;
+  modalType: ModalMode;
+}
+
+interface ModalFoodItem {
+  id: string;
+  name: string;
+  calorie: number;
+}
+
+const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedValue, setSelectedValue] = useState('');
-  const [foodItems, setFoodItems] = useState([
-    { id: 1, food: '', calorie: '', foodCategory: '' },
-  ]);
-
+  const [foodItems, setFoodItems] = useState<ModalFoodItem[]>();
+  console.log('fooddata', foodData);
+  console.log('foodId', foodId);
   // input값 관리
   const [food, setFood] = useState('');
   const [calorie, setCalorie] = useState('');
@@ -33,8 +47,8 @@ const FoodModal = ({modalButton}) => {
     // 새로운 음식 항목 생성
     const newFoodItem = {
       id: new Date().getTime(), // 고유한 id 생성
-      food: food,
-      calorie: calorie,
+      name: null,
+      calorie: null,
       foodCategory: selectedValue, // 새로운 항목의 foodCategory 추가
     };
 
@@ -52,15 +66,77 @@ const FoodModal = ({modalButton}) => {
   // 각 음식 항목의 food 값 업데이트
   const handleFoodChange = (value: string, index: number) => {
     const updatedFoodItems = [...foodItems];
-    updatedFoodItems[index].food = value;
+    updatedFoodItems[index].name = value;
     setFoodItems(updatedFoodItems);
   };
 
   // 각 음식 항목의 calorie 값 업데이트
   const handleCalorieChange = (value: string, index: number) => {
     const updatedFoodItems = [...foodItems];
-    updatedFoodItems[index].calorie = value;
+    updatedFoodItems[index].calorie = Number(value);
     setFoodItems(updatedFoodItems);
+  };
+
+  useEffect(() => {
+    const newFoodItems: ModalFoodItem[] = [];
+
+    foodData.menu.forEach((item: Menu) => {
+      newFoodItems.push({
+        id:
+          foodId.toString() +
+          foodData.foodCategory +
+          item.name +
+          format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
+        name: item.name,
+        calorie: item.calory,
+      });
+    });
+    setFoodItems(newFoodItems);
+  }, []);
+
+  const handleEditClick = async () => {
+    try {
+      const response = await axios.post(`${URL}/check`, {
+        email: 'email@email.com',
+        password: 'sdfdsf',
+      });
+      let user = removeIdField(response.data.user);
+      delete user.__v;
+
+      const newMenu: Menu[] | undefined = foodItems
+        ?.map((item): Menu | undefined => {
+          if (item.name !== null) {
+            return {
+              name: item.name,
+              calory: item.calorie,
+            };
+          }
+        })
+        .filter((item): item is Menu => item !== undefined);
+
+      // 업데이트할 데이터를 찾아 변경
+      user.userFoodList?.forEach((food: Food) => {
+        if (food.foodId === foodId) {
+          food.foodList.forEach((item) => {
+            if (item.foodCategory === foodData.foodCategory) {
+              item.menu = newMenu ?? [];
+            }
+          });
+        }
+      });
+
+      // 변경된 유저 그대로 업데이트
+      console.log('user', JSON.stringify(user));
+
+      // 서버에 변경 사항 업데이트
+      await axios.put(`${URL}`, JSON.stringify(user), {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('Food Modal error', error);
+    }
   };
 
   const handleSendDataToServer = async () => {
@@ -201,7 +277,7 @@ const FoodModal = ({modalButton}) => {
             console.log('삭제');
           }}
           onClickUpdate={() => {
-            console.log('수정');
+            handleEditClick();
           }}
         >
           <div style={{ marginLeft: '10%' }}>
@@ -209,7 +285,7 @@ const FoodModal = ({modalButton}) => {
           </div>
 
           <ScrollBarDiv>
-            {foodItems.map((item, index) => (
+            {foodItems?.map((item, index) => (
               <div
                 key={item.id}
                 style={{
@@ -224,16 +300,16 @@ const FoodModal = ({modalButton}) => {
                 </div>
                 <Input
                   type="text"
-                  placeholder="음식 이름을 입력하세요."
+                  placeholder={'음식 이름'}
                   width="50%"
                   height="35px"
-                  value={item.food}
+                  value={item.name}
                   onChange={(value) => handleFoodChange(value, index)}
                   id={`food-${index}`}
                 />
                 <Input
                   type="number"
-                  placeholder="칼로리를 입력하세요."
+                  placeholder={'칼로리'}
                   width="30%"
                   height="35px"
                   value={item.calorie}
