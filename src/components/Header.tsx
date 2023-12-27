@@ -43,7 +43,7 @@ const Header = () => {
     <StyledHeader>
       <LogoImage></LogoImage>
       <StyledRightSection>
-        {isLogin() ? (
+        {isLoggedIn ? (
           <>
             <StyledLogoutText onClick={Logout.onClick}>
               로그아웃
