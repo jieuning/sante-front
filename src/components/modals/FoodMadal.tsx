@@ -14,6 +14,7 @@ import { Food, FoodList, Menu } from '../../types/user';
 import { ModalMode } from '../../types/modalMode';
 import { getEmail, getPassword } from '../../utils/WebStorageControl';
 
+
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 interface FoodModalProps {
@@ -28,20 +29,22 @@ interface ModalFoodItem {
   id: number | string;
   name: string;
   calory: number | string;
-  food: any;
+  totalCalory?: number | string;
 }
 
 const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedValue, setSelectedValue] = useState(''); // 카테고리저장을 위한
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
+  // const [foodCalory, setFoodCalory] = 
   console.log('fooddata', foodData);
   console.log('해당식단카테고리', foodData?.foodCategory);
   const selectedCategory = foodData?.foodCategory;
   console.log('selectedCategory', selectedCategory);
   // const [selectedFoodCategory, setSelectedFoodCategory] = useState('');  //카테고리표시를위한
   console.log('selectedCategory', selectedCategory);
-  const [userCalory, setUserCalory] = useState()
+  const [userCalory, setUserCalory] = useState();
+
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -57,7 +60,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
         value: selectedValue,
         category: selectedCategory,
       },
-      food: null,
+      totalCalory: '',
     };
 
     // foodItems 상태 업데이트
@@ -95,8 +98,8 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
         const userData = response.data.user;
         console.log('userData', userData);
         const userCalory = userData.todayCalory;
-        setUserCalory(userCalory)
-        console.log('userCalory', userCalory)
+        setUserCalory(userCalory);
+        console.log('userCalory', userCalory);
       })
       .catch((error) => {
         console.error('There was an error!', error);
@@ -117,7 +120,6 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
             format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
           name: item.name,
           calory: item.calory,
-          food: undefined,
         });
       });
     }
@@ -178,9 +180,12 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
 
       const newUserFoodList = user.userFoodList ? [...user.userFoodList] : [];
 
-      const existingFoodIndex = newUserFoodList.findIndex(
-        (item) => item.foodList[0].foodCategory === selectedValue
-      );
+      const existingFoodIndex = newUserFoodList.findIndex((item) => {
+        return (
+          item.foodList.length > 0 &&
+          item.foodList[0].foodCategory === selectedValue
+        );
+      });
 
       if (existingFoodIndex !== -1) {
         newUserFoodList[existingFoodIndex].foodList.push({
@@ -198,10 +203,10 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
         // 새로운 음식 항목 생성
         const newFoodList = foodItems.map((foodItem) => ({
           foodCategory: selectedValue,
-          totalCalory: foodItem.calory,
+          totalCalory: foodItem.totalCalory,
           menu: [
             {
-              name: foodItem.food,
+              name: foodItem.name,
               calory: foodItem.calory,
             },
           ],
