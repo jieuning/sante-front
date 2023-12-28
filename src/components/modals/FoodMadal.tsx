@@ -10,7 +10,7 @@ import {
 import styled from 'styled-components';
 import axios from 'axios';
 import { format } from 'date-fns';
-import { Food, FoodList, Menu } from '../../types/user';
+import { Food, Menu } from '../../types/user';
 import { ModalMode } from '../../types/modalMode';
 import { getEmail, getPassword } from '../../utils/WebStorageControl';
 
@@ -230,7 +230,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
         }
       } else {
         // 새로운 음식 항목 생성 및 추가
-        //FIXME - 확인(조건에안됨)
         console.log('modal date', currentDate);
         newUserFoodList.push({
           foodList: [
@@ -283,18 +282,36 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
       filteredUser.userFoodList?.forEach((food: Food) => {
         if (food.foodId === foodId) {
           food.foodList.forEach(
-            (item: { foodCategory: string | undefined; menu: Menu[] }) => {
+            (item: {
+              totalCalory: number; foodCategory: string | undefined; menu: Menu[] 
+}) => {
               if (item.foodCategory === foodData?.foodCategory) {
                 item.menu = newMenu ?? [];
+
+                // 수정된 칼로리를 반영
+                item.totalCalory = item.menu.reduce(
+                  (total, menu) => total + Number(menu.calory),
+                  0
+                );
               }
             }
           );
         }
       });
 
-      console.log('user', JSON.stringify(user));
+      // 전체 음식 항목에 대한 총 칼로리 다시 계산
+      filteredUser.todayCalory = filteredUser.userFoodList?.reduce(
+        (total, food) =>
+          total +
+          (food.foodList?.reduce(
+            (foodTotal, foodItem) => foodTotal + Number(foodItem.totalCalory),
+            0
+          ) || 0),
+        0
+      );
 
       setUser(filteredUser);
+
       closeModal();
     } catch (error) {
       console.error('Food Modal error', error);
@@ -423,10 +440,16 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
             closeModal();
           }}
           onClickRemove={() => {
-            handleDeleteClick();
+            const isConfirmed = window.confirm('정말로 삭제하시겠습니까?');
+
+            if (isConfirmed) {
+              alert('삭제되었습니다.');
+              handleDeleteClick();
+            }
           }}
           onClickUpdate={() => {
             handleEditClick();
+            alert('수정완료!');
           }}
         >
           <div style={{ marginLeft: '10%' }}>
