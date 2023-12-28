@@ -51,6 +51,7 @@ const FoodModal = ({
   const selectedCategory = foodData?.foodCategory;
   const [userCalory, setUserCalory] = useState();
   console.log('selectedCategory', selectedCategory);
+  const [isRadioDisabled, setIsRadioDisabled] = useState(false); // 추가된 부분
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -138,7 +139,7 @@ const FoodModal = ({
       getUser();
 
       let filteredUser = removeIdField(user);
-      console.log('filteredUser', filteredUser); //✔️
+
       if (!filteredUser) return;
 
       delete filteredUser?.__v;
@@ -148,25 +149,23 @@ const FoodModal = ({
         (total, foodItem) => total + Number(foodItem.calory),
         0
       );
-      console.log('totalFoodCalory', totalFoodCalory);
+
 
       const newUserFoodList = filteredUser.userFoodList
         ? [...filteredUser.userFoodList]
         : [];
-      console.log('이전newUserFoodList', newUserFoodList); //✔️
-      console.log('foodId', foodId); //✔️
 
       let isExistCategory = false;
 
       const selectedFoodId = newUserFoodList.find(
         (item) => item.foodId === foodId
       );
-      console.log('selectedFoodId', selectedFoodId)
 
       if (selectedFoodId === undefined) {
-        console.log('실패');
         return;
       }
+
+      // 1703776618956
 
       if (selectedFoodId.foodList.length > 0) {
         isExistCategory = !isExistCategory;
@@ -178,8 +177,6 @@ const FoodModal = ({
           item.foodList[0].foodCategory === selectedValue
         );
       });
-      console.log('existingFoodIndex', existingFoodIndex); // -1이 나오면 새로 생성, foodList에서 카테고리가 일치하는 인덱스의 번호를 반환하는 것
-      console.log('최근newUserFoodList', newUserFoodList);
 
       // 존재하는 foodCategory 찾은 경우
       if (isExistCategory) {
@@ -224,7 +221,6 @@ const FoodModal = ({
           createdAt: currentDate || new Date(),
           lastUpdated: new Date(),
         });
-        console.log('newUserFoodList', newUserFoodList);
       }
 
       filteredUser.userFoodList = newUserFoodList;
@@ -341,14 +337,25 @@ const FoodModal = ({
     return obj;
   }
 
+  useEffect(() => {
+    // 선택한 foodCategory에 따라 라디오 버튼의 활성화 여부 결정
+    setIsRadioDisabled(
+      selectedValue === '아침' ||
+        selectedValue === '점심' ||
+        selectedValue === '저녁' ||
+        selectedValue === '간식'
+    );
+  }, [selectedValue]);
+
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
     size: 'short-oval',
     value: selectedValue,
     items: ['아침', '점심', '저녁', '간식'],
-    backgroundColor: 'gray',
+    backgroundColor: isRadioDisabled ? 'lightGray02' : 'gray',
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: '900',
+    disabled: isRadioDisabled,
     onChange: (selectedTime: SetStateAction<string>) => {
       console.log('선택된 foodCategory:', selectedTime);
       setSelectedValue(selectedTime);
@@ -398,6 +405,7 @@ const FoodModal = ({
           }}
         >
           <div style={{ marginLeft: '10%' }}>
+            {selectedCategory !== '' && <P>❗카테고리 수정이 불가능합니다❗</P>}
             <RadioButton info={radioButtonInfo} />
           </div>
 
@@ -470,6 +478,11 @@ const ScrollBarDiv = styled.div`
     border-radius: 10px;
     background-color: none;
   }
+`;
+const P = styled.p`
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: gray;
 `;
 
 export default FoodModal;
