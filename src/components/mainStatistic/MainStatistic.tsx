@@ -172,7 +172,6 @@ const MainStatistic = ({
 };
 //NOTE: 미완성
 const GageContainerDiv = styled.div<sizeProps>`
-  width: ${({ width }) => (width ? width : '23rem')};
   height: ${({ height }) => (height ? height : '30rem')};
   border-radius: 2rem;
   background-color: white;

@@ -198,22 +198,30 @@ const Main = () => {
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 1160px;
+`;
 
 const Blank = styled.div<BalckProps>`
   height: ${(props) => props.height || '2rem'};
 `;
 
 const ContentsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 2.5%;
+  padding: 2%;
+
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
 `;
 
-const CardContainer = styled.div`
-  max-width: 620px;
-  width: 480px;
-`;
+const CardContainer = styled.div``;
 
 export default Main;
