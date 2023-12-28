@@ -263,7 +263,7 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
             <InputStyledDiv>
               <Input
                 name="exerciseName"
-                width="80%"
+                width="78%"
                 type="text"
                 height="4.5rem"
                 placeholder="운동 이름을 입력하세요"
@@ -284,7 +284,7 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
       >
         <FlexStyleDiv>
           <RadioStyleDiv>
-            <StyledLabel>반복</StyledLabel>
+            <StyledLabelMargin>반복</StyledLabelMargin>
             <CheckButton info={checkButtonInfo} />
           </RadioStyleDiv>
           <SelectStyleDiv>
@@ -308,7 +308,9 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
             </CustomDatePickerWrapper>
           </SelectStyleDiv>
           <SelectStyleDiv>
-            <StyledLabel>시간</StyledLabel>
+            <SelectMargin>
+              <StyledLabel>시간</StyledLabel>
+            </SelectMargin>
             <MarginSetDiv>
               <SelectBox
                 ageOptions={hours}
@@ -413,7 +415,7 @@ const CustomDatePickerWrapper = styled.div`
 `;
 
 const StyledButton = styled.button`
-  width: 22vw;
+  width: 23.4vw;
   height: 4.5rem;
   border: 1px solid #bebebe;
   outline: none;
@@ -444,7 +446,18 @@ const StyledLabel = styled.label`
   font-weight: 600;
   font-size: 1.6rem;
   letter-spacing: 0.5px;
-  margin-right: 1rem;
+  margin-right: 2rem;
+`;
+
+const StyledLabelMargin = styled.label`
+  font-weight: 600;
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+  margin-right: 1.2rem;
+`;
+
+const SelectMargin = styled.label`
+  margin-top: 12px;
 `;
 
 const FlexStyleDiv = styled.div`
@@ -458,13 +471,15 @@ const RadioStyleDiv = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1rem;
 `;
 
 const SelectStyleDiv = styled.div`
   display: flex;
   align-items: center;
-  width: 83%;
+  width: 89.4%;
   justify-content: center;
+  margin-bottom: 1rem;
 `;
 
 export default ExerciseModal;

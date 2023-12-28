@@ -157,12 +157,14 @@ const InputradioButtonBox = styled.div`
 `;
 const CheckLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   width: ${(props) => getButtonSize(props.size).width};
+  height: ${(props) => getButtonSize(props.size).height};
+  font-size: ${(props) => getButtonSize(props.size).fontSize};
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem;
   margin-bottom: 5px;
-  margin-left: 8px;
+  margin-left: 0.5vw;
   border-radius: 3rem;
   background-color: ${(props) =>
     props.isSelected
@@ -170,8 +172,7 @@ const CheckLabel = styled.label<isSelectedType & ReducedButtonInfo>`
       : getColorValue(props.backgroundColor ?? 'gray')};
   color: ${(props) => getColorValue(props.color ?? 'white')};
   cursor: pointer;
-  height: ${(props) => getButtonSize(props.size).height};
-  font-size: ${(props) => getButtonSize(props.size).fontSize};
+
   transform: scale(0.9);
 `;
 
@@ -181,7 +182,7 @@ const CheckAllDayLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   justify-content: center;
   padding: 0.5rem 1rem;
   margin-top: 5px;
-  margin-left: 9px;
+  margin-left: 0.5vw;
   border: ${(props) =>
     props.isSelected ? 'none' : `1px solid ${getColorValue('primary')}`};
   border-radius: 3rem;
@@ -192,6 +193,7 @@ const CheckAllDayLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   width: 60px;
   height: 30px;
   font-size: ${(props) => getButtonSize(props.size).fontSize};
+  transform: scale(0.9);
 `;
 
 const CheckButton = ({ info }: InputButtonProps) => {
