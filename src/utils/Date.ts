@@ -231,6 +231,17 @@ function filterFoodListByDateRange(
   const start = startOfDay(startDate);
   const end = startOfDay(endDate);
 
+  if (startDate === endDate) {
+    const dateKey = startDate.toISOString().split('T')[0];
+    console.log(dateKey);
+    return foodList.filter((food) => {
+      const foodDateKey = new Date(food.createdAt).toISOString().split('T')[0];
+      console.log(foodDateKey);
+      if (dateKey === foodDateKey) return true;
+      return false;
+    });
+  }
+
   return foodList.filter((food) => {
     const foodDate = startOfDay(new Date(food.createdAt));
     return isWithinInterval(foodDate, { start, end });

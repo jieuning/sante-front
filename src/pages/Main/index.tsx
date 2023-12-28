@@ -114,6 +114,7 @@ const Main = () => {
 
   useEffect(() => {
     getUser();
+    console.log(user);
   }, [currentDate]);
 
   return (
