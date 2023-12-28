@@ -7,14 +7,7 @@ import Header from '../../components/Header';
 import MainStatistic from '../../components/mainStatistic/MainStatistic';
 import { MonthCalendar } from '../../components/Calendar';
 import { DateSelect } from '../../components/DateSelect';
-import {
-  endOfMonth,
-  endOfWeek,
-  isSameMonth,
-  isSameWeek,
-  startOfMonth,
-  startOfWeek,
-} from 'date-fns';
+import { endOfMonth, startOfMonth } from 'date-fns';
 import ExerciseModal from '../../components/modals/ExerciseModal';
 import FoodModal from '../../components/modals/FoodMadal';
 import { MainContext } from './MainContext';
@@ -30,19 +23,12 @@ const Main = () => {
   //const [user, setUser] = useState<User>();
   const user = useStore((state) => state.user);
   const getUser = useStore((state) => state.getUser);
+  const setExerciseData = useStore((state) => state.setExerciseData);
 
   const [currentDate, setCurrentDate] = useState<Date>(today);
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
 
-  const [startOfThisWeek, setStartOfThisWeek] = useState(startOfWeek(today));
-  const [endOfThisWeek, setEndOfThisWeek] = useState(endOfWeek(today)); // 이번 주의 종료 날짜를 계산합니다.
-  // const [weeklyUser, setWeeklyUser] = useState(
-  //   useUserModel(startOfCurrentWeek, endOfCurrentWeek)
-  // );
-  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
-
-  const [exerciseData, setExerciseData] = useState<Exercise>();
   const [foodData, setFoodData] = useState<FoodList>();
   const [foodId, setFoodId] = useState('');
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
@@ -134,12 +120,7 @@ const Main = () => {
             onClick={handleDayOnClick}
           />
           <Blank />
-          {isModalExerciseOpen && (
-            <ExerciseModal
-              modalButton={isCreateMode}
-              exerciseData={exerciseData}
-            />
-          )}
+          {isModalExerciseOpen && <ExerciseModal modalButton={isCreateMode} />}
           {isModalFoodOpen && (
             <FoodModal
               modalButton={isCreateMode} // 모달Button 속성으로 상태 전달
@@ -191,9 +172,8 @@ const Main = () => {
                   console.log('이것은 받아온 value', value[0]);
                 }}
               ></RoutineCard>
-              <Blank />
             </CardContainer>
-            <MainStatistic user={weeklyUser} todayDate={currentDate} />
+            <MainStatistic user={user} todayDate={currentDate} />
           </ContentsContainer>
         </Container>
       </MainContext.Provider>

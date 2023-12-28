@@ -10,6 +10,7 @@ import ko from 'date-fns/locale/ko';
 import { CheckButton, InputButtonInfo } from '../../components/RadioButton';
 import { addMonths, subMonths, format } from 'date-fns';
 import { Exercise } from '../../types/user';
+import { useStore } from '../../states/user';
 import useCreateExercise from '../../hooks/useCreateExercise';
 import useModifyExercise from '../../hooks/useModifyExercise';
 import useDeleteExercise from '../../hooks/useDeleteExercise';
@@ -42,13 +43,12 @@ const minutes = [
 ];
 
 interface ExerciseModalProps {
-  exerciseData?: Exercise;
   modalButton: boolean;
 }
 
-const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
+const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
+  const exerciseData = useStore((state) => state.exerciseData);
   console.log('check mic test', exerciseData);
-  const exercise = exerciseData;
   const [inputValue, setInputValue] = useState<string | undefined>('');
   const [dateRange, setDateRange] = useState<(Date | null)[]>([null, null]);
   const [startDate, endDate] = dateRange;
@@ -100,7 +100,7 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
       );
 
       const payload: Exercise = {
-        exerciseId: exercise?.exerciseId,
+        exerciseId: exerciseData?.exerciseId,
         exerciseName: inputValue,
         exerciseStartDate: new Date(startDate),
         exerciseEndDate: new Date(endDate),
@@ -140,7 +140,7 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
   };
 
   const handleDeleteButtonClick = () => {
-    const exerciseId = exercise?.exerciseId;
+    const exerciseId = exerciseData?.exerciseId;
     console.log('this is ma ID', exerciseId);
     exerciseId && handleDelete(exerciseId);
   };
@@ -166,22 +166,22 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
   };
 
   useEffect(() => {
-    if (exercise?.exerciseId) {
-      exercise?.exerciseName && setInputValue(exercise.exerciseName);
+    if (exerciseData?.exerciseId) {
+      exerciseData?.exerciseName && setInputValue(exerciseData.exerciseName);
       if (
-        exercise.exerciseStartDate &&
-        exercise.repeatDate &&
-        exercise.exerciseEndDate &&
-        exercise.exerciseTime
+        exerciseData.exerciseStartDate &&
+        exerciseData.repeatDate &&
+        exerciseData.exerciseEndDate &&
+        exerciseData.exerciseTime
       ) {
         const newDateRange = [
-          new Date(exercise.exerciseStartDate),
-          new Date(exercise.exerciseEndDate),
+          new Date(exerciseData.exerciseStartDate),
+          new Date(exerciseData.exerciseEndDate),
         ];
         setDateRange(newDateRange);
-        setSelectedDays(exercise.repeatDate);
-        console.log(exercise.exerciseTime);
-        divideMinutesAndHour(exercise.exerciseTime);
+        setSelectedDays(exerciseData.repeatDate);
+        console.log(exerciseData.exerciseTime);
+        divideMinutesAndHour(exerciseData.exerciseTime);
       }
     } else {
       // 생성 모드에서는 빈 input으로 초기화
@@ -190,7 +190,7 @@ const ExerciseModal = ({ modalButton, exerciseData }: ExerciseModalProps) => {
       // setSelectHour(0);
       // setSelectMinutes(0);
     }
-  }, [exercise]);
+  }, [exerciseData]);
 
   const today = new Date();
   const minDate = subMonths(today, 1);
