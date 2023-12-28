@@ -69,12 +69,15 @@ const Header = () => {
 };
 
 const StyledHeader = styled.div`
+  position: sticky;
+  top: 0;
   background-color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 50px;
   padding-right: 13px;
+  z-index: 10;
 `;
 
 const StyledLogoImage = styled.img`

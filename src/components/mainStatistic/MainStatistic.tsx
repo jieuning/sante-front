@@ -162,42 +162,53 @@ const MainStatistic = ({
 
   return (
     <GageContainerDiv>
-      {user ? (
-        <>
-          <InformationAreaDiv>
-            <FlexContainerDiv>
-              <TextContainerDiv>주간 운동 달성률</TextContainerDiv>
-              <br />
-              <GageBar gage={exerciseGage} maxGage={exerciseMaxGage} />
-            </FlexContainerDiv>
-            <FlexContainerDiv>
-              <TextContainerDiv>하루 섭취 칼로리</TextContainerDiv>
-              <br />
-              <GageBar
-                gage={foodGage}
-                maxGage={userCalory}
-                handleGage={handleCaloryGage}
-                color={caloryMood.color}
-              />
-              <br />
-              <div>
-                <EmojiContainerSpan>{caloryMood.emoji}</EmojiContainerSpan>
-                <StatusContainerSpan>{caloryMood.message}</StatusContainerSpan>
-              </div>
-            </FlexContainerDiv>
-          </InformationAreaDiv>
-          <ButtonAreaDiv>
-            <DynamicButton info={buttonInfo} />
-          </ButtonAreaDiv>
-        </>
-      ) : (
-        <h1>Loading...</h1>
-      )}
+      <GageWrap>
+        {user ? (
+          <>
+            <InformationAreaDiv>
+              <FlexContainerDiv>
+                <TextContainerDiv>주간 운동 달성률</TextContainerDiv>
+                <br />
+                <GageBar gage={exerciseGage} maxGage={exerciseMaxGage} />
+              </FlexContainerDiv>
+              <FlexContainerDiv>
+                <TextContainerDiv>하루 섭취 칼로리</TextContainerDiv>
+                <br />
+                <GageBar
+                  gage={foodGage}
+                  maxGage={userCalory}
+                  handleGage={handleCaloryGage}
+                  color={caloryMood.color}
+                />
+                <br />
+                <div>
+                  <EmojiContainerSpan>{caloryMood.emoji}</EmojiContainerSpan>
+                  <StatusContainerSpan>
+                    {caloryMood.message}
+                  </StatusContainerSpan>
+                </div>
+              </FlexContainerDiv>
+            </InformationAreaDiv>
+            <ButtonAreaDiv>
+              <DynamicButton info={buttonInfo} />
+            </ButtonAreaDiv>
+          </>
+        ) : (
+          <h1>Loading...</h1>
+        )}
+      </GageWrap>
     </GageContainerDiv>
   );
 };
 //NOTE: 미완성
-const GageContainerDiv = styled.div<sizeProps>`
+const GageContainerDiv = styled.div`
+  position: relative;
+`;
+//NOTE: globalstyles에 white 컬러 추가
+
+const GageWrap = styled.div<sizeProps>`
+  position: sticky;
+  top: 200px;
   display: flex;
   flex-direction: column;
   height: ${({ height }) => (height ? height : '30rem')};
@@ -205,7 +216,6 @@ const GageContainerDiv = styled.div<sizeProps>`
   background-color: white;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
-//NOTE: globalstyles에 white 컬러 추가
 
 const InformationAreaDiv = styled.div`
   width: 100%;

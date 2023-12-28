@@ -92,6 +92,11 @@ const DateSelectContainer = styled.div`
   flex-direction: column;
   align-items: center;
   user-select: none;
+  z-index: 10;
+  padding: 10px 0;
+  position: sticky;
+  top: 50px;
+  backdrop-filter: blur(20px);
 `;
 
 const DateTitle = styled.h1`

@@ -40,10 +40,10 @@ export const MonthCalendar = ({
   ];
 
   const tagsData = [
-    { type: 'register', label: '운동 등록', background: '#8699FF' },
-    { type: 'complete', label: '운동 완료', background: '#8699FF' },
-    { type: 'normal', label: '칼로리 적정', background: '#97F39A' },
-    { type: 'excess', label: '칼로리 초과', background: '#F39797' },
+    { type: 'register', label: '운동등록', background: '#8699FF' },
+    { type: 'complete', label: '운동완료', background: '#8699FF' },
+    { type: 'normal', label: '칼로리적정', background: '#97F39A' },
+    { type: 'excess', label: '칼로리초과', background: '#F39797' },
   ];
 
   const currentMonth = getMonth(currentDate);
@@ -160,25 +160,15 @@ export const MonthCalendar = ({
   );
 };
 
-const CustomHeader = styled.div`
-  width: 100%;
-  font-size: 20px;
-  font-weight: 600;
-`;
-
-const ColorChipWrap = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 2px;
-  width: 100%;
-`;
-
 const MainCalendarContainer = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
 
   .react-datepicker {
+    position: sticky;
+    top: 200px;
     height: 265px;
     display: flex;
     justify-content: center;
@@ -259,9 +249,27 @@ const MainCalendarContainer = styled.div`
   }
 `;
 
-const ColorChipTagWrap = styled.div`
+const CustomHeader = styled.div`
+  width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const ColorChipWrap = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+`;
+
+const ColorChipTagWrap = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+
+  @media (max-width: 1024px) {
+    gap: 10px;
+  }
 `;
 
 const NoColorChip = styled.div`
@@ -272,8 +280,9 @@ const Tag = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   background-color: var(--gray-light-01);
   border-radius: 30px;
-  padding: 6px 5px;
+  padding: 6px 0;
 `;
