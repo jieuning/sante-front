@@ -18,6 +18,7 @@ type InputButtonInfo = {
   fontSize?: string | number;
   value: string[] | string;
   items: string[];
+  disabled?: string | boolean;
   onChange?: (value: string) => void;
   onClick?: (value: string) => void;
   onClickAll?: () => void;
@@ -125,7 +126,7 @@ const RadioInput = styled.input`
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-
+  
   &:checked {
     + ${RadioLabel}, + ${ShortOvalRadioLabel} {
       background-color: var(--primary-color);

@@ -51,6 +51,7 @@ const FoodModal = ({
   const selectedCategory = foodData?.foodCategory;
   const [userCalory, setUserCalory] = useState();
   console.log('selectedCategory', selectedCategory);
+  const [isRadioDisabled, setIsRadioDisabled] = useState(false); // 추가된 부분
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -158,15 +159,15 @@ const FoodModal = ({
 
       let isExistCategory = false;
 
-      // undefined로 나오는 이유는 foodId와 일치하는 요소가 newUserFoodList 배열에 존재하지 않는 경우입니다. 
+      // undefined로 나오는 이유는 foodId와 일치하는 요소가 newUserFoodList 배열에 존재하지 않는 경우입니다.
       // 이는 newUserFoodList 배열에서 해당 foodId에 맞는 음식 항목이 없다는 것을 의미
-      // 따라서, selectedFoodId가 undefined라면 해당 foodId에 해당하는 음식 항목이 newUserFoodList 배열에 없다는 것을 나타냅니다. 
+      // 따라서, selectedFoodId가 undefined라면 해당 foodId에 해당하는 음식 항목이 newUserFoodList 배열에 없다는 것을 나타냅니다.
       // 이 경우에는 새로운 음식 항목을 추가하거나 다른 작업을 수행하는 로직을 처리할 수 있습니다.
       const selectedFoodId = newUserFoodList.find(
         (item) => item.foodId === foodId
       );
       console.log('후foodId', foodId); //✔️새로 생성되는 식단의 foodId(같음)
-      console.log('selectedFoodId', selectedFoodId)
+      console.log('selectedFoodId', selectedFoodId);
 
       if (selectedFoodId === undefined) {
         console.log('실패');
@@ -348,14 +349,25 @@ const FoodModal = ({
     return obj;
   }
 
+  useEffect(() => {
+    // 선택한 foodCategory에 따라 라디오 버튼의 활성화 여부 결정
+    setIsRadioDisabled(
+      selectedValue === '아침' ||
+        selectedValue === '점심' ||
+        selectedValue === '저녁' ||
+        selectedValue === '간식'
+    );
+  }, [selectedValue]);
+
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
     size: 'short-oval',
     value: selectedValue,
     items: ['아침', '점심', '저녁', '간식'],
-    backgroundColor: 'gray',
+    backgroundColor: isRadioDisabled ? 'lightGray02' : 'gray',
     color: 'white',
-    fontWeight: 'bold',
+    fontWeight: '900',
+    disabled: isRadioDisabled,
     onChange: (selectedTime: SetStateAction<string>) => {
       console.log('선택된 foodCategory:', selectedTime);
       setSelectedValue(selectedTime);
@@ -405,6 +417,7 @@ const FoodModal = ({
           }}
         >
           <div style={{ marginLeft: '10%' }}>
+            {selectedCategory !== '' && <P>❗카테고리 수정이 불가능합니다❗</P>}
             <RadioButton info={radioButtonInfo} />
           </div>
 
@@ -477,6 +490,11 @@ const ScrollBarDiv = styled.div`
     border-radius: 10px;
     background-color: none;
   }
+`;
+const P = styled.p`
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: gray;
 `;
 
 export default FoodModal;
