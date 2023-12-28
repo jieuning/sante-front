@@ -10,9 +10,11 @@ type Store = {
   getUser: () => void;
   setUser: (userData: User) => Promise<void>;
   foodData: FoodList | undefined;
+  foodId: string;
   exerciseData: Exercise | undefined;
   setFoodData: (foodItem: FoodList) => void;
   setExerciseData: (exerciseItem: Exercise | undefined) => void;
+  status: number;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -36,6 +38,7 @@ export const useStore = create<Store>((set) => ({
         password: getPassword(),
       });
       set({ user: response.data.user });
+      set({ status: response.status });
     } catch (error) {
       console.error('User get failed', error);
     }
@@ -47,5 +50,8 @@ export const useStore = create<Store>((set) => ({
   },
   setExerciseData: (exerciseItem: Exercise) => {
     set({ exerciseData: exerciseItem });
+  },
+  setFoodId: (foodId: string) => {
+    set({ foodId: foodId });
   },
 }));

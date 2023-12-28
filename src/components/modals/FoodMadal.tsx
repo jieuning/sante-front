@@ -14,12 +14,14 @@ import { Food, FoodList, Menu } from '../../types/user';
 import { ModalMode } from '../../types/modalMode';
 import { getEmail, getPassword } from '../../utils/WebStorageControl';
 
+import { useStore } from '../../states/user';
+
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 interface FoodModalProps {
   modalButton: any;
   foodData?: FoodList | null;
-  foodId?: string | null; // 날짜
+  foodId?: string; // 날짜
   modalType: ModalMode;
   name?: string; // 음식이름
 }
@@ -32,16 +34,17 @@ interface ModalFoodItem {
 }
 
 const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
+  const user = useStore((state) => state.user);
+  const getUser = useStore((state) => state.getUser);
+  const setUser = useStore((state) => state.setUser);
+  const status = useStore((state) => state.status);
+
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedValue, setSelectedValue] = useState(''); // 카테고리저장을 위한
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
-  console.log('fooddata', foodData);
-  console.log('해당식단카테고리', foodData?.foodCategory);
   const selectedCategory = foodData?.foodCategory;
-  console.log('selectedCategory', selectedCategory);
-  // const [selectedFoodCategory, setSelectedFoodCategory] = useState('');  //카테고리표시를위한
-  console.log('selectedCategory', selectedCategory);
   const [userCalory, setUserCalory] = useState();
+  console.log('selectedCategory', selectedCategory);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -93,10 +96,8 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
       })
       .then((response) => {
         const userData = response.data.user;
-        console.log('userData', userData);
         const userCalory = userData.todayCalory;
         setUserCalory(userCalory);
-        console.log('userCalory', userCalory);
       })
       .catch((error) => {
         console.error('There was an error!', error);
@@ -109,6 +110,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
     // FIXME - 반복문 null처리
     if (foodData !== null) {
       foodData?.menu.forEach((item: Menu) => {
+        setSelectedValue(foodData?.foodCategory || '');
         return newFoodItems.push({
           id:
             foodId?.toString() +
@@ -124,15 +126,16 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
     setFoodItems(newFoodItems);
   }, []);
 
-  // 식단 데이터 생성
+  // 🔴데이터 생성🔴
   const handleSendDataToServer = async () => {
     try {
-      const response = await axios.post(`${URL}/check`, {
-        email: getEmail(),
-        password: getPassword(),
-      });
-      let user = removeIdField(response.data.user);
-      delete user.__v;
+      getUser();
+
+      let filteredUser = removeIdField(user);
+      if (!filteredUser) return;
+
+      delete filteredUser?.__v;
+
       // 총 칼로리 계산
       const totalFoodCalory = foodItems.reduce(
         (total, foodItem) => total + Number(foodItem.calory),
@@ -140,9 +143,11 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
       );
       console.log('totalFoodCalory', totalFoodCalory);
 
-      const newUserFoodList = user.userFoodList ? [...user.userFoodList] : [];
-
-      console.log(foodId);
+      const newUserFoodList = filteredUser.userFoodList
+        ? [...filteredUser.userFoodList]
+        : [];
+      console.log('newUserFoodList', newUserFoodList);
+      console.log('foodId', foodId); //✔️
 
       //새로 추가한 부분
       // const updatedUserFoodList = user.userFoodList.map((item: Food) => {
@@ -202,6 +207,8 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
           item.foodList[0].foodCategory === selectedValue
         );
       });
+      console.log('existingFoodIndex', existingFoodIndex); // -1이 나오면 새로 생성, foodList에서 카테고리가 일치하는 인덱스의 번호를 반환하는 것
+      console.log('newUserFoodList', newUserFoodList);
 
       // 존재하는 foodCategory 찾은 경우
       if (existingFoodIndex !== -1) {
@@ -219,7 +226,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
           existingMenu[existingMenuItemIndex] = {
             ...existingMenu[existingMenuItemIndex],
             calory:
-              existingMenu[existingMenuItemIndex].calory + totalFoodCalory,
+              +existingMenu[existingMenuItemIndex].calory + totalFoodCalory,
           };
         } else {
           existingMenu.push(...foodItems);
@@ -230,43 +237,45 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
         newUserFoodList[existingFoodIndex] = existingFood;
       } else {
         // 새로운 음식 항목 생성 및 추가
+        //FIXME - 확인(조건에안됨)
         newUserFoodList.push({
           foodList: [
             {
               foodCategory: selectedValue,
               totalCalory: totalFoodCalory,
-              menu: foodItems,
+              menu: foodItems.map((foodItem) => ({
+                name: foodItem.name,
+                calory: foodItem.calory,
+              })),
             },
           ],
-          foodId: foodId,
+          foodId: foodId || '',
           createdAt: new Date(),
           lastUpdated: new Date(),
         });
+        console.log('newUserFoodList', newUserFoodList);
       }
 
-      user.userFoodList = newUserFoodList;
+      filteredUser.userFoodList = newUserFoodList;
 
       // 변경된 유저 그대로 업데이트
       console.log('user', user);
 
-      await axios.put(`${URL}`, user, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      setUser(filteredUser);
     } catch (error) {
       console.error('에러 발생:', error);
     }
   };
 
+  // 데이터 수정
   const handleEditClick = async () => {
     try {
-      const response = await axios.post(`${URL}/check`, {
-        email: getEmail(),
-        password: getPassword(),
-      });
-      let user = removeIdField(response.data.user);
-      delete user.__v;
+      getUser();
+
+      let filteredUser = removeIdField(user);
+      if (!filteredUser) return;
+
+      delete filteredUser?.__v;
 
       const newMenu: Menu[] | undefined = foodItems
         ?.map((item): Menu | undefined => {
@@ -279,7 +288,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
         })
         .filter((item): item is Menu => item !== undefined);
 
-      user.userFoodList?.forEach((food: Food) => {
+      filteredUser.userFoodList?.forEach((food: Food) => {
         if (food.foodId === foodId) {
           food.foodList.forEach(
             (item: { foodCategory: string | undefined; menu: Menu[] }) => {
@@ -293,28 +302,24 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
 
       console.log('user', JSON.stringify(user));
 
-      await axios.put(`${URL}`, JSON.stringify(user), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      setUser(filteredUser);
     } catch (error) {
       console.error('Food Modal error', error);
     }
   };
 
-  // 삭제
+  // 데이터 삭제
   const handleDeleteClick = async () => {
     try {
-      const response = await axios.post(`${URL}/check`, {
-        email: getEmail(),
-        password: getPassword(),
-      });
-      let user = removeIdField(response.data.user);
-      delete user.__v;
+      getUser();
+
+      let filteredUser = removeIdField(user);
+      if (!filteredUser) return;
+
+      delete filteredUser?.__v;
 
       // 삭제할 음식 항목 찾기
-      const updatedUserFoodList = (user.userFoodList || []).map(
+      const updatedUserFoodList = (filteredUser.userFoodList || []).map(
         (food: {
           foodId: string | null | undefined;
           foodList: { foodCategory: string | undefined; menu: any[] }[];
@@ -331,27 +336,19 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
         }
       );
 
-      user.userFoodList = updatedUserFoodList;
+      filteredUser?.userFoodList = updatedUserFoodList ?? [];
 
       console.log('user', user);
 
-      const putResponse = await axios.put(`${URL}`, JSON.stringify(user), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      setUser(filteredUser);
 
-      if (putResponse.status === 200) {
+      if (status === 200) {
         console.log('PUT 요청이 성공적으로 완료되었습니다.');
       } else {
-        console.error(
-          'PUT 요청이 실패했습니다. HTTP 상태 코드:',
-          putResponse.status
-        );
+        console.error('PUT 요청이 실패했습니다. HTTP 상태 코드:', status);
       }
 
-      closeModal();
-      //TODO - 페이지 새로고침되야 보이는데 새로고침을 작성해줄지?
+      closeModal(); // 삭제하고 모달 닫기
     } catch (error) {
       console.error('에러 발생:', error);
     }
@@ -374,22 +371,17 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
     return obj;
   }
 
-  // selectedValue
-  // selectedCategory
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
     size: 'short-oval',
     value: selectedValue,
     items: ['아침', '점심', '저녁', '간식'],
-    //category: selectedFoodCategory,
-    // category: '아침',
     backgroundColor: 'gray',
     color: 'white',
     fontWeight: 'bold',
     onChange: (selectedTime: SetStateAction<string>) => {
-      console.log('선택된 값:', selectedTime);
+      console.log('선택된 foodCategory:', selectedTime);
       setSelectedValue(selectedTime);
-      // setSelectedFoodCategory(selectedTime);
     },
   };
 
