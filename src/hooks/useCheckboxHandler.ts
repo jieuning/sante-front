@@ -1,11 +1,7 @@
-import axios from 'axios';
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { Exercise } from '../types/user';
-import { getEmail, getPassword } from '../utils/WebStorageControl';
 import { useStore } from '../states/user';
-
-const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 interface CheckboxStates {
   [key: string]: boolean;
