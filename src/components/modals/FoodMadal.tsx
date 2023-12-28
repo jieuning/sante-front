@@ -33,7 +33,7 @@ interface ModalFoodItem {
 
 const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [selectedValue, setSelectedValue] = useState('');  // 카테고리저장을 위한
+  const [selectedValue, setSelectedValue] = useState(''); // 카테고리저장을 위한
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   console.log('fooddata', foodData);
   console.log('해당식단카테고리', foodData?.foodCategory);
@@ -41,6 +41,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
   console.log('selectedCategory', selectedCategory);
   // const [selectedFoodCategory, setSelectedFoodCategory] = useState('');  //카테고리표시를위한
   console.log('selectedCategory', selectedCategory);
+  const [userCalory, setUserCalory] = useState()
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -56,11 +57,11 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
         value: selectedValue,
         category: selectedCategory,
       },
-      food: null, 
+      food: null,
     };
 
     // foodItems 상태 업데이트
-    setFoodItems((prevFoodItems) => [...prevFoodItems, newFoodItem]);
+    setFoodItems([...foodItems, newFoodItem]);
   };
 
   // 삭제(단일 음식)
@@ -83,6 +84,24 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
     updatedFoodItems[index].calory = Number(value);
     setFoodItems(updatedFoodItems);
   };
+
+  useEffect(() => {
+    axios
+      .post(`${URL}/check`, {
+        email: getEmail(),
+        password: getPassword(),
+      })
+      .then((response) => {
+        const userData = response.data.user;
+        console.log('userData', userData);
+        const userCalory = userData.todayCalory;
+        setUserCalory(userCalory)
+        console.log('userCalory', userCalory)
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
+  }, []);
 
   useEffect(() => {
     const newFoodItems: ModalFoodItem[] = [];
@@ -231,7 +250,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
             // 찾은 음식 항목의 foodList에서 특정 조건에 맞는 항목을 제외
             food.foodList = food.foodList.filter(
               (item: { foodCategory: string | undefined; menu: any[] }) => {
-                return item.foodCategory !== foodData?.foodCategory; 
+                return item.foodCategory !== foodData?.foodCategory;
               }
             );
           }
@@ -325,7 +344,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
                 fontWeight: 'bold',
               }}
             >
-              하루 권장 칼로리 1800Kcal
+              하루 권장 칼로리 {userCalory}Kcal
             </p>
           }
           modalButton={modalButton}
