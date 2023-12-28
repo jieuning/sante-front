@@ -71,6 +71,17 @@ const Main = () => {
     setIsCreateMode(true);
     setIsModalFoodOpen(true);
     setFoodModalType('create');
+    setFoodId(new Date().getTime().toString());
+    setFoodData({
+      foodCategory: '아침',
+      totalCalory: 0,
+      menu: [
+        {
+          name: '',
+          calory: '',
+        },
+      ],
+    });
   };
 
   const handleExerciseCreateClick = () => {
@@ -187,6 +198,7 @@ const Main = () => {
                   console.log('이것은 받아온 value', value[0]);
                 }}
               ></RoutineCard>
+              <Blank />
             </CardContainer>
 
             <MainStatistic user={weeklyUser} todayDate={currentDate} />
@@ -197,30 +209,22 @@ const Main = () => {
   );
 };
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  max-width: 1160px;
-`;
+const Container = styled.div``;
 
 const Blank = styled.div<BalckProps>`
   height: ${(props) => props.height || '2rem'};
 `;
 
 const ContentsContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  gap: 2.5%;
-  padding: 2%;
-
-  @media (max-width: 1024px) {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 20px;
-  }
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
 `;
 
-const CardContainer = styled.div``;
+const CardContainer = styled.div`
+  max-width: 620px;
+  width: 480px;
+`;
 
 export default Main;
