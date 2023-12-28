@@ -66,8 +66,14 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
       totalCalory: '',
     };
 
+    console.log('길이확인', foodItems.length);
+    if (foodItems.length >= 10) {
+      alert('식단의 갯수가 너무 많습니다.');
+    } else {
+      setFoodItems([...foodItems, newFoodItem]);
+    }
+
     // foodItems 상태 업데이트
-    setFoodItems([...foodItems, newFoodItem]);
   };
 
   // 삭제(단일 음식)
@@ -283,8 +289,10 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
         if (food.foodId === foodId) {
           food.foodList.forEach(
             (item: {
-              totalCalory: number; foodCategory: string | undefined; menu: Menu[] 
-}) => {
+              totalCalory: number;
+              foodCategory: string | undefined;
+              menu: Menu[];
+            }) => {
               if (item.foodCategory === foodData?.foodCategory) {
                 item.menu = newMenu ?? [];
 
