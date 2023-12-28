@@ -211,7 +211,7 @@ const MainCalendarContainer = styled.div`
   .react-datepicker__month {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     margin: 0;
     pointer-events: none;
   }
