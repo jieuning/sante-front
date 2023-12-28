@@ -14,6 +14,7 @@ type Store = {
   exerciseData: Exercise | undefined;
   setFoodData: (foodItem: FoodList) => void;
   setExerciseData: (exerciseItem: Exercise | undefined) => void;
+  setFoodId: (foodId: string) => void;
   status: number;
 };
 
