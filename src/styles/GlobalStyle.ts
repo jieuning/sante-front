@@ -2,6 +2,14 @@ import { createGlobalStyle } from 'styled-components';
 import SpoqaHanSansNeo from '../assets/font/SpoqaHanSansNeo-Regular.ttf';
 
 export const GlobalStyles = createGlobalStyle`
+
+	/* input number 화살표 없애기 */
+	input[type="number"]::-webkit-outer-spin-button,
+  	input[type="number"]::-webkit-inner-spin-button {
+    	-webkit-appearance: none;
+    	margin: 0;
+  	}
+
     :root {
         --primary-color: #81D8D0;
         --secondary-orange-color: #FF9116;
@@ -9,11 +17,15 @@ export const GlobalStyles = createGlobalStyle`
 
         --white-background-color: #f8f8f8;
 
+		--gray-light-01 : #D9D9D9;
         --gray-light : #BEBEBE;
         --gray-color: #ABABAB;
         --gray-dark : #868686;
 
         --black-color : #0F0F0F;
+
+		--green-color : #97F39A;
+		--red-color : #F39797;
         
         --font-size-title: 4rem;
         --font-size-large: 2.8rem;
@@ -57,6 +69,7 @@ export const GlobalStyles = createGlobalStyle`
 	}
 	body {
 		line-height: 1;
+		background-color : var(--white-background-color);
 	}
 	ol, ul {
 		list-style: none;

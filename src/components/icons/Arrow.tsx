@@ -1,11 +1,19 @@
-import { IoChevronBack } from "react-icons/io5";
-import { IoChevronForward } from "react-icons/io5";
+import { IoChevronBack } from 'react-icons/io5';
+import { IoChevronForward } from 'react-icons/io5';
 
-const Arrow = () => {
+type ArrowType = 'left' | 'right';
+
+interface ArrowProps {
+  type: ArrowType;
+  size: 'string' | 'number';
+  cursor: 'string';
+}
+
+const Arrow = ({ type, size, cursor }: ArrowProps) => {
   return (
     <>
-      <IoChevronBack type="button" cursor="pointer" />
-      <IoChevronForward type="button" cursor="pointer" />
+      {type === 'left' && <IoChevronBack size={size} style={{ cursor }} />}
+      {type === 'right' && <IoChevronForward size={size} style={{ cursor }} />}
     </>
   );
 };

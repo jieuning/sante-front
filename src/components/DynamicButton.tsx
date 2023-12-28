@@ -1,13 +1,24 @@
 import styled from 'styled-components';
-import { ButtonSize, DynamicButtonInfo } from '../types/dynamicButton';
+import { ColorType, getColorValue } from '../types/colorType';
+
+type ButtonType = 'solid' | 'outline' | 'text';
+type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'default';
+
+type DynamicButtonInfo = {
+  type: ButtonType;
+  size?: ButtonSize;
+  text: string;
+  backgroundColor?: ColorType;
+  color?: ColorType;
+  fontWeight?: string;
+  onClick?: (e?: any) => void;
+};
 
 interface DynamicButtonProps {
   info: DynamicButtonInfo;
 }
 
-const DynamicButton = (info: any) => {
-  //const { info } = props;
-
+const DynamicButton = ({ info }: DynamicButtonProps) => {
   return (
     <Container {...info}>
       {info.type === 'solid' && (
@@ -29,25 +40,25 @@ const DynamicButton = (info: any) => {
   );
 };
 
-export const getButtonSize = (size: ButtonSize) => {
+const getButtonSize = (size: ButtonSize) => {
   switch (size) {
     case 'small':
       return {
-        width: '4.94rem',
+        width: 'auto',
         height: '3.25rem',
-        fontSize: 'var(--font-size-small)',
+        fontSize: '14px',
       };
     case 'medium':
       return {
-        width: '15.81rem',
-        height: '4.00rem',
-        fontSize: 'var(--font-size-medium)',
+        width: '400px',
+        height: '50px',
+        fontSize: '20px',
       };
     case 'large':
       return {
         width: '18.75rem',
         height: '6.62rem',
-        fontSize: 'var(--font-size-large)',
+        fontSize: '16px',
       };
     case 'xlarge':
       return {
@@ -72,16 +83,17 @@ const SolidButton = styled.button<DynamicButtonInfo>`
   height: 100%;
   border: none;
   cursor: pointer;
+  padding: 2px 10px 2px 10px;
   border-radius: 10px;
   font-size: ${(props) => getButtonSize(props.size ?? 'medium').fontSize};
   background-color: ${(props) =>
-    props.backgroundColor ? props.backgroundColor : 'var(--primary-color)'};
-  color: ${(props) => (props.color ? props.color : 'white')};
+    getColorValue(props.backgroundColor ?? 'primary')};
+  color: ${(props) => getColorValue(props.color ?? 'white')};
   font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
 `;
 
 const TextButton = styled.button<DynamicButtonInfo>`
-  color: ${(props) => (props.color ? props.color : '#81D8D0')};
+  color: ${(props) => getColorValue(props.color ?? 'primary')};
   border: none;
   background-color: rgba(255, 0, 0, 0);
   font-size: 14px;
@@ -100,4 +112,5 @@ const OutlineButton = styled.button<DynamicButtonInfo>`
   font-size: 12px;
 `;
 
-export default DynamicButton;
+export type { ButtonType, ButtonSize, DynamicButtonInfo };
+export { DynamicButton };
