@@ -6,8 +6,6 @@ import {
   DynamicButton,
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
-import useUserLogin from './hooks/useUserLogin';
-import { User } from '../../types/user';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setUser } from '../../utils/WebStorageControl';
@@ -21,14 +19,12 @@ const Login = () => {
   const [emailValid, setEmailValid] = useState<boolean>(false);
   const [pwValid, setPwValid] = useState<boolean>(false);
 
-  const { onLoginButton } = useUserLogin();
-
   let navigate = useNavigate();
 
   useEffect(() => {
     console.log('Email:', email);
     const emailRegex = /^\S+@\S+.\S+$/;
-    if (emailRegex.test(email)) {
+    if (typeof email === 'string' && emailRegex.test(email)) {
       setEmailValid(true);
     } else {
       setEmailValid(false);
@@ -39,7 +35,7 @@ const Login = () => {
     console.log('Password:', password);
     const pwRegex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (pwRegex.test(password)) {
+    if (typeof password === 'string' && pwRegex.test(password)) {
       setPwValid(true);
     } else {
       setPwValid(false);
@@ -55,6 +51,14 @@ const Login = () => {
   };
 
   const handleLoginButton = () => {
+    if (!emailValid) {
+      alert('이메일을 확인해주세요.');
+      return;
+    }
+    if (!pwValid) {
+      alert('비밀번호을 확인해주세요.');
+      return;
+    }
     axios
       .post(`${URL}/check`, {
         email: email,
@@ -62,7 +66,7 @@ const Login = () => {
       })
       .then((res) => {
         if (res.status === 200) {
-          setUser(email.toString(), password.toString());
+          setUser(email.toString(), password.toString(), res.data.user.gender);
           navigate('/main');
         } else if (res.status === 404) {
           alert('아이디 또는 비밀번호를 확인해주세요.');
@@ -72,6 +76,7 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
+        alert('서버 오류, 관리자에게 문의하세요.');
       });
   };
 
@@ -109,7 +114,7 @@ const Login = () => {
           value={email}
           onChange={handleEmailChange}
           errorMessage={
-            !emailValid && email.length > 0
+            !emailValid && typeof email === 'string' && email.length > 0
               ? '올바른 이메일 형식으로 입력해주세요.'
               : undefined
           }
@@ -123,7 +128,7 @@ const Login = () => {
           value={password}
           onChange={handlePasswordChange}
           errorMessage={
-            !pwValid && password.length > 0
+            !pwValid && typeof password === 'string' && password.length > 0
               ? '8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.'
               : undefined
           }

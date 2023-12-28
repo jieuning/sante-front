@@ -30,7 +30,6 @@ const Statistic = () => {
 
   //여기서 비율 + 총 평균치 구해서 Card에 보내야함
   useEffect(() => {
-    console.log(targetDate);
     const startDate = startOfMonth(targetDate);
     const endDate = endOfMonth(targetDate);
 
@@ -51,7 +50,7 @@ const Statistic = () => {
       targetDate,
       'cnt'
     );
-    console.log();
+
     if (cnt) {
       setExerciseCntList(cnt);
     }
@@ -62,7 +61,6 @@ const Statistic = () => {
       targetDate,
       25
     );
-    console.log(cnt);
     setCaloryList(fst);
   }, [user, targetDate]);
 
@@ -103,10 +101,6 @@ const Statistic = () => {
   );
 };
 
-const getAvg = (arr: number[]): number => {
-  return Math.ceil(arr.reduce((acc, curr) => acc + curr, 0) / arr.length);
-};
-
 const Container = styled.div`
   display: flex;
 
@@ -122,11 +116,7 @@ const ContentsContainer = styled.div`
     justify-content: center;
     align-items: center;
 `;
-const Line = styled.div`
-  margin: 2px 0 2px 0;
-  border: solid 1px var(--gray-light);
-  transform: scaleY(0.1);
-`;
+
 const Title = styled.div`
   font-size: 16px;
   display: flex;

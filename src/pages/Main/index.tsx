@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import RoutineCard from '../../components/RoutineCard';
-import { Exercise, Food, User } from '../../types/user';
+import { Exercise, FoodList, User } from '../../types/user';
 import styled from 'styled-components';
 import useUserModel from '../../hooks/useUserModel';
 import Header from '../../components/Header';
@@ -20,6 +20,7 @@ import FoodModal from '../../components/modals/FoodMadal';
 import { MainContext } from './MainContext';
 import axios from 'axios';
 import { ModalMode } from '../../types/modalMode';
+import { getEmail, getPassword } from '../../utils/WebStorageControl';
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 interface BalckProps {
   height?: string;
@@ -29,15 +30,17 @@ const Main = () => {
   const today = new Date(TODAY); // 현재 날짜를 가져옵니다.
 
   const [user, setUser] = useState<User>();
-  const startOfThisWeek = startOfWeek(today); // 이번 주의 시작 날짜를 계산합니다.
-  const endOfThisWeek = endOfWeek(today); // 이번 주의 종료 날짜를 계산합니다.
-  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
   const [currentDate, setCurrentDate] = useState<Date>(today);
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
-  const [exerciseData, setExerciseData] = useState(null);
-  const [foodData, setFoodData] = useState(null);
-  const [foodId, setFoodId] = useState(null);
+
+  const startOfThisWeek = startOfWeek(currentDate); // 이번 주의 시작 날짜를 계산합니다.
+  const endOfThisWeek = endOfWeek(currentDate); // 이번 주의 종료 날짜를 계산합니다.
+  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
+
+  const [exerciseData, setExerciseData] = useState<Exercise>();
+  const [foodData, setFoodData] = useState<FoodList>();
+  const [foodId, setFoodId] = useState('');
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
 
   const [isCreateMode, setIsCreateMode] = useState(true);
@@ -82,7 +85,7 @@ const Main = () => {
   };
 
   // "편집하기" 클릭을 처리하는 함수 내부에서
-  const handleEditClick = (value) => {
+  const handleEditClick = (value: [FoodList, string]) => {
     setFoodData(value[0]);
     setFoodId(value[1]);
     setFoodModalType('edit');
@@ -94,8 +97,8 @@ const Main = () => {
   useEffect(() => {
     axios
       .post(`${URL}/check`, {
-        email: 'email@email.com',
-        password: 'sdfdsf',
+        email: getEmail(),
+        password: getPassword(),
       })
       .then((response) => {
         const userData = response.data.user;
@@ -156,12 +159,12 @@ const Main = () => {
                 isMain={true}
                 onClickMore={() => console.log('more click')}
                 onClickAdd={() => {
-                  setExerciseData(null);
+                  setExerciseData(undefined);
                   handleExerciseCreateClick();
                 }}
                 onClickEdit={(value) => {
                   setExerciseData(value);
-                  handleExerciseEditClick(value);
+                  handleExerciseEditClick();
                 }}
                 date={currentDate}
               ></RoutineCard>
@@ -184,10 +187,9 @@ const Main = () => {
                   console.log('이것은 받아온 value', value[0]);
                 }}
               ></RoutineCard>
-              <Blank />
             </CardContainer>
 
-            <MainStatistic user={weeklyUser} todayDate={today} />
+            <MainStatistic user={weeklyUser} todayDate={currentDate} />
           </ContentsContainer>
         </Container>
       </MainContext.Provider>
@@ -195,22 +197,30 @@ const Main = () => {
   );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  max-width: 1160px;
+`;
 
 const Blank = styled.div<BalckProps>`
   height: ${(props) => props.height || '2rem'};
 `;
 
 const ContentsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 2.5%;
+  padding: 2%;
+
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
 `;
 
-const CardContainer = styled.div`
-  max-width: 620px;
-  width: 480px;
-`;
+const CardContainer = styled.div``;
 
 export default Main;

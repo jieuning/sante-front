@@ -1,20 +1,14 @@
 import styled from 'styled-components';
 import GageBar from './GageBar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
-import { User, Exercise, Food, FoodList, Menu } from '../../types/user';
+import { User, Exercise, Food, FoodList } from '../../types/user';
 import { getColorValue } from '../../types/colorType';
 import { isSameDay } from 'date-fns';
 
-const FOOD_COLORS = {
-  notEnough: getColorValue('orange'),
-  enough: getColorValue('purple'),
-  tooMuch: '#F39797',
-};
-
 interface sizeProps {
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
 }
 interface MainStatisticProps {
   user: User | undefined;
@@ -26,25 +20,31 @@ const MainStatistic = ({
   user,
   todayDate = new Date(),
 }: MainStatisticProps) => {
-  const caloryMoods = {
-    notEnough: {
-      emoji: '🥺',
-      message: '끼니 거르고 계신거 아니죠?ㅜㅜ',
-      color: FOOD_COLORS.notEnough,
-    },
-    enough: {
-      emoji: '😊',
-      message: '잘 먹고 있어요!',
-      color: FOOD_COLORS.enough,
-    },
-    tooMuch: {
-      emoji: '😵',
-      message: '기준치를 초과했어요',
-      color: FOOD_COLORS.tooMuch,
-    },
-  };
+  const caloryMoods = useMemo(() => {
+    const FOOD_COLORS = {
+      notEnough: getColorValue('orange'),
+      enough: getColorValue('purple'),
+      tooMuch: '#F39797',
+    };
+    return {
+      notEnough: {
+        emoji: '🥺',
+        message: '끼니 거르고 계신거 아니죠?ㅜㅜ',
+        color: FOOD_COLORS.notEnough,
+      },
+      enough: {
+        emoji: '😊',
+        message: '잘 먹고 있어요!',
+        color: FOOD_COLORS.enough,
+      },
+      tooMuch: {
+        emoji: '😵',
+        message: '기준치를 초과했어요',
+        color: FOOD_COLORS.tooMuch,
+      },
+    };
+  }, []);
 
-  const today: Date = new Date(todayDate);
   const [caloryMood, setCaloryMood] = useState(caloryMoods.notEnough);
   const [exerciseGage, setExerciseGage] = useState(0);
   const [exerciseMaxGage, setExerciseMaxGage] = useState(0);
@@ -54,23 +54,27 @@ const MainStatistic = ({
   // console.log('foodgage', foodGage);
   // console.log('usercalory', userCalory);
 
-  const handleCalory = (userFoodData?: Food[]) => {
-    if (userFoodData) {
-      const todayFoods = userFoodData?.find((food: Food) => {
-        return isSameDay(today, new Date(food.createdAt));
-      });
-      if (todayFoods) {
-        const calculatedCalory = todayFoods.foodList.reduce(
-          (acc: number, item: FoodList) => {
-            // console.log('item', item);
-            return acc + item.totalCalory;
-          },
-          0
-        );
-        setFoodGage(calculatedCalory);
+  const handleCalory = useCallback(
+    (userFoodData?: Food[]) => {
+      if (userFoodData) {
+        const today: Date = new Date(todayDate);
+        const todayFoods = userFoodData?.find((food: Food) => {
+          return isSameDay(today, new Date(food.createdAt));
+        });
+        if (todayFoods) {
+          const calculatedCalory = todayFoods.foodList.reduce(
+            (acc: number, item: FoodList) => {
+              // console.log('item', item);
+              return acc + item.totalCalory;
+            },
+            0
+          );
+          setFoodGage(calculatedCalory);
+        }
       }
-    }
-  };
+    },
+    [todayDate]
+  );
 
   const handleExercise = (userExerciseData?: Exercise[]) => {
     if (userExerciseData) {
@@ -107,7 +111,7 @@ const MainStatistic = ({
     // console.log('--userCalory', userCalory);
     // console.log('--food', foodGage);
     // console.log('--exercise', exerciseGage / exerciseMaxGage);
-  }, [user]); //TODO: 나중에 userFoodData랑 userExerciseData 메모이제이션 따로 분리
+  }, [user, handleCalory]); //TODO: 나중에 userFoodData랑 userExerciseData 메모이제이션 따로 분리
 
   //NOTE: 기준 80%
 
@@ -120,19 +124,22 @@ const MainStatistic = ({
   const MIN_LIMIT = 80;
   const MAX_LIMIT = 100;
 
-  const handleCaloryGage = (currentGage: number) => {
-    let newCaloryMood = { ...caloryMood };
-    if (currentGage >= MIN_LIMIT && currentGage <= MAX_LIMIT) {
-      newCaloryMood = caloryMoods.enough;
-    } else if (currentGage > MAX_LIMIT) {
-      newCaloryMood = caloryMoods.tooMuch;
-    } else if (currentGage < MIN_LIMIT) {
-      newCaloryMood = caloryMoods.notEnough;
-    } else {
-      newCaloryMood = { ...newCaloryMood, color: 'red' };
-    }
-    setCaloryMood(newCaloryMood);
-  };
+  const handleCaloryGage = useCallback(
+    (currentGage: number) => {
+      let newCaloryMood = { ...caloryMood };
+      if (currentGage >= MIN_LIMIT && currentGage <= MAX_LIMIT) {
+        newCaloryMood = caloryMoods.enough;
+      } else if (currentGage > MAX_LIMIT) {
+        newCaloryMood = caloryMoods.tooMuch;
+      } else if (currentGage < MIN_LIMIT) {
+        newCaloryMood = caloryMoods.notEnough;
+      } else {
+        newCaloryMood = { ...newCaloryMood, color: 'red' };
+      }
+      setCaloryMood(newCaloryMood);
+    },
+    [MIN_LIMIT, MAX_LIMIT, caloryMood, caloryMoods]
+  );
 
   return (
     <GageContainerDiv>
@@ -172,7 +179,11 @@ const MainStatistic = ({
 };
 //NOTE: 미완성
 const GageContainerDiv = styled.div<sizeProps>`
-  width: ${({ width }) => (width ? width : '23rem')};
+<<<<<<< HEAD
+=======
+  display: flex;
+  flex-direction: column;
+>>>>>>> eb5aec91393d00e6354a1f405267aa6e5160547c
   height: ${({ height }) => (height ? height : '30rem')};
   border-radius: 2rem;
   background-color: white;

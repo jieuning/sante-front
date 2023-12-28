@@ -7,8 +7,8 @@ interface ColorChipProps {
 }
 
 const ChipDiv = styled.div<ColorChipProps>`
-  height: ${({ ratio }) => (ratio ? `${ratio * 8}px` : '8px')};
-  width: ${({ ratio }) => (ratio ? `${ratio * 8}px` : '8px')};
+  height: ${({ ratio }) => (ratio ? `${ratio * 6}px` : '6px')};
+  width: ${({ ratio }) => (ratio ? `${ratio * 6}px` : '6px')};
   background-color: ${({ color }) => color};
   border-radius: 50%;
   display: flex;

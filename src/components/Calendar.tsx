@@ -14,7 +14,7 @@ import {
 interface MonthCalendarProps {
   exerciseList?: Exercise[] | undefined;
   foodList?: Food[] | undefined;
-  userData: User;
+  userData: User | undefined;
   currentDate: Date;
 }
 
@@ -73,7 +73,7 @@ export const MonthCalendar = ({
 
     if (exerciseList !== undefined) {
       const filteredExerciseList = filterExerciseListByDateRange(
-        userData.userExerciseList ?? [],
+        userData?.userExerciseList ?? [],
         startOfCurrentMonth,
         endOfCurrentMonth
       );
@@ -98,7 +98,7 @@ export const MonthCalendar = ({
 
     if (foodList !== undefined) {
       const filteredFoodList = filterFoodListByDateRange(
-        userData.userFoodList ?? [],
+        userData?.userFoodList ?? [],
         startOfCurrentMonth,
         endOfCurrentMonth
       );
@@ -122,8 +122,14 @@ export const MonthCalendar = ({
       <>
         <span>{date}</span>
         <ColorChipWrap>
-          {exerciseColorChips}
-          {foodColorChips}
+          {exerciseColorChips === undefined && foodColorChips === undefined ? (
+            <NoColorChip />
+          ) : (
+            <>
+              {exerciseColorChips}
+              {foodColorChips}
+            </>
+          )}
         </ColorChipWrap>
       </>
     );
@@ -168,11 +174,12 @@ const MainCalendarContainer = styled.div`
   display: inline-block;
 
   .react-datepicker {
-    min-width: 280px;
-    min-height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: #fefff4;
     border: none;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 20px;
   }
 
@@ -204,7 +211,7 @@ const MainCalendarContainer = styled.div`
   .react-datepicker__month {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     margin: 0;
     pointer-events: none;
   }
@@ -214,7 +221,7 @@ const MainCalendarContainer = styled.div`
   }
 
   .react-datepicker__day-names {
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     margin-bottom: 0;
   }
 
@@ -244,6 +251,10 @@ const MainCalendarContainer = styled.div`
 
 const ColorChipTagWrap = styled.div`
   display: flex;
+`;
+
+const NoColorChip = styled.div`
+  height: 6px;
 `;
 
 // const Tag = styled.span`
