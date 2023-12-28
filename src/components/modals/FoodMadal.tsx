@@ -24,6 +24,7 @@ interface FoodModalProps {
   foodId?: string; // 날짜
   modalType: ModalMode;
   name?: string; // 음식이름
+  currentDate?: Date;
 }
 
 interface ModalFoodItem {
@@ -33,7 +34,7 @@ interface ModalFoodItem {
   totalCalory?: number | string;
 }
 
-const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
+const FoodModal = ({ modalButton, foodData, foodId, currentDate }: FoodModalProps) => {
   const user = useStore((state) => state.user);
   const getUser = useStore((state) => state.getUser);
   const setUser = useStore((state) => state.setUser);
@@ -250,7 +251,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
             },
           ],
           foodId: foodId || '',
-          createdAt: new Date(),
+          createdAt: currentDate || new Date(),
           lastUpdated: new Date(),
         });
         console.log('newUserFoodList', newUserFoodList);
@@ -320,10 +321,7 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
 
       // 삭제할 음식 항목 찾기
       const updatedUserFoodList = (filteredUser.userFoodList || []).map(
-        (food: {
-          foodId: string | null | undefined;
-          foodList: { foodCategory: string | undefined; menu: any[] }[];
-        }) => {
+        (food: Food) => {
           if (food.foodId === foodId) {
             // 찾은 음식 항목의 foodList에서 특정 조건에 맞는 항목을 제외
             food.foodList = food.foodList.filter(
@@ -335,8 +333,9 @@ const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
           return food;
         }
       );
-
-      filteredUser?.userFoodList = updatedUserFoodList ?? [];
+      if (filteredUser.userFoodList !== undefined) {
+        filteredUser.userFoodList = updatedUserFoodList;
+      }
 
       console.log('user', user);
 
