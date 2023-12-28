@@ -247,7 +247,7 @@ function filterFoodListByDateRange(
     console.log(dateKey);
     return foodList.filter((food) => {
       const foodDateKey = new Date(food.createdAt).toISOString().split('T')[0];
-      console.log(foodDateKey);
+
       if (dateKey === foodDateKey) return true;
       return false;
     });

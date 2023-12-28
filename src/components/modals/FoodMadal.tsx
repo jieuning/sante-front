@@ -20,8 +20,6 @@ const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 interface FoodModalProps {
   modalButton: any;
-  foodData?: FoodList | null;
-  foodId?: string; // 날짜
   modalType: ModalMode;
   name?: string; // 음식이름
   currentDate?: Date;
@@ -34,12 +32,10 @@ interface ModalFoodItem {
   totalCalory?: number | string;
 }
 
-const FoodModal = ({
-  modalButton,
-  foodData,
-  foodId,
-  currentDate,
-}: FoodModalProps) => {
+const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
+  const foodData = useStore((state) => state.foodData);
+  const foodId = useStore((state) => state.foodId);
+
   const user = useStore((state) => state.user);
   const getUser = useStore((state) => state.getUser);
   const setUser = useStore((state) => state.setUser);
@@ -114,8 +110,8 @@ const FoodModal = ({
     const newFoodItems: ModalFoodItem[] = [];
 
     // FIXME - 반복문 null처리
-    if (foodData !== null) {
-      foodData?.menu.forEach((item: Menu) => {
+    if (foodData?.menu !== null) {
+      foodData?.menu?.forEach((item: Menu) => {
         setSelectedValue(foodData?.foodCategory || '');
         return newFoodItems.push({
           id:
@@ -153,24 +149,25 @@ const FoodModal = ({
       const newUserFoodList = filteredUser.userFoodList
         ? [...filteredUser.userFoodList]
         : [];
-      console.log('이전newUserFoodList', newUserFoodList); //✔️
-      console.log('foodId', foodId); //✔️
 
       let isExistCategory = false;
 
       const selectedFoodId = newUserFoodList.find(
         (item) => item.foodId === foodId
       );
-      console.log('selectedFoodId', selectedFoodId)
 
+      console.log('newUserFoodList', newUserFoodList);
+      console.log('foodId', foodId);
+
+      //create인 경우
       if (selectedFoodId === undefined) {
-        console.log('실패');
-        return;
+        console.log('새로 생성');
+        isExistCategory = false;
       }
 
-      if (selectedFoodId.foodList.length > 0) {
-        isExistCategory = !isExistCategory;
-      }
+      // if (selectedFoodId.foodList.length > 0) {
+      //   isExistCategory = true;
+      // }
 
       const existingFoodIndex = newUserFoodList.findIndex((item) => {
         return (
@@ -182,33 +179,61 @@ const FoodModal = ({
       console.log('최근newUserFoodList', newUserFoodList);
 
       // 존재하는 foodCategory 찾은 경우
-      if (isExistCategory) {
-        // 기존 객체 복사
-        const existingFood = { ...newUserFoodList[existingFoodIndex] };
-        const existingMenu = [...existingFood.foodList[0].menu]; // 메뉴 배열 복사
-
-        // 메뉴에 foodItem이 이미 존재하는지 확인
-        const existingMenuItemIndex = existingMenu.findIndex(
-          (menu) => menu.name === foodItems[0].name
+      if (selectedFoodId) {
+        //여기서 카테고리 있는경우 없는경우 나눠야함
+        const category = selectedFoodId?.foodList.find(
+          (food) => food.foodCategory === foodData?.foodCategory
         );
 
-        // 기존 메뉴 항목 업데이트 또는 새로운 메뉴 항목 추가
-        if (existingMenuItemIndex !== -1) {
-          existingMenu[existingMenuItemIndex] = {
-            ...existingMenu[existingMenuItemIndex],
-            calory:
-              +existingMenu[existingMenuItemIndex].calory + totalFoodCalory,
-          };
+        if (category) {
+          //카테고리 있으면 메뉴만 추가
+          // 기존 객체 복사
+          const existingFood = { ...newUserFoodList[existingFoodIndex] };
+          const existingMenu = [...existingFood.foodList[0].menu]; // 메뉴 배열 복사
+          // 메뉴에 foodItem이 이미 존재하는지 확인
+          const existingMenuItemIndex = existingMenu.findIndex(
+            (menu) => menu.name === foodItems[0].name
+          );
+          // 기존 메뉴 항목 업데이트 또는 새로운 메뉴 항목 추가
+          if (existingMenuItemIndex !== -1) {
+            existingMenu[existingMenuItemIndex] = {
+              ...existingMenu[existingMenuItemIndex],
+              calory:
+                +existingMenu[existingMenuItemIndex].calory + totalFoodCalory,
+            };
+          } else {
+            existingMenu.push(...foodItems);
+            existingFood.foodList[0].totalCalory += totalFoodCalory;
+          }
+          existingFood.foodList[0].menu = existingMenu;
+          newUserFoodList[existingFoodIndex] = existingFood;
+          filteredUser.userFoodList = newUserFoodList;
         } else {
-          existingMenu.push(...foodItems);
-          existingFood.foodList[0].totalCalory += totalFoodCalory;
+          //카테고리 없으면 Food.foodList에 새 카테고리 push해줘야
+          if (foodData) {
+            console.log('foodData', foodData);
+            selectedFoodId.foodList.push({
+              foodCategory: selectedValue,
+              totalCalory: foodItems.reduce(
+                (acc, curr) => acc + Number(curr.calory),
+                0
+              ),
+              menu: foodItems.map((foodItem) => ({
+                name: foodItem.name,
+                calory: foodItem.calory,
+              })),
+            });
+            filteredUser.userFoodList?.forEach((item) => {
+              if (item.foodId === foodId) {
+                item.foodList = selectedFoodId.foodList;
+              }
+            });
+          }
         }
-
-        existingFood.foodList[0].menu = existingMenu;
-        newUserFoodList[existingFoodIndex] = existingFood;
       } else {
         // 새로운 음식 항목 생성 및 추가
         //FIXME - 확인(조건에안됨)
+        console.log('modal date', currentDate);
         newUserFoodList.push({
           foodList: [
             {
@@ -225,9 +250,8 @@ const FoodModal = ({
           lastUpdated: new Date(),
         });
         console.log('newUserFoodList', newUserFoodList);
+        filteredUser.userFoodList = newUserFoodList;
       }
-
-      filteredUser.userFoodList = newUserFoodList;
 
       // 변경된 유저 그대로 업데이트
       console.log('user', user);

@@ -13,6 +13,7 @@ import FoodModal from '../../components/modals/FoodMadal';
 import { MainContext } from './MainContext';
 import { ModalMode } from '../../types/modalMode';
 import { useStore } from '../../states/user';
+
 interface BalckProps {
   height?: string;
 }
@@ -24,13 +25,11 @@ const Main = () => {
   const user = useStore((state) => state.user);
   const getUser = useStore((state) => state.getUser);
   const setExerciseData = useStore((state) => state.setExerciseData);
-
+  const setFoodData = useStore((state) => state.setFoodData);
   const [currentDate, setCurrentDate] = useState<Date>(today);
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
 
-  const [foodData, setFoodData] = useState<FoodList>();
-  const [foodId, setFoodId] = useState('');
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
 
   const [isCreateMode, setIsCreateMode] = useState(true);
@@ -64,7 +63,6 @@ const Main = () => {
     setIsCreateMode(true);
     setIsModalFoodOpen(true);
     setFoodModalType('create');
-    setFoodId(new Date().getTime().toString());
     setFoodData({
       foodCategory: '',
       totalCalory: Number(),
@@ -89,9 +87,8 @@ const Main = () => {
   };
 
   // "편집하기" 클릭을 처리하는 함수 내부에서
-  const handleEditClick = (value: [FoodList, string]) => {
-    setFoodData(value[0]);
-    setFoodId(value[1]);
+  const handleEditClick = (value: FoodList) => {
+    setFoodData(value);
     setFoodModalType('edit');
     setIsCreateMode(false);
     setIsModalFoodOpen(true);
@@ -124,9 +121,8 @@ const Main = () => {
           {isModalFoodOpen && (
             <FoodModal
               modalButton={isCreateMode} // 모달Button 속성으로 상태 전달
-              foodData={foodData}
-              foodId={foodId}
               modalType={foodModalType}
+              currentDate={currentDate}
               // ... 다른 속성들
             />
           )}

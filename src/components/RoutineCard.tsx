@@ -13,6 +13,7 @@ import {
 } from '../utils/Date';
 import useCheckboxHandler from '../hooks/useCheckboxHandler';
 import { useNavigate } from 'react-router-dom';
+import { useStore } from '../states/user';
 
 type RoutineType = 'exercise' | 'food';
 interface RoutineCardProps {
@@ -55,6 +56,9 @@ const RoutineCard = ({
     });
   }
 
+  const setFoodId = useStore((state) => state.setFoodId);
+  const setFoodData = useStore((state) => state.setFoodData);
+
   const [isExist, setIsExist] = useState(false);
   const [checkboxStates, handleCheckboxChange] =
     useCheckboxHandler(initialCheckboxState);
@@ -71,9 +75,17 @@ const RoutineCard = ({
   useEffect(() => {
     if (type === 'food' && foodList) {
       const filtered = filterFoodListByDateRange(foodList, date, date);
-      setIsExist(filtered.length > 0 && filtered[0].foodList.length > 0);
-
+      const checkList = filtered.length > 0 && filtered[0].foodList.length > 0; //메뉴 데이터 있음
+      setIsExist(checkList);
+      console.log(filtered);
+      if (checkList) {
+        setFoodId(filtered[0].foodId);
+      } else {
+        setFoodId(new Date().getTime().toString());
+      }
       setFilteredFoods(filtered);
+    } else {
+      setFoodId(new Date().getTime().toString());
     }
     if (type === 'exercise' && exerciseList) {
       const filtered = filterExerciseListByDateRange(exerciseList, date, date);
@@ -173,9 +185,7 @@ const RoutineCard = ({
                     type="button"
                     cursor="pointer"
                     color="var(--black-color)"
-                    onClick={() =>
-                      onClickEdit && onClickEdit([foodItem, item.foodId])
-                    }
+                    onClick={() => onClickEdit && onClickEdit(foodItem)}
                   />
                 </ContentsName>
                 <TagContainer>
