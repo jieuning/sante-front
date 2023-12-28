@@ -89,7 +89,6 @@ export const DateSelect = ({
 };
 
 const DateSelectContainer = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,10 +102,11 @@ const DateTitle = styled.h1`
 `;
 
 const DateSelectWrap = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
+  max-width: 452px;
   position: relative;
-  width: 438px;
 `;
 
 const Button = styled(SlArrowLeft)`
@@ -122,8 +122,7 @@ const Button = styled(SlArrowLeft)`
 const DayOfMonthWrap = styled.div`
   margin: 0 auto;
   display: flex;
-  gap: 20px;
-  width: 358px;
+  gap: 30px;
   overflow: hidden;
 `;
 
@@ -131,6 +130,11 @@ const WeekOfMonth = styled.ul`
   display: flex;
   font-size: 16px;
   gap: 20px;
+
+  @media (max-width: 412px) {
+    gap: 12px;
+    algin-items: center;
+  }
 `;
 
 const Day = styled.li`
@@ -152,8 +156,17 @@ const Day = styled.li`
 const OneWeek = styled.ul`
   display: flex;
   justify-content: center;
-  gap: 43px;
-  width: 358px;
+  gap: 20px;
   font-size: 12px;
   margin-top: 10px;
+
+  li {
+    display: flex;
+    justify-content: center;
+    width: 34px;
+  }
+
+  @media (max-width: 412px) {
+    gap: 12px;
+  }
 `;
