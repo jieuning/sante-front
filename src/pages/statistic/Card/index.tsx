@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { getWeekOfMonth } from '../../../utils/Date';
 import { useEffect, useState } from 'react';
 
@@ -80,12 +80,22 @@ const BarContainer = styled.div`
   }
 `;
 
+const createGrowHeightAnimation = (height: number) => keyframes`
+  from {
+    height: 0;
+  }
+  to {
+    height: ${height}px;
+  }
+`;
+
 const Bar = styled.div<BarProps>`
   width: 2rem;
   border-radius: 7px 7px 0 0;
   background-color: ${(props) =>
     props.thisWeek ? 'var(--primary-color)' : 'var(--gray-color)'};
+
+  animation: ${(props) => createGrowHeightAnimation(props.height)} 0.5s ease-out;
   height: ${(props) => props.height}px;
 `;
-
 export default Card;

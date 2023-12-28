@@ -1,6 +1,6 @@
 import create from 'zustand';
 import axios from 'axios';
-import { User } from '../types/user';
+import { Exercise, FoodList, User } from '../types/user';
 import { getEmail, getPassword } from '../utils/WebStorageControl';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
@@ -9,6 +9,10 @@ type Store = {
   user: User | undefined;
   getUser: () => void;
   setUser: (userData: User) => Promise<void>;
+  foodData: FoodList | undefined;
+  exerciseData: Exercise | undefined;
+  setFoodData: (foodItem: FoodList) => void;
+  setExerciseData: (exerciseItem: Exercise) => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -35,5 +39,13 @@ export const useStore = create<Store>((set) => ({
     } catch (error) {
       console.error('User get failed', error);
     }
+  },
+  foodData: undefined,
+  exerciseData: undefined,
+  setFoodData: (foodItem: FoodList) => {
+    set({ foodData: foodItem });
+  },
+  setExerciseData: (exerciseItem: Exercise) => {
+    set({ exerciseData: exerciseItem });
   },
 }));

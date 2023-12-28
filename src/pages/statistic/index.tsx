@@ -107,10 +107,11 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   height: 100vh; /* 전체 화면 높이 */
+  padding: 0 20px;
 `;
 
 const ContentsContainer = styled.div`
-    width: 780px;
+    max-width: 800px;
     display: flex:
     flex-direction: column;
     justify-content: center;
