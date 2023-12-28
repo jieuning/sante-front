@@ -68,5 +68,38 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   );
 };
 
-export default SelectBox;
+const RegisterSelectBox: React.FC<SelectBoxProps> = ({
+  ageOptions,
+  onChange,
+  placeholder,
+  width,
+  height,
+}) => {
+  const [selectedValue, setSelectedValue] = useState('');
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const selectedValue = event.target.value;
+    setSelectedValue(selectedValue);
+    onChange(selectedValue);
+  };
+
+  return (
+    <StyledSelect
+      width={width}
+      height={height}
+      value={selectedValue}
+      onChange={handleSelectChange}
+    >
+      <option value="" disabled>
+        {placeholder}
+      </option>
+      {ageOptions.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </StyledSelect>
+  );
+};
+
+export { SelectBox, RegisterSelectBox };
 export type { Option };

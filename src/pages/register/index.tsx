@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import Input from '../../components/Input';
-import SelectBox, { Option } from '../../components/SelectBox';
+import { RegisterSelectBox, Option } from '../../components/SelectBox';
 import {
   DynamicButton,
   DynamicButtonInfo,
@@ -159,7 +159,6 @@ const Register = () => {
         alert('나이를 선택해주세요.');
         return;
       }
-      
       setIsFormValid(true);
 
       if (!isFormValid) {
@@ -236,7 +235,7 @@ const Register = () => {
         <RadioButtonContainer>
           <RadioButton info={radioGenderButtonInfo} />
         </RadioButtonContainer>
-        <SelectBox
+        <RegisterSelectBox
           width="400px"
           height="40px"
           placeholder="연령을 선택해주세요."
