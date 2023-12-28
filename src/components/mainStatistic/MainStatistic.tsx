@@ -172,7 +172,11 @@ const MainStatistic = ({
 };
 //NOTE: 미완성
 const GageContainerDiv = styled.div<sizeProps>`
-  width: ${({ width }) => (width ? width : '23rem')};
+<<<<<<< HEAD
+=======
+  display: flex;
+  flex-direction: column;
+>>>>>>> eb5aec91393d00e6354a1f405267aa6e5160547c
   height: ${({ height }) => (height ? height : '30rem')};
   border-radius: 2rem;
   background-color: white;
