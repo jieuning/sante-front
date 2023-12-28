@@ -66,7 +66,12 @@ const Login = () => {
       })
       .then((res) => {
         if (res.status === 200) {
-          setUser(email.toString(), password.toString(), res.data.user.gender);
+          setUser(
+            email.toString(),
+            password.toString(),
+            res.data.user.gender,
+            res.data.user.age
+          );
           navigate('/main');
         } else if (res.status === 404) {
           alert('아이디 또는 비밀번호를 확인해주세요.');
@@ -76,7 +81,7 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
-        alert('서버 오류, 관리자에게 문의하세요.');
+        alert('아이디 또는 비밀번호를 확인하세요');
       });
   };
 

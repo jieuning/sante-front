@@ -1,10 +1,4 @@
-import { useState } from 'react';
-
-const CaloryRecommend = () => {
-  const [recommendCalory, setRecommendCalory] = useState<number>(0);
-  const selectedGender = localStorage.getItem('gender');
-  const selectedAge = localStorage.getItem('age');
-
+const CaloryRecommend = (selectedGender: string, selectedAge: string) => {
   let calory: number = 0;
   switch (selectedGender) {
     case '남성':
@@ -52,9 +46,7 @@ const CaloryRecommend = () => {
       }
       break;
   }
-  console.log(calory);
-  setRecommendCalory(calory);
-  console.log(recommendCalory);
+  return calory;
 };
 
 export default CaloryRecommend;

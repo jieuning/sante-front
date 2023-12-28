@@ -1,7 +1,19 @@
-const setUser = (email: string, password: string, gender: string) => {
+import CaloryRecommend from './CaloryRecommend';
+
+const setUser = (
+  email: string,
+  password: string,
+  gender: string,
+  age: number
+) => {
   localStorage.setItem('email', email);
   localStorage.setItem('password', password);
   localStorage.setItem('gender', gender);
+  localStorage.setItem('age', age.toString());
+  localStorage.setItem(
+    'todayCalory',
+    CaloryRecommend(gender, age.toString()).toString()
+  );
 };
 
 const getEmail = () => {
