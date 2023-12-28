@@ -148,7 +148,8 @@ const WeeklyContainer = styled.div`
 const RoutineCardContainer = styled.div`
   margin: 10px auto;
   max-width: 620px;
-  width: 480px;
+  min-width: 300px;
+  padding: 0 10px;
 `;
 
 const AllRoutineCardContainer = styled.div`
