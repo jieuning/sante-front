@@ -25,6 +25,8 @@ const MainStatistic = ({
   user,
   todayDate = new Date(),
 }: MainStatisticProps) => {
+  const todayCalory = parseInt(localStorage.getItem('todayCalory'));
+
   const navigate = useNavigate();
   const caloryMoods = useMemo(() => {
     const FOOD_COLORS = {
@@ -108,7 +110,7 @@ const MainStatistic = ({
     if (user) {
       //console.log('-------thisIsUser------', user);
       const today: Date = new Date(todayDate);
-      user.todayCalory && setUserCalory(user.todayCalory);
+      setUserCalory(todayCalory);
       const userAllFoodData = user.userFoodList || [];
       const userAllExerciseData = user.userExerciseList || [];
 
@@ -127,11 +129,10 @@ const MainStatistic = ({
       handleCalory(userFoodData); //TODO: 클릭했던 날짜 값 받아오기
       handleExercise(userExerciseData);
     }
-    // console.log('--userCalory', userCalory);
-    // console.log('--food', foodGage);
-    // console.log('--exercise', exerciseGage / exerciseMaxGage);
-  }, [user, handleCalory]); //TODO: 나중에 userFoodData랑 userExerciseData 메모이제이션 따로 분리
-
+    console.log('--userCalory', userCalory);
+    console.log('--food', foodGage);
+    console.log('--exercise', exerciseGage / exerciseMaxGage);
+  }, [user, handleCalory, todayDate, todayCalory]);
   //NOTE: 기준 80%
 
   const buttonInfo: DynamicButtonInfo = {
