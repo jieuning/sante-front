@@ -187,8 +187,8 @@ const Main = () => {
                   console.log('이것은 받아온 value', value[0]);
                 }}
               ></RoutineCard>
+              <Blank />
             </CardContainer>
-
             <MainStatistic user={weeklyUser} todayDate={currentDate} />
           </ContentsContainer>
         </Container>
