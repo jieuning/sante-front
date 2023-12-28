@@ -12,7 +12,7 @@ type Store = {
   foodData: FoodList | undefined;
   exerciseData: Exercise | undefined;
   setFoodData: (foodItem: FoodList) => void;
-  setExerciseData: (exerciseItem: Exercise) => void;
+  setExerciseData: (exerciseItem: Exercise | undefined) => void;
 };
 
 export const useStore = create<Store>((set) => ({
