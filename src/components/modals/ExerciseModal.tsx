@@ -4,7 +4,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState, forwardRef, useEffect } from 'react';
 import styled from 'styled-components';
-import SelectBox from '../SelectBox';
+import { SelectBox } from '../SelectBox';
 import ko from 'date-fns/locale/ko';
 
 import { CheckButton, InputButtonInfo } from '../../components/RadioButton';
