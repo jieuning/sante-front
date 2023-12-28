@@ -49,7 +49,7 @@ interface ExerciseModalProps {
 const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
   const exerciseData = useStore((state) => state.exerciseData);
   const setModalState = useStore((state) => state.setModalState);
-  console.log('check mic test', exerciseData);
+  console.log('check mic test', exerciseData?.exerciseId);
   const [inputValue, setInputValue] = useState<string | undefined>('');
   const [dateRange, setDateRange] = useState<(Date | null)[]>([null, null]);
   const [startDate, endDate] = dateRange;
@@ -170,7 +170,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
   };
 
   useEffect(() => {
-    if (exerciseData?.exerciseId) {
+    if (exerciseData) {
       exerciseData?.exerciseName && setInputValue(exerciseData.exerciseName);
       if (
         exerciseData.exerciseStartDate &&
