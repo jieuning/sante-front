@@ -28,6 +28,10 @@ const logOut = () => {
   localStorage.clear();
 };
 
+const getTodayCalory = () => {
+  return localStorage.getItem('todayCalory');
+};
+
 const isLogin = () => {
   if (localStorage.getItem('email')) {
     return true;
@@ -35,4 +39,4 @@ const isLogin = () => {
   return false;
 };
 
-export { setUser, getEmail, getPassword, logOut, isLogin };
+export { setUser, getEmail, getPassword, logOut, isLogin, getTodayCalory };
