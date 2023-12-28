@@ -12,6 +12,7 @@ import {
   endOfMonth,
   endOfWeek,
   isSameMonth,
+  isSameWeek,
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
@@ -34,9 +35,16 @@ const Main = () => {
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
 
-  const startOfThisWeek = startOfWeek(currentDate); // 이번 주의 시작 날짜를 계산합니다.
-  const endOfThisWeek = endOfWeek(currentDate); // 이번 주의 종료 날짜를 계산합니다.
-  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
+  const [startOfCurrentWeek, setStartOfCurrentWeek] = useState(
+    startOfWeek(currentDate)
+  ); // 이번 주의 시작 날짜를 계산합니다.
+  const [endOfCurrentWeek, setEndOfCurrentWeek] = useState(
+    endOfWeek(currentDate)
+  ); // 이번 주의 종료 날짜를 계산합니다.
+  // const [weeklyUser, setWeeklyUser] = useState(
+  //   useUserModel(startOfCurrentWeek, endOfCurrentWeek)
+  // );
+  const weeklyUser = useUserModel(startOfCurrentWeek, endOfCurrentWeek);
 
   const [exerciseData, setExerciseData] = useState<Exercise>();
   const [foodData, setFoodData] = useState<FoodList>();
@@ -54,6 +62,10 @@ const Main = () => {
 
   const handleDayOnClick = (day: Date) => {
     setCurrentDate(day);
+    if (!isSameWeek(day, startOfCurrentWeek)) {
+      setStartOfCurrentWeek(startOfWeek(day));
+      setEndOfCurrentWeek(endOfWeek(day));
+    }
     if (!isSameMonth(day, startOfCurrentMonth)) {
       setStartOfCurrentMonth(startOfMonth(day));
       setEndOfCurrentMonth(endOfMonth(day));
