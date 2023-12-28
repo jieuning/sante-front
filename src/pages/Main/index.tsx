@@ -20,6 +20,7 @@ import FoodModal from '../../components/modals/FoodMadal';
 import { MainContext } from './MainContext';
 import axios from 'axios';
 import { ModalMode } from '../../types/modalMode';
+import { getEmail, getPassword } from '../../utils/WebStorageControl';
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 interface BalckProps {
   height?: string;
@@ -96,8 +97,8 @@ const Main = () => {
   useEffect(() => {
     axios
       .post(`${URL}/check`, {
-        email: 'email@email.com',
-        password: 'sdfdsf',
+        email: getEmail(),
+        password: getPassword(),
       })
       .then((response) => {
         const userData = response.data.user;
