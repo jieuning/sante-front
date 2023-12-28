@@ -71,7 +71,8 @@ const RoutineCard = ({
   useEffect(() => {
     if (type === 'food' && foodList) {
       const filtered = filterFoodListByDateRange(foodList, date, date);
-      setIsExist(filtered.length > 0);
+      setIsExist(filtered.length > 0 && filtered[0].foodList.length > 0);
+
       setFilteredFoods(filtered);
     }
     if (type === 'exercise' && exerciseList) {
