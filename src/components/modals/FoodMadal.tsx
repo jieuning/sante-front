@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import ModalCard from '../../components/modals/ModalCard';
 import Input from '../../components/Input';
 import Remove from '../icons/Remove';
@@ -12,31 +12,35 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { Food, FoodList, Menu } from '../../types/user';
 import { ModalMode } from '../../types/modalMode';
+// import { ModalMode } from '../../types/modalMode';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
 interface FoodModalProps {
   modalButton: any;
-  foodData: FoodList;
-  foodId: string;
+  foodData?: FoodList | null;
+  foodId?: string | null;  // 날짜
   modalType: ModalMode;
+  name?: string  // 음식이름
 }
 
 interface ModalFoodItem {
-  id: string;
+  id: number | string;
   name: string;
-  calorie: number;
+  calory: number | string;
+  food: any;
 }
 
-const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
+const FoodModal = ({ modalButton, foodData, foodId }: FoodModalProps) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedValue, setSelectedValue] = useState('');
-  const [foodItems, setFoodItems] = useState<ModalFoodItem[]>();
+  const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   console.log('fooddata', foodData);
-  console.log('foodId', foodId);
-  // input값 관리
-  const [food, setFood] = useState('');
-  const [calorie, setCalorie] = useState('');
+  console.log('해당식단카테고리', foodData?.foodCategory);
+  const selectedCategory = foodData?.foodCategory;
+  console.log('selectedCategory', selectedCategory);
+  // const [selectedFoodCategory, setSelectedFoodCategory] =
+  //   useState(selectedCategory);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -47,9 +51,10 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     // 새로운 음식 항목 생성
     const newFoodItem = {
       id: new Date().getTime(), // 고유한 id 생성
-      name: null,
-      calorie: null,
+      name: '',
+      calory: '',
       foodCategory: selectedValue, // 새로운 항목의 foodCategory 추가
+      food: null, // food 속성 추가
     };
 
     // foodItems 상태 업데이트
@@ -70,10 +75,10 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     setFoodItems(updatedFoodItems);
   };
 
-  // 각 음식 항목의 calorie 값 업데이트
-  const handleCalorieChange = (value: string, index: number) => {
+  // 각 음식 항목의 calory 값 업데이트
+  const handleCaloryChange = (value: string, index: number) => {
     const updatedFoodItems = [...foodItems];
-    updatedFoodItems[index].calorie = Number(value);
+    updatedFoodItems[index].calory = Number(value);
     setFoodItems(updatedFoodItems);
   };
 
@@ -82,15 +87,16 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
 
     // FIXME - 반복문 null처리
     if (foodData !== null) {
-      foodData.menu.forEach((item: Menu) => {
-        newFoodItems.push({
+      foodData?.menu.forEach((item: Menu) => {
+        return newFoodItems.push({
           id:
-            foodId.toString() +
+            foodId?.toString() +
             foodData.foodCategory +
             item.name +
             format(new Date(), 'yyyy-MM-dd-HH-mm-ss'),
           name: item.name,
-          calorie: item.calory,
+          calory: item.calory,
+          food: undefined,
         });
       });
     }
@@ -112,7 +118,7 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
           if (item.name !== null) {
             return {
               name: item.name,
-              calory: item.calorie,
+              calory: item.calory,
             };
           }
         })
@@ -122,7 +128,7 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
       user.userFoodList?.forEach((food: Food) => {
         if (food.foodId === foodId) {
           food.foodList.forEach((item) => {
-            if (item.foodCategory === foodData.foodCategory) {
+            if (item.foodCategory === foodData?.foodCategory) {
               item.menu = newMenu ?? [];
             }
           });
@@ -152,8 +158,6 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
       let user = removeIdField(response.data.user);
       delete user.__v;
 
-      // ... 이전 코드 ...
-
       // 여기에 userFoodList 업데이트 로직 추가
       const newUserFoodList = user.userFoodList ? [...user.userFoodList] : [];
 
@@ -166,23 +170,23 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
         newUserFoodList[existingFoodIndex].foodList.push({
           foodCategory: selectedValue,
           totalCalory: foodItems.reduce(
-            (total, foodItem) => total + parseInt(foodItem.calorie),
+            (total, foodItem) => total + Number(foodItem.calory),
             0
           ),
           menu: foodItems.map((foodItem) => ({
-            name: foodItem.food,
-            calory: parseInt(foodItem.calorie),
+            name: foodItem.name,
+            calory: foodItem.calory,
           })),
         });
       } else {
         // 새로운 음식 항목 생성
         const newFoodList = foodItems.map((foodItem) => ({
           foodCategory: selectedValue,
-          totalCalory: parseInt(foodItem.calorie),
+          totalCalory: foodItem.calory,
           menu: [
             {
               name: foodItem.food,
-              calory: parseInt(foodItem.calorie),
+              calory: foodItem.calory,
             },
           ],
         }));
@@ -210,6 +214,34 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     }
   };
 
+  // 삭제
+  const handleDeleteClick = async () => {
+    try {
+      const response = await axios.post(`${URL}/check`, {
+        email: 'email@email.com',
+        password: 'sdfdsf',
+      });
+      let user = removeIdField(response.data.user);
+      delete user.__v;
+
+      // 삭제할 데이터의 정보를 수집
+      // const categoryToDelete = selectedValue;
+
+      // 서버에서 데이터 삭제 요청
+      await axios.delete(`${URL}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // 성공적으로 삭제되면 UI를 업데이트합니다.
+      // 여기서는 간단히 모달을 닫아버리지만, 필요에 따라 다양한 업데이트 로직을 추가할 수 있습니다.
+      closeModal();
+    } catch (error) {
+      console.error('에러 발생:', error);
+    }
+  };
+
   function removeIdField<T>(obj: T): T {
     if (Array.isArray(obj)) {
       // 배열인 경우 각 요소에 대해 재귀적으로 호출
@@ -230,15 +262,17 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
     return obj;
   }
 
+  // selectedValue
+  // selectedCategory
   const radioButtonInfo: InputButtonInfo = {
     type: 'circleRadio',
     size: 'short-oval',
     value: selectedValue,
     items: ['아침', '점심', '저녁', '간식'],
-    backgroundColor: 'gray',
+    backgroundColor: 'gray', // 기본 색상
     color: 'white',
     fontWeight: 'bold',
-    onChange: (selectedTime) => {
+    onChange: (selectedTime: SetStateAction<string>) => {
       console.log('선택된 값:', selectedTime);
       setSelectedValue(selectedTime);
     },
@@ -272,13 +306,15 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
             </p>
           }
           modalButton={modalButton}
-          onClick={closeModal}
+          onClick={() => {
+            closeModal();
+          }}
           onClickCreate={() => {
             handleSendDataToServer();
             closeModal();
           }}
           onClickRemove={() => {
-            console.log('삭제');
+            handleDeleteClick();
           }}
           onClickUpdate={() => {
             handleEditClick();
@@ -316,9 +352,9 @@ const FoodModal = ({ modalButton, foodData, foodId, modalType }) => {
                   placeholder={'칼로리'}
                   width="30%"
                   height="35px"
-                  value={item.calorie}
-                  onChange={(value) => handleCalorieChange(value, index)}
-                  id={`calorie-${index}`}
+                  value={item.calory}
+                  onChange={(value) => handleCaloryChange(value, index)}
+                  id={`calory-${index}`}
                 />
                 <p style={{ fontSize: '15px' }}>Kcal</p>
               </div>

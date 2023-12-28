@@ -7,7 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 interface BlankProps {
-  height?: number;
+  height?: string;
 }
 
 const Intro = () => {

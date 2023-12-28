@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import GageBar from './GageBar';
 import { useState, useEffect } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
-import { User, Exercise, Food, FoodList, Menu } from '../../types/user';
+import { User, Exercise, Food, FoodList } from '../../types/user';
 import { getColorValue } from '../../types/colorType';
 import { isSameDay } from 'date-fns';
 
@@ -13,8 +13,8 @@ const FOOD_COLORS = {
 };
 
 interface sizeProps {
-  width: string;
-  height: string;
+  width?: string;
+  height?: string;
 }
 interface MainStatisticProps {
   user: User | undefined;

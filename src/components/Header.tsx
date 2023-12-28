@@ -31,19 +31,30 @@ const Header = () => {
     },
   };
 
+  const handleLogoClick = () => {
+    if (isLoggedIn) {
+      navigate('/main');
+    } else {
+      navigate('/');
+    }
+  };
+
   const Logout = {
     onClick: () => {
       logOut();
       setIsLoggedIn(false);
       console.log('로그아웃 클릭');
+      navigate('/');
     },
   };
 
   return (
     <StyledHeader>
-      <LogoImage></LogoImage>
+      <div onClick={handleLogoClick}>
+        <LogoImage></LogoImage>
+      </div>
       <StyledRightSection>
-        {isLogin() ? (
+        {isLoggedIn ? (
           <>
             <StyledLogoutText onClick={Logout.onClick}>
               로그아웃
@@ -71,6 +82,7 @@ const StyledLogoImage = styled.img`
   width: 80px;
   height: 40px;
   padding: 10px;
+  cursor: pointer;
 `;
 
 const StyledLogoutText = styled.h3`

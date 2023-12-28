@@ -14,7 +14,7 @@ import {
 interface MonthCalendarProps {
   exerciseList?: Exercise[] | undefined;
   foodList?: Food[] | undefined;
-  userData: User;
+  userData: User | undefined;
   currentDate: Date;
 }
 
@@ -73,7 +73,7 @@ export const MonthCalendar = ({
 
     if (exerciseList !== undefined) {
       const filteredExerciseList = filterExerciseListByDateRange(
-        userData.userExerciseList ?? [],
+        userData?.userExerciseList ?? [],
         startOfCurrentMonth,
         endOfCurrentMonth
       );
@@ -98,7 +98,7 @@ export const MonthCalendar = ({
 
     if (foodList !== undefined) {
       const filteredFoodList = filterFoodListByDateRange(
-        userData.userFoodList ?? [],
+        userData?.userFoodList ?? [],
         startOfCurrentMonth,
         endOfCurrentMonth
       );

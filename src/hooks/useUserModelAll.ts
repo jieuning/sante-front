@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { FoodList, User, Food, Exercise } from '../types/user';
-import {
-  filterExerciseListByDateRange,
-  filterFoodListByDateRange,
-} from '../utils/Date';
+import { User } from '../types/user';
+
 import axios from 'axios';
+import { getEmail, getPassword } from '../utils/WebStorageControl';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
@@ -17,8 +15,8 @@ const useUserModelAll = () => {
   useEffect(() => {
     axios
       .post(`${URL}/check`, {
-        email: 'email@email.com',
-        password: 'sdfdsf',
+        email: getEmail(),
+        password: getPassword(),
       })
       .then((res) => res.data.user)
       .then(setUser)

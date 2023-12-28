@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import RoutineCard from '../../components/RoutineCard';
-import { Exercise, Food, User } from '../../types/user';
+import { Exercise, FoodList, User } from '../../types/user';
 import styled from 'styled-components';
 import useUserModel from '../../hooks/useUserModel';
 import Header from '../../components/Header';
@@ -29,15 +29,17 @@ const Main = () => {
   const today = new Date(TODAY); // 현재 날짜를 가져옵니다.
 
   const [user, setUser] = useState<User>();
-  const startOfThisWeek = startOfWeek(today); // 이번 주의 시작 날짜를 계산합니다.
-  const endOfThisWeek = endOfWeek(today); // 이번 주의 종료 날짜를 계산합니다.
-  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
   const [currentDate, setCurrentDate] = useState<Date>(today);
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
-  const [exerciseData, setExerciseData] = useState(null);
-  const [foodData, setFoodData] = useState(null);
-  const [foodId, setFoodId] = useState(null);
+
+  const startOfThisWeek = startOfWeek(currentDate); // 이번 주의 시작 날짜를 계산합니다.
+  const endOfThisWeek = endOfWeek(currentDate); // 이번 주의 종료 날짜를 계산합니다.
+  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
+
+  const [exerciseData, setExerciseData] = useState<Exercise>();
+  const [foodData, setFoodData] = useState<FoodList>();
+  const [foodId, setFoodId] = useState('');
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
 
   const [isCreateMode, setIsCreateMode] = useState(true);
@@ -82,7 +84,7 @@ const Main = () => {
   };
 
   // "편집하기" 클릭을 처리하는 함수 내부에서
-  const handleEditClick = (value) => {
+  const handleEditClick = (value: [FoodList, string]) => {
     setFoodData(value[0]);
     setFoodId(value[1]);
     setFoodModalType('edit');
@@ -156,12 +158,12 @@ const Main = () => {
                 isMain={true}
                 onClickMore={() => console.log('more click')}
                 onClickAdd={() => {
-                  setExerciseData(null);
+                  setExerciseData(undefined);
                   handleExerciseCreateClick();
                 }}
                 onClickEdit={(value) => {
                   setExerciseData(value);
-                  handleExerciseEditClick(value);
+                  handleExerciseEditClick();
                 }}
                 date={currentDate}
               ></RoutineCard>
@@ -185,7 +187,8 @@ const Main = () => {
                 }}
               ></RoutineCard>
             </CardContainer>
-            <MainStatistic user={weeklyUser} todayDate={today} />
+
+            <MainStatistic user={weeklyUser} todayDate={currentDate} />
           </ContentsContainer>
         </Container>
       </MainContext.Provider>
