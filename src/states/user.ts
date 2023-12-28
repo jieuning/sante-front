@@ -5,6 +5,11 @@ import { getEmail, getPassword } from '../utils/WebStorageControl';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
+type ModalState = {
+  food: boolean;
+  exercise: boolean;
+};
+
 type Store = {
   user: User | undefined;
   getUser: () => void;
@@ -16,6 +21,8 @@ type Store = {
   setExerciseData: (exerciseItem: Exercise | undefined) => void;
   setFoodId: (foodId: string) => void;
   status: number;
+  modalState: ModalState;
+  setModalState: (key: keyof ModalState, isOpen: boolean) => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -54,5 +61,18 @@ export const useStore = create<Store>((set) => ({
   },
   setFoodId: (foodId: string) => {
     set({ foodId: foodId });
+  },
+  modalState: {
+    food: false,
+    exercise: false,
+  },
+
+  setModalState: (key, isOpen) => {
+    set((state) => ({
+      modalState: {
+        ...state.modalState,
+        [key]: isOpen,
+      },
+    }));
   },
 }));
