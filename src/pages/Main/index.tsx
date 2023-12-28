@@ -162,6 +162,7 @@ const Main = () => {
 };
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -176,7 +177,7 @@ const ContentsContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   gap: 2.5%;
-  padding: 2%;
+  padding: 0 2%;
 
   @media (max-width: 1024px) {
     display: flex;
