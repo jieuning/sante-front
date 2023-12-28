@@ -192,7 +192,6 @@ const Main = () => {
               ></RoutineCard>
               <Blank />
             </CardContainer>
-
             <MainStatistic user={weeklyUser} todayDate={currentDate} />
           </ContentsContainer>
         </Container>
