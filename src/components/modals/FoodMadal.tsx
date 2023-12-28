@@ -34,7 +34,12 @@ interface ModalFoodItem {
   totalCalory?: number | string;
 }
 
-const FoodModal = ({ modalButton, foodData, foodId, currentDate }: FoodModalProps) => {
+const FoodModal = ({
+  modalButton,
+  foodData,
+  foodId,
+  currentDate,
+}: FoodModalProps) => {
   const user = useStore((state) => state.user);
   const getUser = useStore((state) => state.getUser);
   const setUser = useStore((state) => state.setUser);
@@ -133,6 +138,7 @@ const FoodModal = ({ modalButton, foodData, foodId, currentDate }: FoodModalProp
       getUser();
 
       let filteredUser = removeIdField(user);
+      console.log('filteredUser', filteredUser); //✔️
       if (!filteredUser) return;
 
       delete filteredUser?.__v;
@@ -147,61 +153,25 @@ const FoodModal = ({ modalButton, foodData, foodId, currentDate }: FoodModalProp
       const newUserFoodList = filteredUser.userFoodList
         ? [...filteredUser.userFoodList]
         : [];
-      console.log('newUserFoodList', newUserFoodList);
+      console.log('이전newUserFoodList', newUserFoodList); //✔️
       console.log('foodId', foodId); //✔️
 
-      //새로 추가한 부분
-      // const updatedUserFoodList = user.userFoodList.map((item: Food) => {
-      //   if (item.foodId === foodId) {
-      //     // foodId가 일치하는 경우 foodList 업데이트
-      //     return {
-      //       ...item,
-      //       foodList: [
-      //         ...item.foodList,
-      //         {
-      //           foodCategory: selectedValue,
-      //           totalCalory: totalFoodCalory,
-      //           menu: foodItems.map((foodItem) => ({
-      //             name: foodItem.name,
-      //             calory: foodItem.calory,
-      //           })),
-      //         },
-      //       ],
-      //     };
-      //   } else {
-      //     // foodId가 일치하지 않는 경우 현재 요소 반환
-      //     return item;
-      //   }
-      // });
+      let isExistCategory = false;
 
-      // // 새 Food 객체 추가 필요 여부 확인
-      // const foodExists = user.userFoodList.some(
-      //   (item: Food) => item.foodId === foodId
-      // );
-      // if (!foodExists) {
-      //   updatedUserFoodList.push({
-      //     foodId: foodId?.toString() ?? '',
-      //     lastUpdated: new Date(),
-      //     createdAt: new Date(),
-      //     foodList: [
-      //       {
-      //         foodCategory: selectedValue,
-      //         totalCalory: totalFoodCalory,
-      //         menu: foodItems.map((foodItem) => ({
-      //           name: foodItem.name,
-      //           calory: foodItem.calory,
-      //         })),
-      //       },
-      //     ],
-      //   });
-      // }
+      const selectedFoodId = newUserFoodList.find(
+        (item) => item.foodId === foodId
+      );
+      console.log('selectedFoodId', selectedFoodId)
 
-      // // user.userFoodList 업데이트
-      // user.userFoodList = updatedUserFoodList;
+      if (selectedFoodId === undefined) {
+        console.log('실패');
+        return;
+      }
 
-      // console.log(user);
+      if (selectedFoodId.foodList.length > 0) {
+        isExistCategory = !isExistCategory;
+      }
 
-      //원래 있던 부분
       const existingFoodIndex = newUserFoodList.findIndex((item) => {
         return (
           item.foodList.length > 0 &&
@@ -209,10 +179,10 @@ const FoodModal = ({ modalButton, foodData, foodId, currentDate }: FoodModalProp
         );
       });
       console.log('existingFoodIndex', existingFoodIndex); // -1이 나오면 새로 생성, foodList에서 카테고리가 일치하는 인덱스의 번호를 반환하는 것
-      console.log('newUserFoodList', newUserFoodList);
+      console.log('최근newUserFoodList', newUserFoodList);
 
       // 존재하는 foodCategory 찾은 경우
-      if (existingFoodIndex !== -1) {
+      if (isExistCategory) {
         // 기존 객체 복사
         const existingFood = { ...newUserFoodList[existingFoodIndex] };
         const existingMenu = [...existingFood.foodList[0].menu]; // 메뉴 배열 복사
@@ -304,6 +274,7 @@ const FoodModal = ({ modalButton, foodData, foodId, currentDate }: FoodModalProp
       console.log('user', JSON.stringify(user));
 
       setUser(filteredUser);
+      closeModal();
     } catch (error) {
       console.error('Food Modal error', error);
     }
