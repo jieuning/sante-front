@@ -14,6 +14,7 @@ import { useStore } from '../../states/user';
 import useCreateExercise from '../../hooks/useCreateExercise';
 import useModifyExercise from '../../hooks/useModifyExercise';
 import useDeleteExercise from '../../hooks/useDeleteExercise';
+
 type Option = {
   value: string;
   label: string;
@@ -48,6 +49,7 @@ interface ExerciseModalProps {
 
 const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
   const exerciseData = useStore((state) => state.exerciseData);
+  const setModalState = useStore((state) => state.setModalState);
   console.log('check mic test', exerciseData);
   const [inputValue, setInputValue] = useState<string | undefined>('');
   const [dateRange, setDateRange] = useState<(Date | null)[]>([null, null]);
@@ -112,6 +114,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         scheduledDate: scheduleList,
       };
       await handleModify({ exercise: payload });
+      setModalState('exercise', false);
     }
   };
 
@@ -136,6 +139,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
       };
 
       await handleCreate({ exercise: payload });
+      setModalState('exercise', false);
     }
   };
 
@@ -143,6 +147,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
     const exerciseId = exerciseData?.exerciseId;
     console.log('this is ma ID', exerciseId);
     exerciseId && handleDelete(exerciseId);
+    setModalState('exercise', false);
   };
 
   const HOUR_IN_MINUTES = 60;
@@ -405,6 +410,7 @@ const CustomDatePickerWrapper = styled.div`
   .react-datepicker__day--outside-month {
     color: #ababab !important;
   }import useButtonHandler from './../../hooks/useButtonHandler';
+import { useStore } from './../../states/user';
 
   .react-datepicker__day--keyboard-selected {
    color: white;
