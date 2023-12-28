@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { Exercise } from '../types/user';
 import { getEmail, getPassword } from '../utils/WebStorageControl';
+import { useStore } from '../states/user';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
@@ -19,7 +20,9 @@ const useCheckboxHandler = (
   const [checkboxStates, setCheckboxStates] = useState<{
     [key: string]: boolean;
   }>(initialState);
-
+  const user = useStore((state) => state.user);
+  const getUser = useStore((state) => state.getUser);
+  const setUser = useStore((state) => state.setUser);
   const handleCheckboxChange = async (
     checkboxKey: string,
     isChecked: boolean
@@ -31,15 +34,15 @@ const useCheckboxHandler = (
 
     //업데이트를 위해 유저 전체 정보를 가져옴
     try {
-      const response = await axios.post(`${URL}/check`, {
-        email: getEmail(),
-        password: getPassword(),
-      });
-      let user = removeIdField(response.data.user);
-      delete user.__v;
+      getUser();
+
+      let filteredUser = removeIdField(user);
+      if (!filteredUser) return;
+
+      delete filteredUser?.__v;
 
       // 업데이트할 데이터를 찾아 변경
-      user.userExerciseList?.forEach((exercise: Exercise) => {
+      filteredUser.userExerciseList?.forEach((exercise: Exercise) => {
         exercise.scheduledDate?.forEach((scheduledDate) => {
           const dateKey = format(scheduledDate.date, 'yyyy-MM-dd');
           const key = `${exercise.exerciseId}-${dateKey}`;
@@ -50,14 +53,15 @@ const useCheckboxHandler = (
       });
 
       // 변경된 유저 그대로 업데이트
-      console.log('user', JSON.stringify(user));
+      console.log('user', JSON.stringify(filteredUser));
 
       // 서버에 변경 사항 업데이트
-      await axios.put(`${URL}`, JSON.stringify(user), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      setUser(filteredUser);
+      // await axios.put(`${URL}`, JSON.stringify(user), {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // });
     } catch (error) {
       console.error('checkboxHook error', error);
       setCheckboxStates((prevStates) => ({

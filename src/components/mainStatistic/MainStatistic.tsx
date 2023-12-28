@@ -5,6 +5,7 @@ import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import { User, Exercise, Food, FoodList } from '../../types/user';
 import { getColorValue } from '../../types/colorType';
 import { isSameDay } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 interface sizeProps {
   width?: string;
@@ -20,6 +21,7 @@ const MainStatistic = ({
   user,
   todayDate = new Date(),
 }: MainStatisticProps) => {
+  const navigate = useNavigate();
   const caloryMoods = useMemo(() => {
     const FOOD_COLORS = {
       notEnough: getColorValue('orange'),
@@ -118,7 +120,7 @@ const MainStatistic = ({
   const buttonInfo: DynamicButtonInfo = {
     type: 'outline',
     text: '통계 상세보기',
-    onClick: () => console.log('Button clicked!'),
+    onClick: () => navigate('/statistic'),
   };
 
   const MIN_LIMIT = 80;

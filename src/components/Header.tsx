@@ -11,7 +11,6 @@ const LogoImage = () => {
 
 const Header = () => {
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin());
 
   //테스트 데이터
