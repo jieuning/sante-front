@@ -154,19 +154,26 @@ const FoodModal = ({
         ? [...filteredUser.userFoodList]
         : [];
       console.log('이전newUserFoodList', newUserFoodList); //✔️
-      console.log('foodId', foodId); //✔️
+      console.log('foodId', foodId); //✔️새로생성되는 식단의 foodId(같음)
 
       let isExistCategory = false;
 
+      // undefined로 나오는 이유는 foodId와 일치하는 요소가 newUserFoodList 배열에 존재하지 않는 경우입니다. 
+      // 이는 newUserFoodList 배열에서 해당 foodId에 맞는 음식 항목이 없다는 것을 의미
+      // 따라서, selectedFoodId가 undefined라면 해당 foodId에 해당하는 음식 항목이 newUserFoodList 배열에 없다는 것을 나타냅니다. 
+      // 이 경우에는 새로운 음식 항목을 추가하거나 다른 작업을 수행하는 로직을 처리할 수 있습니다.
       const selectedFoodId = newUserFoodList.find(
         (item) => item.foodId === foodId
       );
+      console.log('후foodId', foodId); //✔️새로 생성되는 식단의 foodId(같음)
       console.log('selectedFoodId', selectedFoodId)
 
       if (selectedFoodId === undefined) {
         console.log('실패');
         return;
       }
+
+      // 1703776618956
 
       if (selectedFoodId.foodList.length > 0) {
         isExistCategory = !isExistCategory;
