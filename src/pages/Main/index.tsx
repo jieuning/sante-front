@@ -80,8 +80,8 @@ const Main = () => {
     setFoodModalType('create');
     setFoodId(new Date().getTime().toString());
     setFoodData({
-      foodCategory: '아침',
-      totalCalory: 0,
+      foodCategory: '',
+      totalCalory: Number(),
       menu: [
         {
           name: '',
