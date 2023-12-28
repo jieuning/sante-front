@@ -4,6 +4,8 @@ import {
   getMonthlyCaloryTotalStatistic,
   filterExerciseListByDateRange,
   filterFoodListByDateRange,
+  calculateWeeklyAndMonthlyDoneRate,
+  calculateWeeklyDoneCountAndRate,
 } from '../../utils/Date';
 import '../../index.css';
 import Card from './Card';
@@ -34,22 +36,19 @@ const Statistic = () => {
     const endDate = endOfMonth(targetDate);
 
     if (user?.userExerciseList === undefined) return;
-
-    const rate = getMonthlyExerciseRateStatistic(
-      filterExerciseListByDateRange(user?.userExerciseList, startDate, endDate),
-      targetDate,
-      'rate'
+    const filtered = filterExerciseListByDateRange(
+      user?.userExerciseList,
+      startDate,
+      endDate
     );
+    const rate = calculateWeeklyAndMonthlyDoneRate(filtered);
 
     if (rate) {
       setExerciseRateList(rate);
+      console.log(rate);
     }
 
-    const cnt = getMonthlyExerciseRateStatistic(
-      filterExerciseListByDateRange(user?.userExerciseList, startDate, endDate),
-      targetDate,
-      'cnt'
-    );
+    const cnt = calculateWeeklyDoneCountAndRate(filtered);
 
     if (cnt) {
       setExerciseCntList(cnt);
@@ -78,7 +77,9 @@ const Statistic = () => {
           <CardContainer>
             <Card
               title="운동 달성률"
-              subTitle={`이번달 평균 ${exerciseRateList?.result ?? 0}%`}
+              subTitle={`이번달 평균 ${Math.ceil(
+                exerciseRateList?.result ?? 0
+              )}%`}
               data={exerciseRateList?.list ?? [0, 0, 0, 0, 0]}
             />
             <Card
@@ -106,7 +107,6 @@ const Container = styled.div`
 
   align-items: center;
   flex-direction: column;
-  height: 100vh; /* 전체 화면 높이 */
   padding: 0 20px;
 `;
 

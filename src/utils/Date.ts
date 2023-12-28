@@ -43,6 +43,7 @@ const getMonthlyExerciseRateStatistic = (
   //여기서 해당 날짜 isDone 체크되어있는지 확인
   //scheduled date 의 날짜와 존재하는 isDone을 키밸류로 저장
   const isDoneDate = packingScheduledDate(userExerciseList);
+  console.log(isDoneDate);
   if (exerciseType === 'cnt') console.log(isDoneDate);
   let max = 0;
   for (let i = 1; i <= endOfMonth(targetDate).getDate(); i++) {
@@ -79,14 +80,14 @@ const getMonthlyExerciseRateStatistic = (
 
       //rate는 해당 날짜의 done이 다 되었는지 아닌지만 체크한다.
       const maxCnt =
-        exerciseType === 'rate' ? (doneCnt !== 0 ? 0 : 1) : doneAllCnt;
+        exerciseType === 'rate' ? (doneCnt !== 0 ? 1 : 0) : doneAllCnt;
       const currCnt =
         exerciseType === 'rate'
           ? doneCnt === doneAllCnt && doneCnt !== 0
             ? 1
             : 0
           : doneCnt;
-
+      console.log(doneCnt);
       if (statistic[weekIndex].curr + currCnt > max) {
         max = statistic[weekIndex].curr + currCnt;
       }
@@ -96,9 +97,19 @@ const getMonthlyExerciseRateStatistic = (
         max: statistic[weekIndex].max + maxCnt,
         curr: statistic[weekIndex].curr + currCnt,
       };
+      if (exerciseType === 'rate') {
+        console.log(weekIndex, maxCnt, doneCnt);
+        console.log(
+          weekIndex,
+          statistic[weekIndex].max,
+          statistic[weekIndex].curr
+        );
+      }
     }
   }
-  console.log(statistic);
+  if (exerciseType === 'rate') {
+    console.log(statistic);
+  }
   const list = statistic.reduce((acc, curr) => {
     if (exerciseType === 'rate') {
       const result = curr.max > 0 ? Math.ceil((curr.curr / curr.max) * 100) : 0;
@@ -275,8 +286,70 @@ function filterExerciseListByDateRange(
       (exercise) => exercise.scheduledDate && exercise.scheduledDate.length > 0
     );
 }
+interface WeeklyData {
+  done: number;
+  total: number;
+}
+
+const getWeeksInMonth = (date: Date): number => {
+  const lastDayOfMonth = endOfMonth(date);
+  return getWeekOfMonth(lastDayOfMonth);
+};
+const calculateWeeklyAndMonthlyDoneRate = (userExerciseList: Exercise[]) => {
+  const scheduledData = packingScheduledDate(userExerciseList);
+  const totalWeeks = getWeeksInMonth(new Date());
+  const weeklyRates: WeeklyData[] = Array.from({ length: totalWeeks }, () => ({
+    done: 0,
+    total: 0,
+  }));
+  let monthlyDoneCount = 0;
+  let monthlyTotalCount = 0;
+
+  scheduledData.forEach((doneList, date) => {
+    const weekNumber = getWeekOfMonth(new Date(date)) - 1; // 주차를 0부터 시작하도록 조정
+    const doneCount = doneList.filter((isDone) => isDone).length;
+    monthlyDoneCount += doneCount;
+    monthlyTotalCount += doneList.length;
+
+    weeklyRates[weekNumber].done += doneCount;
+    weeklyRates[weekNumber].total += doneList.length;
+  });
+
+  const weeklyDoneRates = weeklyRates.map((week) =>
+    week.total > 0 ? (week.done / week.total) * 100 : 0
+  );
+  const monthlyDoneRate =
+    monthlyTotalCount > 0 ? (monthlyDoneCount / monthlyTotalCount) * 100 : 0;
+
+  return { list: weeklyDoneRates, result: monthlyDoneRate };
+};
+
+const calculateWeeklyDoneCountAndRate = (userExerciseList: Exercise[]) => {
+  const scheduledData = packingScheduledDate(userExerciseList);
+  const totalWeeks = getWeeksInMonth(new Date());
+  const weeklyCounts: number[] = Array.from({ length: totalWeeks }, () => 0);
+  let monthlyDoneCount = 0;
+  let maxWeeklyCount = 0;
+
+  scheduledData.forEach((doneList, date) => {
+    const weekNumber = getWeekOfMonth(new Date(date)) - 1; // 주차를 0부터 시작하도록 조정
+    const doneCount = doneList.filter((isDone) => isDone).length;
+    monthlyDoneCount += doneCount;
+
+    weeklyCounts[weekNumber] += doneCount;
+    maxWeeklyCount = Math.max(maxWeeklyCount, weeklyCounts[weekNumber]);
+  });
+
+  const weeklyDoneRates = weeklyCounts.map((count) =>
+    maxWeeklyCount > 0 ? (count / maxWeeklyCount) * 100 : 0
+  );
+
+  return { list: weeklyDoneRates, result: monthlyDoneCount };
+};
 
 export {
+  calculateWeeklyAndMonthlyDoneRate,
+  calculateWeeklyDoneCountAndRate,
   getWeekOfMonth,
   getMonthlyExerciseRateStatistic,
   getMonthlyCaloryTotalStatistic,
