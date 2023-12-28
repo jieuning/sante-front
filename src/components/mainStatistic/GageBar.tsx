@@ -37,7 +37,7 @@ const GageBar = ({
     if (handleGage) {
       handleGage(calculateStatus);
     }
-  }, [gage, maxGage]);
+  }, [gage, maxGage, gageStatus, handleGage]);
 
   return (
     <Progress>
@@ -55,7 +55,7 @@ const Progress = styled.div`
 
 const GageStatus = styled.div<GageStatusProp>`
   background-color: ${({ color }) => color};
-  width: ${({ gageStatus }) => gageStatus + '%'};
+  width: ${({ gageStatus }) => (gageStatus > 100 ? '100%' : gageStatus + '%')};
   height: 100%;
   border-radius: 20px;
 `;
