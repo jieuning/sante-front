@@ -1,5 +1,6 @@
 import { useState, useEffect, SetStateAction } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import styled from 'styled-components';
 import Input from '../../components/Input';
@@ -39,12 +40,15 @@ const Register = () => {
   const [pwConfirm, setPwConfirm] = useState<string>('');
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const [selectedGender, setSelectedGender] = useState('');
-  const [recommendCalory, setRecommendCalory] = useState<number>(0);
+  // const [recommendCalory, setRecommendCalory] = useState<number>(0);
   //const [age, setAge] = useState('');
 
   const [emailValid, setEmailValid] = useState<boolean>(false);
   const [pwValid, setPwValid] = useState<boolean>(false);
   const [pwCheck, setPwCheck] = useState<boolean>(false);
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const ageOptions: Option[] = [
     { value: '1', label: '12~14세' },
@@ -101,56 +105,6 @@ const Register = () => {
     //setAge 할 필요 없이 selectedValue에 선택한 나이가 이미 들어있음
     setSelectedValue(selectedValue);
     console.log('Selected value:', selectedValue);
-    console.log('selectedGender:', selectedGender);
-    let calory: number = 0;
-    switch (selectedGender) {
-      case '남성':
-        switch (selectedValue) {
-          case '1':
-            calory = 2500;
-            break;
-          case '2':
-            calory = 3000;
-            break;
-          case '3':
-            calory = 3000;
-            break;
-          case '4':
-            calory = 2500;
-            break;
-          case '5':
-            calory = 2300;
-            break;
-          case '6':
-            calory = 2000;
-            break;
-        }
-        break;
-      case '여성':
-        switch (selectedValue) {
-          case '1':
-            calory = 2200;
-            break;
-          case '2':
-            calory = 2300;
-            break;
-          case '3':
-            calory = 2200;
-            break;
-          case '4':
-            calory = 2000;
-            break;
-          case '5':
-            calory = 1800;
-            break;
-          case '6':
-            calory = 1500;
-            break;
-        }
-        break;
-    }
-    console.log(calory);
-    setRecommendCalory(calory);
   };
 
   const radioGenderButtonInfo: InputButtonInfo & {
@@ -181,18 +135,50 @@ const Register = () => {
     text: '가입하기',
     fontWeight: 'bold',
     onClick: () => {
+      if (!emailValid) {
+        alert('이메일을 확인해주세요.');
+        return;
+      }
+
+      if (!pwValid) {
+        alert('비밀번호를 확인해주세요.');
+        return;
+      }
+
+      if (!pwCheck) {
+        alert('동일한 비밀번호인지 확인해주세요.');
+        return;
+      }
+
+      if (!selectedGender) {
+        alert('성별을 선택해주세요.');
+        return;
+      }
+
+      if (!selectedValue) {
+        alert('나이를 선택해주세요.');
+        return;
+      }
+      
+      setIsFormValid(true);
+
+      if (!isFormValid) {
+        return;
+      }
+
       const apiUrl = 'http://kdt-sw-7-team04.elicecoding.com/api/register';
       const requestData = {
         email,
         password: pw,
         gender: selectedGender,
         age: selectedValue,
-        recommendCalory,
       };
       axios
         .post(apiUrl, requestData)
         .then((response) => {
           console.log('성공', response.data);
+          alert('가입이 완료되었습니다!');
+          navigate('/login');
         })
         .catch((error) => {
           console.error('실패', error);
