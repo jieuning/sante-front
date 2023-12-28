@@ -4,8 +4,12 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import { User, Exercise, Food, FoodList } from '../../types/user';
 import { getColorValue } from '../../types/colorType';
-import { isSameDay } from 'date-fns';
+import { endOfWeek, isSameDay, startOfWeek } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import {
+  filterExerciseListByDateRange,
+  filterFoodListByDateRange,
+} from '../../utils/Date';
 
 interface sizeProps {
   width?: string;
@@ -103,10 +107,23 @@ const MainStatistic = ({
   useEffect(() => {
     if (user) {
       //console.log('-------thisIsUser------', user);
+      const today: Date = new Date(todayDate);
       user.todayCalory && setUserCalory(user.todayCalory);
-      const userFoodData = user.userFoodList;
-      const userExerciseData = user.userExerciseList;
+      const userAllFoodData = user.userFoodList || [];
+      const userAllExerciseData = user.userExerciseList || [];
 
+      const startOfcurrentWeek = startOfWeek(today);
+      const endOfcurrentWeek = endOfWeek(today);
+      const userFoodData = filterFoodListByDateRange(
+        userAllFoodData,
+        startOfcurrentWeek,
+        endOfcurrentWeek
+      );
+      const userExerciseData = filterExerciseListByDateRange(
+        userAllExerciseData,
+        startOfcurrentWeek,
+        endOfcurrentWeek
+      );
       handleCalory(userFoodData); //TODO: 클릭했던 날짜 값 받아오기
       handleExercise(userExerciseData);
     }
@@ -181,11 +198,6 @@ const MainStatistic = ({
 };
 //NOTE: 미완성
 const GageContainerDiv = styled.div<sizeProps>`
-<<<<<<< HEAD
-=======
-  display: flex;
-  flex-direction: column;
->>>>>>> eb5aec91393d00e6354a1f405267aa6e5160547c
   height: ${({ height }) => (height ? height : '30rem')};
   border-radius: 2rem;
   background-color: white;
