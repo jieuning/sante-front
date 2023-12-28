@@ -51,6 +51,14 @@ const Login = () => {
   };
 
   const handleLoginButton = () => {
+    if (!emailValid) {
+      alert('이메일을 확인해주세요.');
+      return;
+    }
+    if (!pwValid) {
+      alert('비밀번호을 확인해주세요.');
+      return;
+    }
     axios
       .post(`${URL}/check`, {
         email: email,
@@ -68,6 +76,7 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
+        alert('서버 오류, 관리자에게 문의하세요.');
       });
   };
 
