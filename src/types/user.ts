@@ -47,6 +47,7 @@ interface User {
   todayCalory?: number;
   joinedAt?: Date;
   _id?: string;
+  __v?: number;
 }
 
 export type { User, Exercise, Food, FoodList, Menu };
