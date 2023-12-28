@@ -79,7 +79,7 @@ const RoutineCard = ({
       const filtered = filterExerciseListByDateRange(exerciseList, date, date);
       setIsExist(filtered.length > 0);
       setFilteredExercises(filtered);
-      console.log(exerciseList);
+      // console.log(exerciseList);
     }
 
     //handleCheckboxChange(initialCheckboxState); // 여기서 상태 업데이트

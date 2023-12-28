@@ -11,7 +11,7 @@ interface FoodList {
   _id?: string;
 }
 
-interface Food extends Document {
+interface Food {
   foodList: FoodList[];
   foodId: string;
   createdAt: Date;
