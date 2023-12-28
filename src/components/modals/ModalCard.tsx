@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-import { ReactNode, useContext } from 'react';
+import { ReactNode } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import Closed from '../icons/Closed';
 import { FoodList, Menu } from '../../types/user';
-import { MainContext } from '../../pages/Main/MainContext';
+import { useStore } from '../../states/user';
 
 export interface ModalCardProps {
   modalTitle: string;
@@ -37,7 +37,7 @@ const ModalCard = ({
   onClickRemove,
   onClickUpdate,
 }: ModalCardProps) => {
-  const { closeExerciseModal, closeFoodModal } = useContext(MainContext)!;
+  const setModalState = useStore((state) => state.setModalState);
   const buttonCreateInfo: DynamicButtonInfo = {
     type: 'solid',
     size: 'medium',
@@ -73,8 +73,8 @@ const ModalCard = ({
           {modalTitle}
           <div
             onClick={() => {
-              closeExerciseModal(false);
-              closeFoodModal(false);
+              setModalState('exercise', false);
+              setModalState('food', false);
             }}
           >
             <Closed />
