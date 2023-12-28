@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import RoutineCard from '../../components/RoutineCard';
-import { Exercise, FoodList, User } from '../../types/user';
+import { Exercise, FoodList } from '../../types/user';
 import styled from 'styled-components';
 import useUserModel from '../../hooks/useUserModel';
 import Header from '../../components/Header';
 import MainStatistic from '../../components/mainStatistic/MainStatistic';
-const TODAY = '2023-12-08';
 import { MonthCalendar } from '../../components/Calendar';
 import { DateSelect } from '../../components/DateSelect';
 import {
@@ -19,32 +18,29 @@ import {
 import ExerciseModal from '../../components/modals/ExerciseModal';
 import FoodModal from '../../components/modals/FoodMadal';
 import { MainContext } from './MainContext';
-import axios from 'axios';
 import { ModalMode } from '../../types/modalMode';
-import { getEmail, getPassword } from '../../utils/WebStorageControl';
-const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
+import { useStore } from '../../states/user';
 interface BalckProps {
   height?: string;
 }
 
 const Main = () => {
-  const today = new Date(TODAY); // 현재 날짜를 가져옵니다.
+  const today = new Date(); // 현재 날짜를 가져옵니다.
 
-  const [user, setUser] = useState<User>();
+  //const [user, setUser] = useState<User>();
+  const user = useStore((state) => state.user);
+  const getUser = useStore((state) => state.getUser);
+
   const [currentDate, setCurrentDate] = useState<Date>(today);
   const [isModalFoodOpen, setIsModalFoodOpen] = useState(false);
   const [isModalExerciseOpen, setIsModalExerciseOpen] = useState(false);
 
-  const [startOfCurrentWeek, setStartOfCurrentWeek] = useState(
-    startOfWeek(currentDate)
-  ); // 이번 주의 시작 날짜를 계산합니다.
-  const [endOfCurrentWeek, setEndOfCurrentWeek] = useState(
-    endOfWeek(currentDate)
-  ); // 이번 주의 종료 날짜를 계산합니다.
+  const [startOfThisWeek, setStartOfThisWeek] = useState(startOfWeek(today));
+  const [endOfThisWeek, setEndOfThisWeek] = useState(endOfWeek(today)); // 이번 주의 종료 날짜를 계산합니다.
   // const [weeklyUser, setWeeklyUser] = useState(
   //   useUserModel(startOfCurrentWeek, endOfCurrentWeek)
   // );
-  const weeklyUser = useUserModel(startOfCurrentWeek, endOfCurrentWeek);
+  const weeklyUser = useUserModel(startOfThisWeek, endOfThisWeek);
 
   const [exerciseData, setExerciseData] = useState<Exercise>();
   const [foodData, setFoodData] = useState<FoodList>();
@@ -52,7 +48,6 @@ const Main = () => {
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
 
   const [isCreateMode, setIsCreateMode] = useState(true);
-
   const [startOfCurrentMonth, setStartOfCurrentMonth] = useState(
     startOfMonth(currentDate)
   );
@@ -62,14 +57,14 @@ const Main = () => {
 
   const handleDayOnClick = (day: Date) => {
     setCurrentDate(day);
-    if (!isSameWeek(day, startOfCurrentWeek)) {
-      setStartOfCurrentWeek(startOfWeek(day));
-      setEndOfCurrentWeek(endOfWeek(day));
-    }
-    if (!isSameMonth(day, startOfCurrentMonth)) {
-      setStartOfCurrentMonth(startOfMonth(day));
-      setEndOfCurrentMonth(endOfMonth(day));
-    }
+    // if (!isSameWeek(day, startOfThisWeek)) {
+    //   setStartOfThisWeek(startOfWeek(day));
+    //   setEndOfThisWeek(endOfWeek(day));
+    // }
+    // if (!isSameMonth(day, startOfCurrentMonth)) {
+    //   setStartOfCurrentMonth(startOfMonth(day));
+    //   setEndOfCurrentMonth(endOfMonth(day));
+    // }
   };
 
   const closeFoodModal = () => {
@@ -118,23 +113,8 @@ const Main = () => {
   //NOTE: mainStatistics는 이번주차 데이터를 불러와야합니다
 
   useEffect(() => {
-    axios
-      .post(`${URL}/check`, {
-        email: getEmail(),
-        password: getPassword(),
-      })
-      .then((response) => {
-        const userData = response.data.user;
-        console.log(userData);
-
-        setUser({
-          ...userData,
-        });
-      })
-      .catch((error) => {
-        console.error('There was an error!', error);
-      });
-  }, [startOfCurrentMonth, endOfCurrentMonth]);
+    getUser();
+  }, [currentDate]);
 
   return (
     <>

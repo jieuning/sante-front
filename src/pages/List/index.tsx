@@ -52,8 +52,6 @@ const List = () => {
   const loadMoreItems = () => {
     const nextLoadIndex = loadIndex + LOAD_SIZE;
     const newLoadedDates = dateArray.slice(loadIndex, nextLoadIndex);
-    console.log('newLoadedDates:', newLoadedDates);
-    console.log('nextLoadIndex:', nextLoadIndex);
     setLoadedDates((prevLoadedDates) => [
       ...prevLoadedDates,
       ...newLoadedDates,
