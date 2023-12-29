@@ -57,7 +57,6 @@ const RoutineCard = ({
   }
 
   const setFoodId = useStore((state) => state.setFoodId);
-  const setFoodData = useStore((state) => state.setFoodData);
 
   const [isExist, setIsExist] = useState(false);
   const [checkboxStates, handleCheckboxChange] =
@@ -80,6 +79,7 @@ const RoutineCard = ({
       console.log(filtered);
       if (checkList) {
         setFoodId(filtered[0].foodId);
+        //console.log(filtered);
       } else {
         setFoodId(new Date().getTime().toString());
       }

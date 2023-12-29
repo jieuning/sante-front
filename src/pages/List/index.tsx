@@ -3,21 +3,17 @@ import { RadioButton, InputButtonInfo } from '../../components/RadioButton';
 import RoutineCard from '../../components/RoutineCard';
 import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
-import useUserModel from '../../hooks/useUserModel'; // 수정된 부분
 import MonthlyDateSelector from '../../components/MonthlyDateSelector';
 import useMonthlyDateHandler from '../../hooks/useMonthlyDateHandler';
-
+import useUserModelAll from '../../hooks/useUserModelAll';
 const List = () => {
   const { targetDate, onLeftClick, onRightClick } = useMonthlyDateHandler(
     new Date()
   );
 
-  const user = useUserModel(
-    new Date(targetDate.getFullYear(), targetDate.getMonth(), 1),
-    new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0)
-  );
+  const user = useUserModelAll();
 
-  const dateArray: Date[] = [];
+  let dateArray: Date[] = [];
   for (
     let date = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
     date <= new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0);
@@ -48,6 +44,20 @@ const List = () => {
       setSelectedValue(selectedCategory);
     },
   };
+
+  useEffect(() => {
+    setLoadIndex(0);
+    setLoadedDates([]);
+    dateArray = [];
+    for (
+      let date = new Date(targetDate.getFullYear(), targetDate.getMonth(), 1);
+      date <= new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0);
+      date.setDate(date.getDate() + 1)
+    ) {
+      dateArray.push(new Date(date)); // 각 날짜에 대해 새로운 Date 객체 생성
+    }
+    console.log('dateArray', dateArray);
+  }, [targetDate]);
 
   const loadMoreItems = () => {
     const nextLoadIndex = loadIndex + LOAD_SIZE;
@@ -102,7 +112,9 @@ const List = () => {
         {selectedValue === '운동' && (
           <>
             {loadedDates.map((date, index) => (
-              <RoutineCardContainer key={`exercise-${index}`}>
+              <RoutineCardContainer
+                key={`exercise-${index + date.toDateString()}`}
+              >
                 <RoutineCard
                   key={`exercise-${index}`}
                   type="exercise"
@@ -116,7 +128,7 @@ const List = () => {
         {selectedValue === '식단' && (
           <>
             {loadedDates.map((date, index) => (
-              <RoutineCardContainer key={`food-${index}`}>
+              <RoutineCardContainer key={`food-${index + date.toDateString()}`}>
                 <RoutineCard
                   key={`food-${index}`}
                   type="food"
