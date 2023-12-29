@@ -15,7 +15,7 @@ const StyledTitle = styled.h1`
   text-align: center;
   font-size: 25px;
   font-weight: bold;
-  padding: 50px 0 30px 0;
+  padding-bottom: 30px;
 `;
 
 const InputContainer = styled.div`
@@ -186,8 +186,8 @@ const Register = () => {
   return (
     <StyledRegister>
       <Header />
-      <StyledTitle>회원가입</StyledTitle>
       <ContentsContainer>
+        <StyledTitle>회원가입</StyledTitle>
         <InputContainer>
           <Input
             type="text"
@@ -251,13 +251,15 @@ const Register = () => {
 };
 
 const StyledRegister = styled.div`
+  height: 100vh;
   background-color: var(--white-background-color);
 `;
 
 const ContentsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export default Register;

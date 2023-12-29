@@ -111,39 +111,41 @@ const Login = () => {
     <>
       <StyledLogin>
         <Header />
-        <StyledTitle>로그인</StyledTitle>
-        <Input
-          type="text"
-          name="email"
-          placeholder="이메일을 입력해주세요."
-          width="370px"
-          height="50px"
-          value={email}
-          onChange={handleEmailChange}
-          errorMessage={
-            !emailValid && typeof email === 'string' && email.length > 0
-              ? '올바른 이메일 형식으로 입력해주세요.'
-              : undefined
-          }
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="비밀번호를 입력해주세요."
-          width="370px"
-          height="50px"
-          value={password}
-          onChange={handlePasswordChange}
-          errorMessage={
-            !pwValid && typeof password === 'string' && password.length > 0
-              ? '8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.'
-              : undefined
-          }
-        />
-        <StyledButton>
-          <DynamicButton info={buttonInfoLogin} />
-          <DynamicButton info={buttonInfoSignUp} />
-        </StyledButton>
+        <LoginContentWrap>
+          <StyledTitle>로그인</StyledTitle>
+          <Input
+            type="text"
+            name="email"
+            placeholder="이메일을 입력해주세요."
+            width="370px"
+            height="50px"
+            value={email}
+            onChange={handleEmailChange}
+            errorMessage={
+              !emailValid && typeof email === 'string' && email.length > 0
+                ? '올바른 이메일 형식으로 입력해주세요.'
+                : undefined
+            }
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="비밀번호를 입력해주세요."
+            width="370px"
+            height="50px"
+            value={password}
+            onChange={handlePasswordChange}
+            errorMessage={
+              !pwValid && typeof password === 'string' && password.length > 0
+                ? '8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.'
+                : undefined
+            }
+          />
+          <StyledButton>
+            <DynamicButton info={buttonInfoLogin} />
+            <DynamicButton info={buttonInfoSignUp} />
+          </StyledButton>
+        </LoginContentWrap>
       </StyledLogin>
     </>
   );
@@ -159,17 +161,24 @@ const StyledButton = styled.div`
 `;
 
 const StyledTitle = styled.p`
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   display: flex;
   justify-content: center;
-  margin-top: 70px;
   margin-bottom: 50px;
   background-color: var(--white-background-color);
 `;
 
 const StyledLogin = styled.div`
+  height: 100vh;
   background-color: var(--white-background-color);
+`;
+
+const LoginContentWrap = styled.div`
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export default Login;
