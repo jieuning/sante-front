@@ -12,6 +12,8 @@ type DynamicButtonInfo = {
   color?: ColorType;
   fontWeight?: string;
   onClick?: (e?: any) => void;
+  width?: string;
+  height?: string;
 };
 
 interface DynamicButtonProps {
@@ -72,8 +74,10 @@ const getButtonSize = (size: ButtonSize) => {
 };
 
 const Container = styled.div<DynamicButtonInfo>`
-  width: ${(props) => getButtonSize(props.size ?? 'default').width};
-  height: ${(props) => getButtonSize(props.size ?? 'default').height};
+  width: ${(props) =>
+    props.width ?? getButtonSize(props.size ?? 'default').width};
+  height: ${(props) =>
+    props.height ?? getButtonSize(props.size ?? 'default').height};
 
   cursor: pointer;
 `;
