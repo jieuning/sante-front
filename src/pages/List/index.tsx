@@ -12,7 +12,13 @@ import ExerciseModal from '../../components/modals/ExerciseModal';
 import FoodModal from '../../components/modals/FoodMadal';
 
 const List = () => {
-  //const [user, setUser] = useState<User>();
+  const queryString = window.location.search;  // 현재 페이지의 URL에서 쿼리 문자열
+  const urlParams = new URLSearchParams(queryString);
+  console.log('urlParams', urlParams);  //  가져온 쿼리 문자열을 URLSearchParams 객체로 변환
+  const selectCategory = urlParams.get('category');
+  console.log('selectCategory==========', selectCategory);
+
+
   const user = useStore((state: Store) => state.user);
   const getUser = useStore((state: Store) => state.getUser);
   const setExerciseData = useStore((state: Store) => state.setExerciseData);
@@ -37,7 +43,7 @@ const List = () => {
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
   const [isCreateMode, setIsCreateMode] = useState(true);
 
-  const [selectedValue, setSelectedValue] = useState('운동');
+  const [selectedValue, setSelectedValue] = useState(selectCategory);
   const [loadedDates, setLoadedDates] = useState<Date[]>([]); // 로드된 날짜들을 저장
   const loader = useRef(null);
   const [loadIndex, setLoadIndex] = useState(0);
@@ -46,7 +52,7 @@ const List = () => {
   const radioCategoryButtonInfo: InputButtonInfo = {
     type: 'shortOvalRadio',
     size: 'short-oval',
-    value: selectedValue,
+    value: selectedValue || '',
     items: ['운동', '식단'],
     backgroundColor: 'white',
     border: 'primary',
@@ -165,7 +171,7 @@ const List = () => {
             ))}
           </>
         )}
-        {selectedValue === '식단' && (
+        {selectedValue === '음식' && (
           <>
             {loadedDates.map((date, index) => (
               <RoutineCardContainer key={`food-${index + date.toDateString()}`}>

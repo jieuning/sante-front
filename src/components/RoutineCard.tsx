@@ -37,12 +37,22 @@ const RoutineCard = ({
   onClickEdit,
 }: RoutineCardProps) => {
   const navigate = useNavigate();
-  const buttonInfo: DynamicButtonInfo = {
+  const exerciseButtonInfo: DynamicButtonInfo = {
     type: 'outline',
     text: '더보기',
     fontWeight: 'bold',
     onClick: () => {
-      navigate('/list');
+      const newUrl = '/list?category=운동';
+      navigate(newUrl);
+    },
+  };
+  const foodButtonInfo: DynamicButtonInfo = {
+    type: 'outline',
+    text: '더보기',
+    fontWeight: 'bold',
+    onClick: () => {
+      const newUrl = '/list?category=음식';
+      navigate(newUrl);
     },
   };
 
@@ -99,14 +109,14 @@ const RoutineCard = ({
       {type === 'exercise' && (
         <Title>
           <p>🏃 운동</p>
-          {isMain && <DynamicButton info={buttonInfo} />}
+          {isMain && <DynamicButton info={exerciseButtonInfo} />}
           {!isMain && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
         </Title>
       )}
       {type === 'food' && (
         <Title>
           <p>🍚 식단</p>
-          {isMain && <DynamicButton info={buttonInfo} />}
+          {isMain && <DynamicButton info={foodButtonInfo} />}
           {!isMain && <p>{`(${date.getMonth() + 1}.${date.getDate()})`}</p>}
         </Title>
       )}
