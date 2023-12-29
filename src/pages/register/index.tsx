@@ -131,6 +131,8 @@ const Register = () => {
   };
 
   const buttonInfo: DynamicButtonInfo = {
+    width: '370px',
+    height: '50px',
     type: 'solid',
     size: 'medium',
     text: '가입하기',

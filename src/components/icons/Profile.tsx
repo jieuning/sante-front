@@ -36,14 +36,16 @@ const UserInfoBox = () => {
 const Container = styled.div`
   position: absolute;
   //위치 + 사이즈 조정!!
-  left: 90%;
-  top: 18%;
+  // left: 90%;
+  right: -130px;
+  top: 118px;
   transform: translate(-50%, -50%);
   width: 250px;
   height: 150px;
   background-color: #fff;
   border: 1px solid var(--primary-color);
   border-radius: 10px;
+  z-index: 11;
 `;
 
 const UserInfoHeader = styled.div`
