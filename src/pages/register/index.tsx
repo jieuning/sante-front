@@ -61,7 +61,6 @@ const Register = () => {
   ];
 
   useEffect(() => {
-    console.log('Email:', email);
     const emailRegex = /^\S+@\S+.\S+$/;
     if (emailRegex.test(email)) {
       setEmailValid(true);
@@ -75,7 +74,6 @@ const Register = () => {
   };
 
   useEffect(() => {
-    console.log('Password:', pw);
     const pwRegex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (pwRegex.test(pw)) {
@@ -90,7 +88,6 @@ const Register = () => {
   };
 
   useEffect(() => {
-    console.log('pw confirm:', pwConfirm);
     if (pw === pwConfirm) {
       setPwCheck(true);
     } else {
@@ -105,7 +102,6 @@ const Register = () => {
   const handleAgeSelectChange = (selectedValue: string) => {
     //setAge 할 필요 없이 selectedValue에 선택한 나이가 이미 들어있음
     setSelectedValue(selectedValue);
-    console.log('Selected value:', selectedValue);
   };
 
   const radioGenderButtonInfo: InputButtonInfo & {
@@ -120,7 +116,6 @@ const Register = () => {
     color: 'inputText',
     fontWeight: 'regular',
     onChange: (selectedGender: SetStateAction<string>) => {
-      console.log('selectedValue:', selectedGender);
       setSelectedGender(selectedGender);
       if (selectedGender === '남성') {
         setSelectedGender('남성');

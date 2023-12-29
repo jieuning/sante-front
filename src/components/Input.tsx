@@ -10,7 +10,7 @@ const StyledInputWrapper = styled.div<{
   text-align: ${(props) => props.textAlign || 'left'};
 
   display: block; /* 블록 레벨 요소로 설정 */
-  margin: 22px auto; /* 가운데 정렬을 위한 스타일 */
+  margin: 22px auto;
 
   // display: flex;
   justify-content: center;

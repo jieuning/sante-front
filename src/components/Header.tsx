@@ -13,19 +13,12 @@ const Header = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin());
 
-  //테스트 데이터
-  // useEffect(() => {
-  //   setUser('test@test.com', 'test1111!', '여성');
-  //   setIsLoggedIn(isLogin());
-  // }, []);
-
   const loginButtonInfo: DynamicButtonInfo = {
     type: 'solid',
     size: 'small',
     text: '로그인',
     fontWeight: 'bold',
     onClick: () => {
-      console.log('Login Button clicked!');
       navigate('/login');
     },
   };
@@ -42,7 +35,6 @@ const Header = () => {
     onClick: () => {
       logOut();
       setIsLoggedIn(false);
-      console.log('로그아웃 클릭');
       navigate('/');
     },
   };
