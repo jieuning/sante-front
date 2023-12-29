@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { getColorValue } from '../../types/colorType';
 
-//NOTE: 퍼센테지에 따라 색상이 변경될 수 있게 state받기?
-
 interface GageProps {
   gage?: number;
   maxGage?: number;
@@ -17,8 +15,6 @@ type GageStatusProp = {
   gageStatus: number;
 };
 
-//NOTE 타입지정을 중복되지 않게 하는 방법?
-
 const GageBar = ({
   gage = 0,
   maxGage = 100,
@@ -31,9 +27,6 @@ const GageBar = ({
   useEffect(() => {
     const calculateStatus: number = Math.floor((gage / maxGage) * 100);
     setGageStatus(calculateStatus);
-    console.log('gageStatus', gageStatus);
-    console.log('gage', gage);
-    console.log('maxGage', maxGage);
     if (handleGage) {
       handleGage(calculateStatus);
     }
