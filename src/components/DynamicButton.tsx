@@ -113,6 +113,11 @@ const SolidButton = styled.button<DynamicButtonInfo>`
     getColorValue(props.backgroundColor ?? 'primary')};
   color: ${(props) => getColorValue(props.color ?? 'white')};
   font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
+
+  transition: filter 0.3s ease;
+  &:hover {
+    filter: brightness(87%);
+  }
 `;
 
 const TextButton = styled.button<DynamicButtonInfo>`
