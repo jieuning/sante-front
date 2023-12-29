@@ -75,7 +75,6 @@ const Main = () => {
 
   useEffect(() => {
     getUser();
-    console.log(user);
   }, [currentDate]);
 
   return (
@@ -110,7 +109,6 @@ const Main = () => {
               type="exercise"
               exerciseList={user?.userExerciseList}
               isMain={true}
-              onClickMore={() => console.log('more click')}
               onClickAdd={() => {
                 setExerciseData(undefined);
                 handleExerciseCreateClick();
@@ -127,7 +125,6 @@ const Main = () => {
               foodList={user?.userFoodList ?? []}
               isMain={true}
               date={currentDate}
-              onClickMore={() => console.log('more click')}
               onClickAdd={() => {
                 handleCreateClick();
                 setModalState('food', true);

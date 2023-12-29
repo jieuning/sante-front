@@ -44,7 +44,6 @@ const getMonthlyExerciseRateStatistic = (
   //여기서 해당 날짜 isDone 체크되어있는지 확인
   //scheduled date 의 날짜와 존재하는 isDone을 키밸류로 저장
   const isDoneDate = packingScheduledDate(userExerciseList);
-  console.log(isDoneDate);
   if (exerciseType === 'cnt') console.log(isDoneDate);
   let max = 0;
   for (let i = 1; i <= endOfMonth(targetDate).getDate(); i++) {
@@ -88,7 +87,6 @@ const getMonthlyExerciseRateStatistic = (
             ? 1
             : 0
           : doneCnt;
-      console.log(doneCnt);
       if (statistic[weekIndex].curr + currCnt > max) {
         max = statistic[weekIndex].curr + currCnt;
       }
@@ -98,14 +96,6 @@ const getMonthlyExerciseRateStatistic = (
         max: statistic[weekIndex].max + maxCnt,
         curr: statistic[weekIndex].curr + currCnt,
       };
-      if (exerciseType === 'rate') {
-        console.log(weekIndex, maxCnt, doneCnt);
-        console.log(
-          weekIndex,
-          statistic[weekIndex].max,
-          statistic[weekIndex].curr
-        );
-      }
     }
   }
   if (exerciseType === 'rate') {

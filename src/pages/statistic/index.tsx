@@ -45,7 +45,6 @@ const Statistic = () => {
 
     if (rate) {
       setExerciseRateList(rate);
-      console.log(rate);
     }
 
     const cnt = calculateWeeklyDoneCountAndRate(filtered);
