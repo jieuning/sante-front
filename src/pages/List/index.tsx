@@ -11,13 +11,15 @@ import { ModalMode } from '../../types/modalMode';
 import ExerciseModal from '../../components/modals/ExerciseModal';
 import FoodModal from '../../components/modals/FoodMadal';
 
-import useUserModelAll from '../../hooks/useUserModelAll';
 const List = () => {
+  //const [user, setUser] = useState<User>();
+  const user = useStore((state) => state.user);
+  const getUser = useStore((state) => state.getUser);
+  const setExerciseData = useStore((state) => state.setExerciseData);
+  const modalState = useStore((state) => state.modalState);
   const { targetDate, onLeftClick, onRightClick } = useMonthlyDateHandler(
     new Date()
   );
-
-  const user = useUserModelAll();
 
   let dateArray: Date[] = [];
   for (
@@ -32,10 +34,6 @@ const List = () => {
   const setFoodData = useStore((state) => state.setFoodData);
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
   const [isCreateMode, setIsCreateMode] = useState(true);
-  const setExerciseData = useStore((state) => state.setExerciseData);
-  const modalState = useStore((state) => state.modalState);
-  const [currentDate, setCurrentDate] = useState<Date>(today);
-
 
   const [selectedValue, setSelectedValue] = useState('운동');
   const [loadedDates, setLoadedDates] = useState<Date[]>([]); // 로드된 날짜들을 저장
@@ -61,6 +59,7 @@ const List = () => {
   };
 
   useEffect(() => {
+    getUser();
     setLoadIndex(0);
     setLoadedDates([]);
     dateArray = [];
@@ -83,21 +82,20 @@ const List = () => {
     ]);
     setLoadIndex(nextLoadIndex);
   };
-  
-    // "편집하기" 클릭을 처리하는 함수 내부에서
-    const handleExerciseEditClick = () => {
-      setIsCreateMode(false);
-      setModalState('exercise', true);
-    };
-  
-    // "편집하기" 클릭을 처리하는 함수 내부에서
-    const handleEditClick = (value: FoodList) => {
-      setFoodData(value);
-      setFoodModalType('edit');
-      setIsCreateMode(false);
-      setModalState('food', true);
-    };
 
+  // "편집하기" 클릭을 처리하는 함수 내부에서
+  const handleExerciseEditClick = () => {
+    setIsCreateMode(false);
+    setModalState('exercise', true);
+  };
+
+  // "편집하기" 클릭을 처리하는 함수 내부에서
+  const handleEditClick = (value: FoodList) => {
+    setFoodData(value);
+    setFoodModalType('edit');
+    setIsCreateMode(false);
+    setModalState('food', true);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -130,14 +128,13 @@ const List = () => {
         <RadioButton info={radioCategoryButtonInfo}></RadioButton>
       </RadioBtnContainer>
       {modalState.exercise && <ExerciseModal modalButton={isCreateMode} />}
-        {modalState.food && (
-          <FoodModal
-            modalButton={isCreateMode} // 모달Button 속성으로 상태 전달
-            modalType={foodModalType}
-            currentDate={currentDate}
-            // ... 다른 속성들
-          />
-        )}
+      {modalState.food && (
+        <FoodModal
+          modalButton={isCreateMode} // 모달Button 속성으로 상태 전달
+          modalType={foodModalType}
+          // ... 다른 속성들
+        />
+      )}
       <WeeklyContainer>
         <MonthlyDateSelector
           targetDate={targetDate}
