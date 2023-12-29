@@ -15,8 +15,8 @@ const List = () => {
   const queryString = window.location.search;  // 현재 페이지의 URL에서 쿼리 문자열
   const urlParams = new URLSearchParams(queryString);
   console.log('urlParams', urlParams);  //  가져온 쿼리 문자열을 URLSearchParams 객체로 변환
-  const selectCategory = urlParams.get('category');
-  console.log('selectCategory==========', selectCategory);
+  const selectCategory = urlParams.get('category');  //운동이면 운동,식단이면 식단
+  console.log('selectCategory==========', selectCategory);  
 
 
   const user = useStore((state: Store) => state.user);
@@ -44,6 +44,7 @@ const List = () => {
   const [isCreateMode, setIsCreateMode] = useState(true);
 
   const [selectedValue, setSelectedValue] = useState(selectCategory);
+
   const [loadedDates, setLoadedDates] = useState<Date[]>([]); // 로드된 날짜들을 저장
   const loader = useRef(null);
   const [loadIndex, setLoadIndex] = useState(0);
@@ -171,7 +172,7 @@ const List = () => {
             ))}
           </>
         )}
-        {selectedValue === '음식' && (
+        {selectedValue === '식단' && (
           <>
             {loadedDates.map((date, index) => (
               <RoutineCardContainer key={`food-${index + date.toDateString()}`}>

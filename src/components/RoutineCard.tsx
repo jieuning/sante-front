@@ -51,7 +51,7 @@ const RoutineCard = ({
     text: '더보기',
     fontWeight: 'bold',
     onClick: () => {
-      const newUrl = '/list?category=음식';
+      const newUrl = '/list?category=식단';
       navigate(newUrl);
     },
   };
