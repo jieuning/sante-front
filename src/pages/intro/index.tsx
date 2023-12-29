@@ -5,6 +5,8 @@ import {
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { isLogin } from '../../utils/WebStorageControl';
 
 interface BlankProps {
   height?: string;
@@ -12,6 +14,13 @@ interface BlankProps {
 
 const Intro = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLogin()) {
+      navigate('/main');
+    }
+  }, []);
+
   const registerButtonInfo: DynamicButtonInfo = {
     type: 'solid',
     size: 'large',
