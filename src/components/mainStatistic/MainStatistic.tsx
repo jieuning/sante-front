@@ -95,7 +95,7 @@ const MainStatistic = ({
           const doneExerciseFiltered = exercise?.filter((data) => {
             return data.isDone === true;
           });
-          doneExercise = doneExerciseFiltered?.length || 0;
+          doneExercise += doneExerciseFiltered?.length || 0;
         });
       }
 
