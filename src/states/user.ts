@@ -56,9 +56,11 @@ export const useStore = create<Store>((set) => ({
   setFoodData: (foodItem: FoodList) => {
     set({ foodData: foodItem });
   },
-  setExerciseData: (exerciseItem: Exercise) => {
+  setExerciseData: (exerciseItem: Exercise | undefined) => {
     set({ exerciseData: exerciseItem });
   },
+  status: 0,
+  foodId: '',
   setFoodId: (foodId: string) => {
     set({ foodId: foodId });
   },
