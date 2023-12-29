@@ -380,6 +380,7 @@ const ErrorMessageSpan = styled.span`
   font-size: 1rem;
   display: flex;
   justify-content: start;
+  background-color: red;
 `;
 
 const GrayStyledSpan = styled.span`
