@@ -21,20 +21,39 @@ interface DynamicButtonProps {
 }
 
 const DynamicButton = ({ info }: DynamicButtonProps) => {
+  console.log(info.onClick);
   return (
     <Container {...info}>
       {info.type === 'solid' && (
-        <SolidButton onClick={info.onClick} {...info}>
+        <SolidButton
+          {...info}
+          onClick={(event) => {
+            event.stopPropagation();
+            info.onClick?.();
+          }}
+        >
           {info.text}
         </SolidButton>
       )}
       {info.type === 'text' && (
-        <TextButton onClick={info.onClick} {...info}>
+        <TextButton
+          {...info}
+          onClick={(event) => {
+            event.stopPropagation();
+            info.onClick?.();
+          }}
+        >
           {info.text}
         </TextButton>
       )}
       {info.type === 'outline' && (
-        <OutlineButton onClick={info.onClick} {...info}>
+        <OutlineButton
+          {...info}
+          onClick={(event) => {
+            event.stopPropagation();
+            info.onClick?.();
+          }}
+        >
           {info.text}
         </OutlineButton>
       )}
