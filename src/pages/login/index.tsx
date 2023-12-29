@@ -90,6 +90,7 @@ const Login = () => {
   };
 
   const buttonInfoLogin: DynamicButtonInfo = {
+    width: '370px',
     type: 'solid',
     size: 'medium',
     text: '로그인',
@@ -98,6 +99,7 @@ const Login = () => {
   };
 
   const buttonInfoSignUp: DynamicButtonInfo = {
+    width: '370px',
     type: 'solid',
     size: 'medium',
     text: '회원가입',

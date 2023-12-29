@@ -58,7 +58,10 @@ const Header = () => {
             <StyledLogoutText onClick={Logout.onClick}>
               로그아웃
             </StyledLogoutText>
-            <Profile />
+            <ProfileContainer>
+              <Profile />
+            </ProfileContainer>
+            
           </>
         ) : (
           <DynamicButton info={loginButtonInfo} />
@@ -101,4 +104,7 @@ const StyledRightSection = styled.div`
   align-itmes: center;
 `;
 
+const ProfileContainer = styled.div`
+  position: relative;
+`;
 export default Header;

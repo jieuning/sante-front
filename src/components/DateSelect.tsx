@@ -90,7 +90,7 @@ const DateSelectContainer = styled.div`
   flex-direction: column;
   align-items: center;
   user-select: none;
-  z-index: 10;
+  z-index: 2;
   padding: 10px 0;
   position: sticky;
   top: 50px;
