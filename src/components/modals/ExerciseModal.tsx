@@ -340,17 +340,15 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
               )}
             </CustomDatePickerWrapper>
           </FlexStyleDiv>
+          <SelectMargin>
+            <StyledLabel>시간</StyledLabel>
+          </SelectMargin>
           <div>
-            <SelectMargin>
-              <StyledLabel>시간</StyledLabel>
-            </SelectMargin>
-          </div>
-          <FlexStyleDiv>
             <SelectBetweenMargin>
               <SelectBox
                 ageOptions={hours}
                 placeholder={`${selectHour}시간`}
-                width="48%"
+                width="47.9%"
                 height="4.5rem"
                 onChange={(targetValue) => {
                   setSelectHour(Number(targetValue));
@@ -362,7 +360,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
             <SelectBox
               ageOptions={minutes}
               placeholder={`${selectMinutes}분`}
-              width="48%"
+              width="47.9%"
               height="4.5rem"
               onChange={(targetValue) => {
                 setSelectMinutes(Number(targetValue));
@@ -370,7 +368,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
               }}
               externalValue={selectMinutes}
             />
-          </FlexStyleDiv>
+          </div>
         </GridStyleDiv>
 
         <Spacing></Spacing>
@@ -460,8 +458,8 @@ const CustomDatePickerWrapper = styled.div`
 `;
 
 const StyledButton = styled.button`
-  width: 28vw;
-  height: 4.5rem;
+  width: 404px;
+  height: 43px;
   border: 1px solid #bebebe;
   outline: none;
   border-radius: 10px;
@@ -472,12 +470,25 @@ const StyledButton = styled.button`
   &:focus {
     border: 1px solid #81d8d0;
   }
-  @media screen and (max-width: 375px) {
-    width: 300px;
+   @media only screen and (max-width: 760px) {
+    & {
+      width: 375px;
+  
   }
-  @media screen and (max-width: 760px) {
-    width: 375px;
+
+  @media screen and (max-width: 569px) {
+    & {
+      width: 350px;
+    }
   }
+
+  
+  @media screen and (max-width: 500px) {
+    & {
+      width: 300px;
+    }
+  }
+  
 `;
 
 const InputStyledDiv = styled.div`
@@ -509,7 +520,7 @@ const SelectMargin = styled.label`
 `;
 
 const SelectBetweenMargin = styled.label`
-  margin-right: 1vw;
+  margin-right: 1rem;
 `;
 
 const GridStyleDiv = styled.div`
@@ -520,14 +531,8 @@ const GridStyleDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
 `;
-
-const FlexStyleDiv = styled.div`
-  display: static;
-  justify-content: cetner;
-  align-content: center;
-`;
-
+const FlexStyleDiv = styled.div``;
 export default ExerciseModal;

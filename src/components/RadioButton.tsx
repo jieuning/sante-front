@@ -126,7 +126,7 @@ const RadioInput = styled.input`
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
-  
+
   &:checked {
     + ${RadioLabel}, + ${ShortOvalRadioLabel} {
       background-color: var(--primary-color);
@@ -170,8 +170,7 @@ const CheckLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem;
-  margin-bottom: 5px;
-  margin-left: 0.7vw;
+  margin-left: 0.5vw;
   border-radius: 3rem;
   background-color: ${(props) =>
     props.isSelected
@@ -189,7 +188,7 @@ const CheckAllDayLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   justify-content: center;
   padding: 0.5rem 1rem;
   margin-top: 5px;
-  margin-left: 0.7vw;
+  margin-left: 0.5vw;
   border: ${(props) =>
     props.isSelected ? 'none' : `1px solid ${getColorValue('primary')}`};
   border-radius: 3rem;
