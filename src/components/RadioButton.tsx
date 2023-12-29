@@ -180,6 +180,11 @@ const CheckLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   cursor: pointer;
 
   transform: scale(0.9);
+
+  @media only screen and (min-width: 1864px) {
+    & {
+      margin-left: 0.9rem;
+  }
 `;
 
 const CheckAllDayLabel = styled.label<isSelectedType & ReducedButtonInfo>`
@@ -200,6 +205,11 @@ const CheckAllDayLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   height: 30px;
   font-size: ${(props) => getButtonSize(props.size).fontSize};
   transform: scale(0.9);
+
+  @media only screen and (min-width: 1864px) {
+    & {
+      margin-left: 0.9rem;
+  }
 `;
 
 const CheckButton = ({ info }: InputButtonProps) => {
