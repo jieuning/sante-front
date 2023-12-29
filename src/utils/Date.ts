@@ -98,7 +98,6 @@ const getMonthlyExerciseRateStatistic = (
     }
   }
   if (exerciseType === 'rate') {
-    console.log(statistic);
   }
   const list = statistic.reduce((acc, curr) => {
     if (exerciseType === 'rate') {
@@ -126,11 +125,9 @@ const getMonthlyCaloryTotalStatistic = (
   if (userFoodList === undefined) {
     return;
   }
-  console.log(userFoodList);
   const statistic = new Array<StatisticType>();
 
   const packedFoodList = packingFoodList(userFoodList);
-  console.log(packedFoodList);
   const lastDay = endOfMonth(targetDate).getDate();
   let maxMonthlyCaloryTotal = 0;
   let dayCount = 0;
@@ -163,7 +160,6 @@ const getMonthlyCaloryTotalStatistic = (
         max = Math.ceil(maxMonthlyCaloryTotal / dayCount);
       }
       allCalory += packedFoodList.get(format(thisDay, 'yyyy-MM-dd')) ?? 0;
-      console.log(format(thisDay, 'yyyy-MM-dd'));
       statistic[weekIndex] = {
         week: currWeek,
         max: maxMonthlyCaloryTotal,
@@ -178,7 +174,6 @@ const getMonthlyCaloryTotalStatistic = (
 
     return acc;
   }, new Array<number>());
-  console.log(list);
   return {
     list: list,
     result: Math.ceil(allCalory / targetDayCount),
@@ -279,6 +274,29 @@ function filterExerciseListByDateRange(
 ): Exercise[] {
   const start = startOfDay(startDate);
   const end = startOfDay(endDate);
+
+  if (startDate === endDate) {
+    //const dateKey = convertUtcToKstString(startDate);
+    return exerciseList
+      .map((exercise) => {
+        // 날짜 범위에 맞는 scheduledDate만 필터링
+        const filteredScheduledDates = exercise.scheduledDate?.filter(
+          (scheduledItem) => {
+            const scheduledDate = startOfDay(new Date(scheduledItem.date));
+            return isWithinInterval(scheduledDate, { start, end });
+          }
+        );
+
+        return {
+          ...exercise,
+          scheduledDate: filteredScheduledDates,
+        };
+      })
+      .filter(
+        (exercise) =>
+          exercise.scheduledDate && exercise.scheduledDate.length > 0
+      );
+  }
 
   return exerciseList
     .map((exercise) => {
