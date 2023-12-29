@@ -49,7 +49,6 @@ interface ExerciseModalProps {
 const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
   const exerciseData = useStore((state) => state.exerciseData);
   const setModalState = useStore((state) => state.setModalState);
-  console.log('check mic test', exerciseData?.exerciseId);
   const [inputValue, setInputValue] = useState<string>('');
   const [dateRange, setDateRange] = useState<(Date | null)[]>([null, null]);
   const [startDate, endDate] = dateRange;
@@ -86,7 +85,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
       }
 
       currentDate.setDate(currentDate.getDate() + 1);
-      console.log('currr', formattedDate);
     }
 
     return scheduledDates;
@@ -151,8 +149,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         scheduledDate: scheduleList,
       };
 
-      console.log('inputValue length', inputValue.length);
-
       await handleCreate({ exercise: payload });
       setModalState('exercise', false);
     }
@@ -160,7 +156,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
 
   const handleDeleteButtonClick = () => {
     const exerciseId = exerciseData?.exerciseId;
-    console.log('this is ma ID', exerciseId);
     exerciseId && handleDelete(exerciseId);
     setModalState('exercise', false);
   };
@@ -200,7 +195,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         ];
         setDateRange(newDateRange);
         setSelectedDays(exerciseData.repeatDate);
-        console.log(exerciseData.exerciseTime);
         divideMinutesAndHour(exerciseData.exerciseTime);
       }
     } else {
@@ -231,7 +225,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
       } else {
         setSelectedDays([...items]);
       }
-      console.log('매일 버튼이 클릭되었습니다.', selectedDays);
     },
     onClick: (day) => {
       if (selectedDays.includes(day)) {
@@ -240,7 +233,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         );
       } else {
         if (items.includes(day)) {
-          console.log(`${day} 들어갔다`);
           setSelectedDays([...selectedDays, day]);
         }
       }
@@ -273,7 +265,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
     </StyledButton>
   ));
 
-  console.log('dateRange2', dateRange, 'start', startDate, 'end', endDate);
   return (
     <div>
       <ModalCard
@@ -290,7 +281,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                 value={inputValue}
                 onChange={(value) => {
                   setInputValue(value.toString());
-                  console.log(inputValue);
                 }}
                 errorMessage={
                   isNameError && inputValue?.trim().length === 0
@@ -327,7 +317,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                 endDate={endDate}
                 onChange={(update) => {
                   setDateRange(update);
-                  console.log('dateRange', dateRange);
                 }}
                 minDate={minDate}
                 maxDate={maxDate}
@@ -352,7 +341,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                 height="4.5rem"
                 onChange={(targetValue) => {
                   setSelectHour(Number(targetValue));
-                  console.log('hours', selectHour);
                 }}
                 externalValue={selectHour}
               />
@@ -364,7 +352,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
               height="4.5rem"
               onChange={(targetValue) => {
                 setSelectMinutes(Number(targetValue));
-                console.log('minutes', selectMinutes);
               }}
               externalValue={selectMinutes}
             />
