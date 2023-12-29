@@ -406,19 +406,17 @@ const CustomDatePickerWrapper = styled.div`
   position: relative;
   .react-datepicker {
     transform: scale(1.4);
-    transform-origin: top left; 
+    transform-origin: top left;
     position: absolute;
     top: 100%; // 적절한 값으로 조정
     left: 0; // 적절한 값으로 조정
   }
-
 
   .react-datepicker__triangle,
   .react-datepicker__triangle::before,
   .react-datepicker__triangle::after {
     display: none;
   }
-
 
   .react-datepicker__navigation {
     transform: scale(0.5);
@@ -443,8 +441,8 @@ const CustomDatePickerWrapper = styled.div`
     top: 0.3rem;
   }
 
-  .react-datepicker__close-icon:: after{
-    background-color: var(--primary-color)
+  .react-datepicker__close-icon::after {
+    background-color: var(--primary-color);
   }
 
   .react-datepicker__day--keyboard-selected,
@@ -454,18 +452,15 @@ const CustomDatePickerWrapper = styled.div`
 
   .react-datepicker__day--outside-month {
     color: #ababab !important;
-  }import useButtonHandler from './../../hooks/useButtonHandler';
-
-  .react-datepicker__day--keyboard-selected {
-   color: white;
   }
 
-
+  .react-datepicker__day--keyboard-selected {
+    color: white;
   }
 `;
 
 const StyledButton = styled.button`
-  width: 28vw
+  width: 28vw;
   height: 4.5rem;
   border: 1px solid #bebebe;
   outline: none;
@@ -480,15 +475,9 @@ const StyledButton = styled.button`
   @media screen and (max-width: 375px) {
     width: 300px;
   }
-
-  @media screen  and (max-width: 760px) {
+  @media screen and (max-width: 760px) {
     width: 375px;
   }
-
- 
-
-
-
 `;
 
 const InputStyledDiv = styled.div`
@@ -527,7 +516,7 @@ const GridStyleDiv = styled.div`
   display: grid;
   row-gap: 3rem;
   grid-template-columns: auto auto;
-  grid-templeate-rows: auto;
+  grid-template-rows: auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -536,9 +525,9 @@ const GridStyleDiv = styled.div`
 `;
 
 const FlexStyleDiv = styled.div`
-  display: static
+  display: static;
   justify-content: cetner;
-  align-contents: center;
+  align-content: center;
 `;
 
 export default ExerciseModal;
