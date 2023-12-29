@@ -255,7 +255,7 @@ function filterFoodListByDateRange(
   const end = startOfDay(endDate);
 
   if (startDate === endDate) {
-    const dateKey = format(addHours(startDate, 0), 'yyyy-MM-dd');
+    const dateKey = convertUtcToKstString(startDate);
     return foodList.filter((food) => {
       const foodDateKey = convertUtcToKstString(food.createdAt);
       //console.log(addHours(startDate, 9), food.createdAt);
