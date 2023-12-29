@@ -6,7 +6,6 @@ import Header from '../../components/Header';
 import MainStatistic from '../../components/mainStatistic/MainStatistic';
 import { MonthCalendar } from '../../components/Calendar';
 import { DateSelect } from '../../components/DateSelect';
-import { endOfMonth, startOfMonth } from 'date-fns';
 import ExerciseModal from '../../components/modals/ExerciseModal';
 import FoodModal from '../../components/modals/FoodMadal';
 import { ModalMode } from '../../types/modalMode';
