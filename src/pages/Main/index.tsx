@@ -29,7 +29,6 @@ const Main = () => {
   const [currentDate, setCurrentDate] = useState<Date>(today);
 
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
-
   const [isCreateMode, setIsCreateMode] = useState(true);
   const [startOfCurrentMonth, setStartOfCurrentMonth] = useState(
     startOfMonth(currentDate)
@@ -150,7 +149,6 @@ const Main = () => {
                 setFoodData(value[0]);
                 handleEditClick(value);
                 setModalState('food', true);
-                console.log('이것은 받아온 value', value[0]);
               }}
             ></RoutineCard>
           </CardContainer>
