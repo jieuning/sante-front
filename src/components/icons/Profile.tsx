@@ -101,31 +101,41 @@ const UserInfoData = styled.div`
 
 const Withdrawal = () => {
   const navigate = useNavigate();
+
   const handleWithdrawal = async () => {
-    try {
-      const email = localStorage.getItem('email');
-      const apiUrl = `http://kdt-sw-7-team04.elicecoding.com/api/user/${email}`;
-      const response = await fetch(apiUrl, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.ok) {
-        console.log('회원탈퇴 성공');
-        localStorage.removeItem('email');
-        localStorage.removeItem('password');
-        localStorage.removeItem('gender');
-        localStorage.removeItem('age');
-        localStorage.removeItem('todayCalory');
-        navigate('/');
-      } else {
-        console.error('회원탈퇴 실패');
+    // confirm 창을 사용하여 사용자의 응답을 얻음
+    const isConfirmed = window.confirm('정말 탈퇴하시겠습니까?');
+
+    // 사용자가 "예"를 선택한 경우에만 회원 탈퇴 처리
+    if (isConfirmed) {
+      try {
+        const email = localStorage.getItem('email');
+        const apiUrl = `http://kdt-sw-7-team04.elicecoding.com/api/user/${email}`;
+        const response = await fetch(apiUrl, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          console.log('회원탈퇴 성공');
+          localStorage.removeItem('email');
+          localStorage.removeItem('password');
+          localStorage.removeItem('gender');
+          localStorage.removeItem('age');
+          localStorage.removeItem('todayCalory');
+          navigate('/');
+        } else {
+          console.error('회원탈퇴 실패');
+        }
+      } catch (error) {
+        console.log('회원탈퇴 중 오류 발생', error);
       }
-    } catch (error) {
-      console.log('회원탈퇴 중 오류 발생', error);
+    } else {
+      console.log('회원탈퇴 취소');
     }
   };
+
   return (
     <StyledWithdrawal onClick={handleWithdrawal}>회원탈퇴</StyledWithdrawal>
   );
