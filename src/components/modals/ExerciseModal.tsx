@@ -329,7 +329,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                 dateFormat="yy.MM.dd"
                 customInput={<ExampleCustomInput />}
               />
-              {isDateError && (
+              {isDateError && !startDate && (
                 <ErrorMessageSpan>기간을 입력해주세요</ErrorMessageSpan>
               )}
             </CustomDatePickerWrapper>
