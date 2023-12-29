@@ -32,6 +32,10 @@ const StyledSelect = styled.select<{
   &:focus {
     border: 1px solid #81d8d0;
   }
+
+  // @media screen and (min-width: 376px) {
+  //   width: 349px;
+  // }
 `;
 
 const SelectBox: React.FC<SelectBoxProps> = ({

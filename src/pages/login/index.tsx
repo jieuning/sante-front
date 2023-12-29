@@ -114,7 +114,7 @@ const Login = () => {
           type="text"
           name="email"
           placeholder="이메일을 입력해주세요."
-          width="400px"
+          width="370px"
           height="50px"
           value={email}
           onChange={handleEmailChange}
@@ -128,7 +128,7 @@ const Login = () => {
           type="password"
           name="password"
           placeholder="비밀번호를 입력해주세요."
-          width="400px"
+          width="370px"
           height="50px"
           value={password}
           onChange={handlePasswordChange}
@@ -162,7 +162,7 @@ const StyledTitle = styled.p`
   display: flex;
   justify-content: center;
   margin-top: 70px;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
   background-color: var(--white-background-color);
 `;
 

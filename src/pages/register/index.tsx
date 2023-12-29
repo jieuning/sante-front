@@ -25,8 +25,9 @@ const InputContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   text-align: center;
-  padding-top: 20px;
+  padding-top: 50px;
 `;
 
 const RadioButtonContainer = styled.div`
@@ -189,69 +190,77 @@ const Register = () => {
     <StyledRegister>
       <Header />
       <StyledTitle>회원가입</StyledTitle>
-      <InputContainer>
-        <Input
-          type="text"
-          name="email"
-          placeholder="이메일을 입력해주세요."
-          width="400px"
-          height="40px"
-          value={email}
-          onChange={handleEmailChange}
-          errorMessage={
-            !emailValid && email.length > 0
-              ? '올바른 이메일 형식으로 입력해주세요.'
-              : undefined
-          }
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="비밀번호를 입력해주세요."
-          width="400px"
-          height="40px"
-          value={pw}
-          onChange={handlePwChange}
-          errorMessage={
-            !pwValid && pw.length > 0
-              ? '8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.'
-              : undefined
-          }
-        />
-        <Input
-          type="password"
-          name="password-confirm"
-          placeholder="비밀번호 확인을 위해 다시 입력해주세요."
-          width="400px"
-          height="40px"
-          value={pwConfirm}
-          onChange={handlePwConfirmChange}
-          errorMessage={
-            !pwCheck && pwConfirm.length > 0
-              ? '동일한 비밀번호인지 확인해주세요.'
-              : undefined
-          }
-        />
-        <RadioButtonContainer>
-          <RadioButton info={radioGenderButtonInfo} />
-        </RadioButtonContainer>
-        <RegisterSelectBox
-          width="400px"
-          height="40px"
-          placeholder="연령을 선택해주세요."
-          ageOptions={ageOptions}
-          onChange={handleAgeSelectChange}
-        />
-      </InputContainer>
-      <ButtonContainer>
-        <DynamicButton info={buttonInfo} />
-      </ButtonContainer>
+      <ContentsContainer>
+        <InputContainer>
+          <Input
+            type="text"
+            name="email"
+            placeholder="이메일을 입력해주세요."
+            width="370px"
+            height="40px"
+            value={email}
+            onChange={handleEmailChange}
+            errorMessage={
+              !emailValid && email.length > 0
+                ? '올바른 이메일 형식으로 입력해주세요.'
+                : undefined
+            }
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="비밀번호를 입력해주세요."
+            width="370px"
+            height="40px"
+            value={pw}
+            onChange={handlePwChange}
+            errorMessage={
+              !pwValid && pw.length > 0
+                ? '8자리 이상 영문, 숫자, 특수문자를 포함해야 합니다.'
+                : undefined
+            }
+          />
+          <Input
+            type="password"
+            name="password-confirm"
+            placeholder="비밀번호 확인을 위해 다시 입력해주세요."
+            width="370px"
+            height="40px"
+            value={pwConfirm}
+            onChange={handlePwConfirmChange}
+            errorMessage={
+              !pwCheck && pwConfirm.length > 0
+                ? '동일한 비밀번호인지 확인해주세요.'
+                : undefined
+            }
+          />
+          <RadioButtonContainer>
+            <RadioButton info={radioGenderButtonInfo} />
+          </RadioButtonContainer>
+          <RegisterSelectBox
+            width="370px"
+            height="40px"
+            placeholder="연령을 선택해주세요."
+            ageOptions={ageOptions}
+            onChange={handleAgeSelectChange}
+          />
+        </InputContainer>
+        <ButtonContainer>
+          <DynamicButton info={buttonInfo} />
+        </ButtonContainer>
+      </ContentsContainer>
     </StyledRegister>
   );
 };
 
 const StyledRegister = styled.div`
   background-color: var(--white-background-color);
+`;
+
+const ContentsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 export default Register;
