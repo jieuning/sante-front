@@ -61,7 +61,6 @@ const Header = () => {
             <ProfileContainer>
               <Profile />
             </ProfileContainer>
-            
           </>
         ) : (
           <DynamicButton info={loginButtonInfo} />
