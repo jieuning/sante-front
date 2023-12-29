@@ -38,7 +38,6 @@ const List = () => {
     color: 'black',
     fontWeight: 'bold',
     onChange: (selectedCategory) => {
-      console.log('선택된 값:', selectedCategory);
       setLoadIndex(0);
       setLoadedDates([]);
       setSelectedValue(selectedCategory);
@@ -56,7 +55,6 @@ const List = () => {
     ) {
       dateArray.push(new Date(date)); // 각 날짜에 대해 새로운 Date 객체 생성
     }
-    console.log('dateArray', dateArray);
   }, [targetDate]);
 
   const loadMoreItems = () => {
