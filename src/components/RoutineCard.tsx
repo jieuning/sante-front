@@ -13,7 +13,7 @@ import {
 } from '../utils/Date';
 import useCheckboxHandler from '../hooks/useCheckboxHandler';
 import { useNavigate } from 'react-router-dom';
-import { useStore } from '../states/user';
+import { useStore, Store } from '../states/user';
 
 type RoutineType = 'exercise' | 'food';
 interface RoutineCardProps {
@@ -56,7 +56,7 @@ const RoutineCard = ({
     });
   }
 
-  const setFoodId = useStore((state) => state.setFoodId);
+  const setFoodId = useStore((state: Store) => state.setFoodId);
 
   const [isExist, setIsExist] = useState(false);
   const [checkboxStates, handleCheckboxChange] =

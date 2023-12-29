@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { Exercise } from '../types/user';
-import { useStore } from '../states/user';
+import { useStore, Store } from '../states/user';
 
 interface CheckboxStates {
   [key: string]: boolean;
@@ -16,9 +16,9 @@ const useCheckboxHandler = (
   const [checkboxStates, setCheckboxStates] = useState<{
     [key: string]: boolean;
   }>(initialState);
-  const user = useStore((state) => state.user);
-  const getUser = useStore((state) => state.getUser);
-  const setUser = useStore((state) => state.setUser);
+  const user = useStore((state: Store) => state.user);
+  const getUser = useStore((state: Store) => state.getUser);
+  const setUser = useStore((state: Store) => state.setUser);
   const handleCheckboxChange = async (
     checkboxKey: string,
     isChecked: boolean
@@ -49,7 +49,6 @@ const useCheckboxHandler = (
       });
 
       // 변경된 유저 그대로 업데이트
-      console.log('user', JSON.stringify(filteredUser));
 
       // 서버에 변경 사항 업데이트
       setUser(filteredUser);

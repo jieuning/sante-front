@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useEffect, useRef, useState } from 'react';
 import MonthlyDateSelector from '../../components/MonthlyDateSelector';
 import useMonthlyDateHandler from '../../hooks/useMonthlyDateHandler';
-import { useStore } from '../../states/user';
+import { useStore, Store } from '../../states/user';
 import { FoodList } from '../../types/user';
 import { ModalMode } from '../../types/modalMode';
 import ExerciseModal from '../../components/modals/ExerciseModal';
@@ -13,10 +13,10 @@ import FoodModal from '../../components/modals/FoodMadal';
 
 const List = () => {
   //const [user, setUser] = useState<User>();
-  const user = useStore((state) => state.user);
-  const getUser = useStore((state) => state.getUser);
-  const setExerciseData = useStore((state) => state.setExerciseData);
-  const modalState = useStore((state) => state.modalState);
+  const user = useStore((state: Store) => state.user);
+  const getUser = useStore((state: Store) => state.getUser);
+  const setExerciseData = useStore((state: Store) => state.setExerciseData);
+  const modalState = useStore((state: Store) => state.modalState);
   const { targetDate, onLeftClick, onRightClick } = useMonthlyDateHandler(
     new Date()
   );
@@ -30,9 +30,9 @@ const List = () => {
     dateArray.push(new Date(date)); // 각 날짜에 대해 새로운 Date 객체 생성
   }
 
-  const setModalState = useStore((state) => state.setModalState);
-  const setFoodData = useStore((state) => state.setFoodData);
-  const setFoodId = useStore((state) => state.setFoodId);
+  const setModalState = useStore((state: Store) => state.setModalState);
+  const setFoodData = useStore((state: Store) => state.setFoodData);
+  const setFoodId = useStore((state: Store) => state.setFoodId);
 
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
   const [isCreateMode, setIsCreateMode] = useState(true);
