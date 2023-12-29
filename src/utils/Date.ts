@@ -244,17 +244,10 @@ function filterFoodListByDateRange(
   const end = startOfDay(endDate);
 
   if (startDate === endDate) {
-    //const dateKey = startDate.toISOString().split('T')[0];
     const dateKey = format(startDate, 'yyyy-MM-dd');
-    console.log(dateKey);
     return foodList.filter((food) => {
-      //const foodDateKey = new Date(food.createdAt).toISOString().split('T')[0];
       const foodDateKey = format(addHours(food.createdAt, 9), 'yyyy-MM-dd');
-      //
       if (dateKey === foodDateKey) {
-        //console.log(food.createdAt.getTimezoneOffset());
-        console.log(foodDateKey);
-        console.log(startDate, food.createdAt);
         return true;
       }
       return false;
