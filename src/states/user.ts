@@ -16,10 +16,12 @@ export type Store = {
   setUser: (userData: User) => Promise<void>;
   foodData: FoodList | undefined;
   foodId: string;
+  exerciseId: string;
   exerciseData: Exercise | undefined;
   setFoodData: (foodItem: FoodList) => void;
   setExerciseData: (exerciseItem: Exercise | undefined) => void;
   setFoodId: (foodId: string) => void;
+  setExerciseId: (exerciseId: string) => void;
   status: number;
   modalState: ModalState;
   setModalState: (key: keyof ModalState, isOpen: boolean) => void;
@@ -67,6 +69,10 @@ export const useStore = create<Store>((set) => ({
   modalState: {
     food: false,
     exercise: false,
+  },
+  exerciseId: '',
+  setExerciseId: (foodId: string) => {
+    set({ exerciseId: foodId });
   },
 
   setModalState: (key, isOpen) => {

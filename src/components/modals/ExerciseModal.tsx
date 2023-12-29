@@ -49,6 +49,8 @@ interface ExerciseModalProps {
 const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
   const exerciseData = useStore((state) => state.exerciseData);
   const setModalState = useStore((state) => state.setModalState);
+  const exerciseId = useStore((state) => state.exerciseId);
+
   const [inputValue, setInputValue] = useState<string>('');
   const [dateRange, setDateRange] = useState<(Date | null)[]>([null, null]);
   const [startDate, endDate] = dateRange;
@@ -111,6 +113,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         selectedDays
       );
 
+      console.log('what is my Id', exerciseData?.exerciseId);
       const payload: Exercise = {
         exerciseId: exerciseData?.exerciseId,
         exerciseName: inputValue,
@@ -136,8 +139,9 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         endDate,
         selectedDays
       );
-
+      console.log('hey Create Id', exerciseData?.exerciseId);
       const payload = {
+        exerciseId: `exercise-${exerciseId}`,
         exerciseName: inputValue,
         exerciseStartDate: new Date(startDate),
         exerciseEndDate: new Date(endDate),
@@ -151,6 +155,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
 
       await handleCreate({ exercise: payload });
       setModalState('exercise', false);
+      console.log('hey Create Id', exerciseId);
     }
   };
 
