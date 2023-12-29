@@ -365,7 +365,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
 };
 
 const LabelSpacingDiv = styled.div`
-  background-color: red;
   width: 10px;
   height: 10px;
   display: inline;
@@ -380,7 +379,7 @@ const ErrorMessageSpan = styled.span`
   font-size: 1rem;
   display: flex;
   justify-content: start;
-  background-color: red;
+  color: red;
 `;
 
 const GrayStyledSpan = styled.span`
