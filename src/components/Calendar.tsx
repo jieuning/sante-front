@@ -132,7 +132,7 @@ export const MonthCalendar = ({
   return (
     <MainCalendarContainer>
       <DatePicker
-        onChange={(date) => console.log(date)}
+        onChange={(date) => date}
         inline
         selected={currentDate}
         disabledKeyboardNavigation
