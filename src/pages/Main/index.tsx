@@ -139,6 +139,7 @@ const Main = () => {
           </CardContainer>
           <MainStatistic user={user} todayDate={currentDate} />
         </ContentsContainer>
+        <Blank height="3rem" />
       </Container>
     </>
   );
