@@ -40,8 +40,9 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
   const getUser = useStore((state) => state.getUser);
   const setUser = useStore((state) => state.setUser);
   const status = useStore((state) => state.status);
+  const setModalState = useStore((state) => state.setModalState);
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  // const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedValue, setSelectedValue] = useState(''); // 카테고리저장을 위한
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   const selectedCategory = foodData?.foodCategory;
@@ -52,7 +53,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setModalState('food', false);
   };
 
   // 추가 생성
@@ -441,94 +442,92 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
 
   return (
     <>
-      {isModalOpen && (
-        <ModalCard
-          modalTitle="🍚식단"
-          inputElement={
-            <p
-              style={{
-                fontSize: '15px',
-                marginLeft: '40px',
-                fontWeight: 'bold',
-              }}
-            >
-              하루 권장 칼로리 {userCalory}Kcal
-            </p>
-          }
-          modalButton={modalButton}
-          onClick={() => {
-            closeModal();
-          }}
-          onClickCreate={() => {
-            handleSendDataToServer();
-          }}
-          onClickRemove={() => {
-            const isConfirmed = window.confirm('정말로 삭제하시겠습니까?');
-
-            if (isConfirmed) {
-              alert('삭제되었습니다.');
-              handleDeleteClick();
-            }
-          }}
-          onClickUpdate={() => {
-            handleEditClick();
-            alert('수정완료!');
-          }}
-        >
-          <div style={{ marginLeft: '10%' }}>
-            {/* 모달 내부에 에러 메시지 표시 */}
-            {selectedCategory !== '' && <P>❗카테고리 수정이 불가능합니다❗</P>}
-            {errorMessage && <P>❗{errorMessage}❗</P>}
-            <RadioButton info={radioButtonInfo} />
-          </div>
-
-          <ScrollBarDiv>
-            {foodItems?.map((item, index) => (
-              <div
-                key={item.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  columnGap: '5px',
-                  margin: '0px 10px',
-                }}
-              >
-                <div onClick={() => handleRemoveFoodItem(index)}>
-                  <Remove />
-                </div>
-                <Input
-                  type="text"
-                  placeholder={'음식 이름'}
-                  width="50%"
-                  height="35px"
-                  value={item.name}
-                  onChange={(value) => handleFoodChange(value, index)}
-                  id={`food-${index}`}
-                />
-                <Input
-                  type="number"
-                  placeholder={'칼로리'}
-                  width="30%"
-                  height="35px"
-                  value={item.calory}
-                  onChange={(value) => handleCaloryChange(value, index)}
-                  id={`calory-${index}`}
-                />
-                <p style={{ fontSize: '15px' }}>Kcal</p>
-              </div>
-            ))}
-          </ScrollBarDiv>
-          <div
+      <ModalCard
+        modalTitle="🍚식단"
+        inputElement={
+          <p
             style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              paddingRight: '10px',
+              fontSize: '15px',
+              marginLeft: '40px',
+              fontWeight: 'bold',
             }}
           >
-            <DynamicButton info={buttonInfo} />
-          </div>
-        </ModalCard>
-      )}
+            하루 권장 칼로리 {userCalory}Kcal
+          </p>
+        }
+        modalButton={modalButton}
+        onClick={() => {
+          closeModal();
+        }}
+        onClickCreate={() => {
+          handleSendDataToServer();
+        }}
+        onClickRemove={() => {
+          const isConfirmed = window.confirm('정말로 삭제하시겠습니까?');
+
+          if (isConfirmed) {
+            alert('삭제되었습니다.');
+            handleDeleteClick();
+          }
+        }}
+        onClickUpdate={() => {
+          handleEditClick();
+          alert('수정완료!');
+        }}
+      >
+        <div style={{ marginLeft: '10%' }}>
+          {/* 모달 내부에 에러 메시지 표시 */}
+          {selectedCategory !== '' && <P>❗카테고리 수정이 불가능합니다❗</P>}
+          {errorMessage && <P>❗{errorMessage}❗</P>}
+          <RadioButton info={radioButtonInfo} />
+        </div>
+
+        <ScrollBarDiv>
+          {foodItems?.map((item, index) => (
+            <div
+              key={item.id}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                columnGap: '5px',
+                margin: '0px 10px',
+              }}
+            >
+              <div onClick={() => handleRemoveFoodItem(index)}>
+                <Remove />
+              </div>
+              <Input
+                type="text"
+                placeholder={'음식 이름'}
+                width="50%"
+                height="35px"
+                value={item.name}
+                onChange={(value) => handleFoodChange(value, index)}
+                id={`food-${index}`}
+              />
+              <Input
+                type="number"
+                placeholder={'칼로리'}
+                width="30%"
+                height="35px"
+                value={item.calory}
+                onChange={(value) => handleCaloryChange(value, index)}
+                id={`calory-${index}`}
+              />
+              <p style={{ fontSize: '15px' }}>Kcal</p>
+            </div>
+          ))}
+        </ScrollBarDiv>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            paddingRight: '10px',
+          }}
+        >
+          <DynamicButton info={buttonInfo} />
+        </div>
+      </ModalCard>
     </>
   );
 };
