@@ -48,7 +48,7 @@ export const MonthCalendar = ({
 
   const currentMonth = getMonth(currentDate);
   const currentMonthName = months[currentMonth];
-  const userCalory = userData?.todayCalory ?? 2000;
+  const userCalory = Number(localStorage.getItem('todayCalory'));
 
   // 해당 월의 시작일과 종료일을 계산
   const startOfCurrentMonth = startOfMonth(currentDate);
@@ -237,6 +237,10 @@ const MainCalendarContainer = styled.div`
     color: #0f0f0f;
     margin: 0;
     width: 100%;
+  }
+
+  .react-datepicker__day--today {
+    font-weight: 400;
   }
 
   .react-datepicker__day--selected {
