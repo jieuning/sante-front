@@ -21,7 +21,6 @@ interface DynamicButtonProps {
 }
 
 const DynamicButton = ({ info }: DynamicButtonProps) => {
-  console.log(info.onClick);
   return (
     <Container {...info}>
       {info.type === 'solid' && (

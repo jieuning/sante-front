@@ -46,7 +46,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   const selectedCategory = foodData?.foodCategory;
   const [userCalory, setUserCalory] = useState();
-  const [isRadioDisabled, setIsRadioDisabled] = useState(false); 
+  const [isRadioDisabled, setIsRadioDisabled] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -312,6 +312,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
       setUser(filteredUser);
 
       closeModal();
+      alert('수정완료!');
     } catch (error) {
       console.error('Food Modal error', error);
     }
@@ -442,18 +443,13 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
             handleDeleteClick();
           }
         }}
-        onClickUpdate={() => {
-          handleEditClick();
-          alert('수정완료!');
-        }}
+        onClickUpdate={handleEditClick}
       >
-        <div style={{ margin:'0 0 10px 40px' }}>
+        <div style={{ margin: '0 0 10px 40px' }}>
           {/* 모달 내부에 에러 메시지 표시 */}
           {selectedCategory !== '' && <P>❗카테고리 수정이 불가능합니다❗</P>}
           {errorMessage && <P>❗{errorMessage}❗</P>}
-          <RadioButton
-            info={radioButtonInfo}
-          />
+          <RadioButton info={radioButtonInfo} />
         </div>
 
         <ScrollBarDiv>

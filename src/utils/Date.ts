@@ -127,10 +127,11 @@ const getMonthlyCaloryTotalStatistic = (
   if (userFoodList === undefined) {
     return;
   }
-
+  console.log(userFoodList);
   const statistic = new Array<StatisticType>();
 
   const packedFoodList = packingFoodList(userFoodList);
+  console.log(packedFoodList);
   const today = new Date();
   const lastDay = endOfMonth(targetDate).getDate();
   let maxMonthlyCaloryTotal = 0;
@@ -154,7 +155,8 @@ const getMonthlyCaloryTotalStatistic = (
         curr: 0,
       });
     }
-    if (today >= thisDay) {
+
+    if (targetDate.getMonth() === thisDay.getMonth()) {
       const weekIndex = currWeek - 1;
       dayCount += 1;
       maxMonthlyCaloryTotal +=
@@ -163,7 +165,7 @@ const getMonthlyCaloryTotalStatistic = (
         max = Math.ceil(maxMonthlyCaloryTotal / dayCount);
       }
       allCalory += packedFoodList.get(format(thisDay, 'yyyy-MM-dd')) ?? 0;
-
+      console.log(format(thisDay, 'yyyy-MM-dd'));
       statistic[weekIndex] = {
         week: currWeek,
         max: maxMonthlyCaloryTotal,
@@ -178,7 +180,7 @@ const getMonthlyCaloryTotalStatistic = (
 
     return acc;
   }, new Array<number>());
-
+  console.log(list);
   return {
     list: list,
     result: Math.ceil(allCalory / targetDayCount),
@@ -204,7 +206,7 @@ const calculateDoneRate = (scheduledData: Map<string, Boolean[]>) => {
 const packingScheduledDate = (userExerciseList: Exercise[]) => {
   return userExerciseList.reduce((acc, exercises) => {
     exercises.scheduledDate?.forEach(({ date, isDone }) => {
-      const formattedDate = format(date, 'yyyy-MM-dd');
+      const formattedDate = convertUtcToKstString(date);
       const existingEntries = acc.get(formattedDate) || [];
       acc.set(formattedDate, [...existingEntries, isDone]);
     });
@@ -212,15 +214,35 @@ const packingScheduledDate = (userExerciseList: Exercise[]) => {
   }, new Map<string, Boolean[]>());
 };
 
+function convertUtcToKstString(utcDate: Date) {
+  const date = new Date(utcDate);
+  const kstDate = new Date(
+    date.getUTCFullYear(),
+    date.getUTCMonth(),
+    date.getUTCDate(),
+    date.getUTCHours() + 9,
+    date.getUTCMinutes(),
+    date.getUTCSeconds()
+  );
+
+  if (kstDate.getUTCHours() >= 24) {
+    kstDate.setUTCDate(kstDate.getUTCDate() + 1);
+    kstDate.setUTCHours(kstDate.getUTCHours() - 24);
+  }
+
+  return kstDate.toISOString().split('T')[0];
+}
+
 const packingFoodList = (userFoodList: Food[]) => {
   return userFoodList.reduce((acc, curr) => {
-    const formattedDate = format(curr.createdAt, 'yyyy-MM-dd');
+    const formattedDate = convertUtcToKstString(curr.createdAt);
     const sum = curr.foodList.reduce((listAcc, listCurr) => {
       return listAcc + listCurr.totalCalory;
     }, 0);
     return acc.set(formattedDate, sum);
   }, new Map<string, number>());
 };
+
 const getSum = (arr: StatisticType[]): number => {
   return arr.reduce((acc, curr) => acc + curr.curr, 0);
 };
@@ -236,10 +258,10 @@ function filterFoodListByDateRange(
   if (startDate === endDate) {
     const dateKey = format(addHours(startDate, 0), 'yyyy-MM-dd');
     return foodList.filter((food) => {
-      const foodDateKey = format(addHours(food.createdAt, 0), 'yyyy-MM-dd');
-      console.log(addHours(startDate, 9), food.createdAt);
+      const foodDateKey = convertUtcToKstString(food.createdAt);
+      //console.log(addHours(startDate, 9), food.createdAt);
       if (dateKey === foodDateKey) {
-        console.log(dateKey, foodDateKey);
+        //console.log(dateKey, foodDateKey);
         return true;
       }
       return false;
