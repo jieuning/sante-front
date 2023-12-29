@@ -435,7 +435,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           <p
             style={{
               fontSize: '15px',
-              marginLeft: '40px',
+              margin: '20px 0 25px 40px',
               fontWeight: 'bold',
             }}
           >
@@ -462,11 +462,13 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           alert('수정완료!');
         }}
       >
-        <div style={{ marginLeft: '10%' }}>
+        <div style={{ margin:'0 0 10px 40px' }}>
           {/* 모달 내부에 에러 메시지 표시 */}
           {selectedCategory !== '' && <P>❗카테고리 수정이 불가능합니다❗</P>}
           {errorMessage && <P>❗{errorMessage}❗</P>}
-          <RadioButton info={radioButtonInfo} />
+          <RadioButton
+            info={radioButtonInfo}
+          />
         </div>
 
         <ScrollBarDiv>
@@ -478,6 +480,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
                 alignItems: 'center',
                 columnGap: '5px',
                 margin: '0px 10px',
+                height: '60px',
               }}
             >
               <div onClick={() => handleRemoveFoodItem(index)}>
@@ -509,7 +512,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           style={{
             display: 'flex',
             justifyContent: 'flex-end',
-            paddingRight: '10px',
+            padding: '10px 10px 0 0',
           }}
         >
           <DynamicButton info={buttonInfo} />
@@ -539,7 +542,7 @@ const ScrollBarDiv = styled.div`
   }
 `;
 const P = styled.p`
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: 13px;
   color: gray;
 `;
