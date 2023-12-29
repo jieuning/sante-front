@@ -60,9 +60,6 @@ const MainStatistic = ({
   const [foodGage, setFoodGage] = useState(0);
   const [userCalory, setUserCalory] = useState<number>(0);
 
-  // console.log('foodgage', foodGage);
-  // console.log('usercalory', userCalory);
-
   const handleCalory = (userFoodData?: Food[]) => {
     if (userFoodData) {
       const today: Date = new Date(todayDate);
@@ -82,7 +79,7 @@ const MainStatistic = ({
         setFoodGage(0);
       }
     }
-  }; //NOTE: 재렌더링 일어나면 useCallback에 감싸기
+  };
 
   const handleExercise = (userExerciseData?: Exercise[]) => {
     if (userExerciseData) {
@@ -112,7 +109,6 @@ const MainStatistic = ({
 
   useEffect(() => {
     if (user) {
-      //console.log('-------thisIsUser------', user);
       const today: Date = new Date(todayDate);
       setUserCalory(todayCalory);
       const userAllFoodData = user.userFoodList || [];
@@ -133,11 +129,7 @@ const MainStatistic = ({
       handleCalory(userFoodData); //TODO: 클릭했던 날짜 값 받아오기
       handleExercise(userExerciseData);
     }
-    console.log('--userCalory', userCalory);
-    console.log('--food', foodGage);
-    console.log('--exercise', exerciseGage / exerciseMaxGage);
   }, [user, handleCalory, todayDate, todayCalory]);
-  //NOTE: 기준 80%
 
   const buttonInfo: DynamicButtonInfo = {
     type: 'outline',
@@ -202,11 +194,10 @@ const MainStatistic = ({
     </GageContainerDiv>
   );
 };
-//NOTE: 미완성
+
 const GageContainerDiv = styled.div`
   position: relative;
 `;
-//NOTE: globalstyles에 white 컬러 추가
 
 const GageWrap = styled.div<sizeProps>`
   position: sticky;
