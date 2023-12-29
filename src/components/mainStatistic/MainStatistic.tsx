@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import GageBar from './GageBar';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import { User, Exercise, Food, FoodList } from '../../types/user';
 import { getColorValue } from '../../types/colorType';
@@ -25,6 +25,9 @@ const MainStatistic = ({
   user,
   todayDate = new Date(),
 }: MainStatisticProps) => {
+  const todayCaloryStr = localStorage.getItem('todayCalory');
+  const todayCalory = todayCaloryStr ? parseInt(todayCaloryStr) : 0;
+
   const navigate = useNavigate();
   const caloryMoods = useMemo(() => {
     const FOOD_COLORS = {
@@ -60,27 +63,26 @@ const MainStatistic = ({
   // console.log('foodgage', foodGage);
   // console.log('usercalory', userCalory);
 
-  const handleCalory = useCallback(
-    (userFoodData?: Food[]) => {
-      if (userFoodData) {
-        const today: Date = new Date(todayDate);
-        const todayFoods = userFoodData?.find((food: Food) => {
-          return isSameDay(today, new Date(food.createdAt));
-        });
-        if (todayFoods) {
-          const calculatedCalory = todayFoods.foodList.reduce(
-            (acc: number, item: FoodList) => {
-              // console.log('item', item);
-              return acc + item.totalCalory;
-            },
-            0
-          );
-          setFoodGage(calculatedCalory);
-        }
+  const handleCalory = (userFoodData?: Food[]) => {
+    if (userFoodData) {
+      const today: Date = new Date(todayDate);
+      const todayFoods = userFoodData?.find((food: Food) => {
+        return isSameDay(today, new Date(food.createdAt));
+      });
+      if (todayFoods) {
+        const calculatedCalory = todayFoods.foodList.reduce(
+          (acc: number, item: FoodList) => {
+            // console.log('item', item);
+            return acc + item.totalCalory;
+          },
+          0
+        );
+        setFoodGage(calculatedCalory);
+      } else {
+        setFoodGage(0);
       }
-    },
-    [todayDate]
-  );
+    }
+  }; //NOTE: 재렌더링 일어나면 useCallback에 감싸기
 
   const handleExercise = (userExerciseData?: Exercise[]) => {
     if (userExerciseData) {
@@ -99,8 +101,12 @@ const MainStatistic = ({
           doneExercise = doneExerciseFiltered?.length || 0;
         });
       }
+
       setExerciseMaxGage(totalExercise);
       setExerciseGage(doneExercise);
+      if (totalExercise === 0) {
+        setExerciseMaxGage(1);
+      }
     }
   };
 
@@ -108,7 +114,7 @@ const MainStatistic = ({
     if (user) {
       //console.log('-------thisIsUser------', user);
       const today: Date = new Date(todayDate);
-      user.todayCalory && setUserCalory(user.todayCalory);
+      setUserCalory(todayCalory);
       const userAllFoodData = user.userFoodList || [];
       const userAllExerciseData = user.userExerciseList || [];
 
@@ -127,11 +133,10 @@ const MainStatistic = ({
       handleCalory(userFoodData); //TODO: 클릭했던 날짜 값 받아오기
       handleExercise(userExerciseData);
     }
-    // console.log('--userCalory', userCalory);
-    // console.log('--food', foodGage);
-    // console.log('--exercise', exerciseGage / exerciseMaxGage);
-  }, [user, handleCalory]); //TODO: 나중에 userFoodData랑 userExerciseData 메모이제이션 따로 분리
-
+    console.log('--userCalory', userCalory);
+    console.log('--food', foodGage);
+    console.log('--exercise', exerciseGage / exerciseMaxGage);
+  }, [user, handleCalory, todayDate, todayCalory]);
   //NOTE: 기준 80%
 
   const buttonInfo: DynamicButtonInfo = {
@@ -143,22 +148,19 @@ const MainStatistic = ({
   const MIN_LIMIT = 80;
   const MAX_LIMIT = 100;
 
-  const handleCaloryGage = useCallback(
-    (currentGage: number) => {
-      let newCaloryMood = { ...caloryMood };
-      if (currentGage >= MIN_LIMIT && currentGage <= MAX_LIMIT) {
-        newCaloryMood = caloryMoods.enough;
-      } else if (currentGage > MAX_LIMIT) {
-        newCaloryMood = caloryMoods.tooMuch;
-      } else if (currentGage < MIN_LIMIT) {
-        newCaloryMood = caloryMoods.notEnough;
-      } else {
-        newCaloryMood = { ...newCaloryMood, color: 'red' };
-      }
-      setCaloryMood(newCaloryMood);
-    },
-    [MIN_LIMIT, MAX_LIMIT, caloryMood, caloryMoods]
-  );
+  const handleCaloryGage = (currentGage: number) => {
+    let newCaloryMood = { ...caloryMood };
+    if (currentGage >= MIN_LIMIT && currentGage <= MAX_LIMIT) {
+      newCaloryMood = caloryMoods.enough;
+    } else if (currentGage > MAX_LIMIT) {
+      newCaloryMood = caloryMoods.tooMuch;
+    } else if (currentGage < MIN_LIMIT) {
+      newCaloryMood = caloryMoods.notEnough;
+    } else {
+      newCaloryMood = { ...newCaloryMood, color: 'red' };
+    }
+    setCaloryMood(newCaloryMood);
+  };
 
   return (
     <GageContainerDiv>
