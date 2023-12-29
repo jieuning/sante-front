@@ -132,7 +132,6 @@ const getMonthlyCaloryTotalStatistic = (
 
   const packedFoodList = packingFoodList(userFoodList);
   console.log(packedFoodList);
-  const today = new Date();
   const lastDay = endOfMonth(targetDate).getDate();
   let maxMonthlyCaloryTotal = 0;
   let dayCount = 0;
