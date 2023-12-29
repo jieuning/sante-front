@@ -50,12 +50,14 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
   const exerciseData = useStore((state) => state.exerciseData);
   const setModalState = useStore((state) => state.setModalState);
   console.log('check mic test', exerciseData?.exerciseId);
-  const [inputValue, setInputValue] = useState<string | undefined>('');
+  const [inputValue, setInputValue] = useState<string>('');
   const [dateRange, setDateRange] = useState<(Date | null)[]>([null, null]);
   const [startDate, endDate] = dateRange;
   const [selectHour, setSelectHour] = useState<number>(0);
   const [selectMinutes, setSelectMinutes] = useState<number>(0);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [isNameError, setIsNameError] = useState(false);
+  const [isDateError, setIsDateError] = useState(false);
 
   const days: Record<number, string> = {
     0: '일',
@@ -276,9 +278,13 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                   setInputValue(value.toString());
                   console.log(inputValue);
                 }}
+                errorMessage={
+                  isNameError && inputValue?.trim().length === 0
+                    ? '올바른 이메일 형식으로 입력해주세요.'
+                    : undefined
+                }
               />
             </InputStyledDiv>
-            <br />
           </>
         }
         onClickCreate={() => handleCreateButtonClick()}
@@ -309,8 +315,12 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                 dateFormat="yy.MM.dd"
                 customInput={<ExampleCustomInput />}
               />
+              {isDateError && (
+                <ErrorMessageSpan>기간을 입력해주세요</ErrorMessageSpan>
+              )}
             </CustomDatePickerWrapper>
           </SelectStyleDiv>
+
           <SelectStyleDiv>
             <SelectMargin>
               <StyledLabel>시간</StyledLabel>
@@ -345,6 +355,14 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
     </div>
   );
 };
+
+const ErrorMessageSpan = styled.span`
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: red;
+  display: flex;
+  justify-content: start;
+`;
 
 const GrayStyledSpan = styled.span`
   color: var(--gray-color);
