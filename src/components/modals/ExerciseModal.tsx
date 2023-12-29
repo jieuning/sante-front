@@ -91,6 +91,17 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
 
     return scheduledDates;
   };
+
+  const validate = () => {
+    if (inputValue?.trim().length === 0) {
+      setIsNameError(true);
+    }
+    if (!startDate) {
+      setIsDateError(true);
+    } else {
+      setIsDateError(false);
+    }
+  };
   const { handleModify } = useModifyExercise();
   const { handleCreate } = useCreateExercise();
   const { handleDelete } = useDeleteExercise();
@@ -120,6 +131,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
   };
 
   const handleCreateButtonClick = async () => {
+    validate();
     if (startDate !== null && endDate !== null && selectedDays !== null) {
       const scheduleList: ScheduledDate[] = generateScheduledDates(
         startDate,
@@ -138,6 +150,8 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         repeatDate: selectedDays,
         scheduledDate: scheduleList,
       };
+
+      console.log('inputValue length', inputValue.length);
 
       await handleCreate({ exercise: payload });
       setModalState('exercise', false);
@@ -280,7 +294,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                 }}
                 errorMessage={
                   isNameError && inputValue?.trim().length === 0
-                    ? '올바른 이메일 형식으로 입력해주세요.'
+                    ? '운동 이름을 입력해주세요'
                     : undefined
                 }
               />
