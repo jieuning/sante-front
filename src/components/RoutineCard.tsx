@@ -76,10 +76,8 @@ const RoutineCard = ({
       const filtered = filterFoodListByDateRange(foodList, date, date);
       const checkList = filtered.length > 0 && filtered[0].foodList.length > 0; //메뉴 데이터 있음
       setIsExist(checkList);
-      console.log(filtered);
       if (checkList) {
         setFoodId(filtered[0].foodId);
-        //console.log(filtered);
       } else {
         setFoodId(new Date().getTime().toString());
       }
@@ -91,10 +89,7 @@ const RoutineCard = ({
       const filtered = filterExerciseListByDateRange(exerciseList, date, date);
       setIsExist(filtered.length > 0);
       setFilteredExercises(filtered);
-      // console.log(exerciseList);
     }
-
-    //handleCheckboxChange(initialCheckboxState); // 여기서 상태 업데이트
   }, [exerciseList, foodList, date]);
 
   if (!isExist && !isMain) return null;
@@ -185,7 +180,9 @@ const RoutineCard = ({
                     type="button"
                     cursor="pointer"
                     color="var(--black-color)"
-                    onClick={() => onClickEdit && onClickEdit(foodItem)}
+                    onClick={() =>
+                      onClickEdit && onClickEdit([foodItem, item.foodId])
+                    }
                   />
                 </ContentsName>
                 <TagContainer>

@@ -32,6 +32,8 @@ const List = () => {
 
   const setModalState = useStore((state) => state.setModalState);
   const setFoodData = useStore((state) => state.setFoodData);
+  const setFoodId = useStore((state) => state.setFoodId);
+
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
   const [isCreateMode, setIsCreateMode] = useState(true);
 
@@ -51,7 +53,6 @@ const List = () => {
     color: 'black',
     fontWeight: 'bold',
     onChange: (selectedCategory) => {
-      console.log('선택된 값:', selectedCategory);
       setLoadIndex(0);
       setLoadedDates([]);
       setSelectedValue(selectedCategory);
@@ -70,7 +71,6 @@ const List = () => {
     ) {
       dateArray.push(new Date(date)); // 각 날짜에 대해 새로운 Date 객체 생성
     }
-    console.log('dateArray', dateArray);
   }, [targetDate]);
 
   const loadMoreItems = () => {
@@ -90,8 +90,9 @@ const List = () => {
   };
 
   // "편집하기" 클릭을 처리하는 함수 내부에서
-  const handleEditClick = (value: FoodList) => {
-    setFoodData(value);
+  const handleEditClick = (value: [FoodList, number]) => {
+    setFoodData(value[0]);
+    setFoodId(value[1].toString());
     setFoodModalType('edit');
     setIsCreateMode(false);
     setModalState('food', true);
@@ -174,7 +175,6 @@ const List = () => {
                   foodList={user?.userFoodList}
                   date={date}
                   onClickEdit={(value) => {
-                    console.log('main data', value[0]);
                     setFoodData(value[0]);
                     handleEditClick(value);
                     setModalState('food', true);

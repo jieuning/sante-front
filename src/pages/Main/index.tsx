@@ -26,27 +26,14 @@ const Main = () => {
   const modalState = useStore((state) => state.modalState);
   const setModalState = useStore((state) => state.setModalState);
   const setFoodData = useStore((state) => state.setFoodData);
+  const setFoodId = useStore((state) => state.setFoodId);
   const [currentDate, setCurrentDate] = useState<Date>(today);
 
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
   const [isCreateMode, setIsCreateMode] = useState(true);
-  const [startOfCurrentMonth, setStartOfCurrentMonth] = useState(
-    startOfMonth(currentDate)
-  );
-  const [endOfCurrentMonth, setEndOfCurrentMonth] = useState(
-    endOfMonth(currentDate)
-  );
 
   const handleDayOnClick = (day: Date) => {
     setCurrentDate(day);
-    // if (!isSameWeek(day, startOfThisWeek)) {
-    //   setStartOfThisWeek(startOfWeek(day));
-    //   setEndOfThisWeek(endOfWeek(day));
-    // }
-    // if (!isSameMonth(day, startOfCurrentMonth)) {
-    //   setStartOfCurrentMonth(startOfMonth(day));
-    //   setEndOfCurrentMonth(endOfMonth(day));
-    // }
   };
 
   const handleCreateClick = () => {
@@ -77,8 +64,9 @@ const Main = () => {
   };
 
   // "편집하기" 클릭을 처리하는 함수 내부에서
-  const handleEditClick = (value: FoodList) => {
-    setFoodData(value);
+  const handleEditClick = (value: [FoodList, string]) => {
+    setFoodData(value[0]);
+    setFoodId(value[1]);
     setFoodModalType('edit');
     setIsCreateMode(false);
     setModalState('food', true);

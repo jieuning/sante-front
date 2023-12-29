@@ -47,7 +47,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   const selectedCategory = foodData?.foodCategory;
   const [userCalory, setUserCalory] = useState();
-  console.log('selectedCategory', selectedCategory);
   const [isRadioDisabled, setIsRadioDisabled] = useState(false); // 추가된 부분
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -69,7 +68,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
       totalCalory: '',
     };
 
-    console.log('길이확인', foodItems.length);
     if (foodItems.length >= 10) {
       alert('식단의 갯수가 너무 많습니다.');
     } else {
@@ -180,12 +178,8 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           (item) => item.foodId === foodId
         );
 
-        console.log('newUserFoodList', newUserFoodList);
-        console.log('foodId', foodId);
-
         //create인 경우
         if (selectedFoodId === undefined) {
-          console.log('새로 생성');
           isExistCategory = false;
         }
 
@@ -229,7 +223,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           } else {
             //카테고리 없으면 Food.foodList에 새 카테고리 push해줘야
             if (foodData) {
-              console.log('foodData', foodData);
               selectedFoodId.foodList.push({
                 foodCategory: selectedValue,
                 totalCalory: foodItems.reduce(
@@ -250,7 +243,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           }
         } else {
           // 새로운 음식 항목 생성 및 추가
-          console.log('modal date', currentDate);
           newUserFoodList.push({
             foodList: [
               {
@@ -270,7 +262,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
         }
 
         // 변경된 유저 그대로 업데이트
-        console.log('user', user);
 
         setUser(filteredUser);
 
@@ -290,7 +281,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
       if (!filteredUser) return;
 
       delete filteredUser?.__v;
-
       const newMenu: Menu[] | undefined = foodItems
         ?.map((item): Menu | undefined => {
           if (item.name !== null) {
@@ -303,7 +293,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
         .filter((item): item is Menu => item !== undefined);
 
       filteredUser.userFoodList?.forEach((food: Food) => {
-        if (food.foodId === foodId) {
+        if (food.foodId === foodId.toString()) {
           food.foodList.forEach(
             (item: {
               totalCalory: number;
@@ -334,7 +324,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           ) || 0),
         0
       );
-
       setUser(filteredUser);
 
       closeModal();
@@ -370,8 +359,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
       if (filteredUser.userFoodList !== undefined) {
         filteredUser.userFoodList = updatedUserFoodList;
       }
-
-      console.log('user', user);
 
       setUser(filteredUser);
 
@@ -424,7 +411,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
     fontWeight: '900',
     disabled: isRadioDisabled,
     onChange: (selectedTime: SetStateAction<string>) => {
-      console.log('선택된 foodCategory:', selectedTime);
+      //console.log('선택된 foodCategory:', selectedTime);
       setSelectedValue(selectedTime);
     },
   };
