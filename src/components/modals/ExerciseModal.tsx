@@ -306,13 +306,17 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         onClickUpdate={() => handleModifyButtonClick()}
         modalButton={modalButton}
       >
-        <FlexStyleDiv>
-          <RadioStyleDiv>
+        <GridStyleDiv>
+          <div>
             <StyledLabelMargin>반복</StyledLabelMargin>
+          </div>
+          <div>
             <CheckButton info={checkButtonInfo} />
-          </RadioStyleDiv>
-          <SelectStyleDiv>
+          </div>
+          <div>
             <StyledLabel>기간</StyledLabel>
+          </div>
+          <FlexStyleDiv>
             <CustomDatePickerWrapper>
               <DatePicker
                 locale={ko}
@@ -333,17 +337,18 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                 <ErrorMessageSpan>기간을 입력해주세요</ErrorMessageSpan>
               )}
             </CustomDatePickerWrapper>
-          </SelectStyleDiv>
-
-          <SelectStyleDiv>
+          </FlexStyleDiv>
+          <div>
             <SelectMargin>
               <StyledLabel>시간</StyledLabel>
             </SelectMargin>
-            <MarginSetDiv>
+          </div>
+          <FlexStyleDiv>
+            <SelectBetweenMargin>
               <SelectBox
                 ageOptions={hours}
                 placeholder={`${selectHour}시간`}
-                width="100%"
+                width="14.2vw"
                 height="4.5rem"
                 onChange={(targetValue) => {
                   setSelectHour(Number(targetValue));
@@ -351,11 +356,11 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
                 }}
                 externalValue={selectHour}
               />
-            </MarginSetDiv>
+            </SelectBetweenMargin>
             <SelectBox
               ageOptions={minutes}
               placeholder={`${selectMinutes}분`}
-              width="35%"
+              width="14.2vw"
               height="4.5rem"
               onChange={(targetValue) => {
                 setSelectMinutes(Number(targetValue));
@@ -363,8 +368,8 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
               }}
               externalValue={selectMinutes}
             />
-          </SelectStyleDiv>
-        </FlexStyleDiv>
+          </FlexStyleDiv>
+        </GridStyleDiv>
       </ModalCard>
     </div>
   );
@@ -373,7 +378,6 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
 const ErrorMessageSpan = styled.span`
   margin-top: 0.5rem;
   font-size: 1rem;
-  color: red;
   display: flex;
   justify-content: start;
 `;
@@ -390,9 +394,8 @@ const CustomDatePickerWrapper = styled.div`
     position: absolute;
     top: 100%; // 적절한 값으로 조정
     left: 0; // 적절한 값으로 조정
-
-   
   }
+
 
   .react-datepicker__triangle,
   .react-datepicker__triangle::before,
@@ -451,7 +454,7 @@ const CustomDatePickerWrapper = styled.div`
 `;
 
 const StyledButton = styled.button`
-  width: 23.4vw;
+  width: 29.4vw;
   height: 4.5rem;
   border: 1px solid #bebebe;
   outline: none;
@@ -465,11 +468,6 @@ const StyledButton = styled.button`
   }
 `;
 
-const MarginSetDiv = styled.span`
-  width: 35%;
-  margin-right: 1rem;
-`;
-
 const InputStyledDiv = styled.div`
   margin-right: 2.5rem;
   margin-left: 2.5rem;
@@ -481,14 +479,12 @@ const InputStyledDiv = styled.div`
 const StyledLabel = styled.label`
   font-weight: 600;
   font-size: 1.6rem;
-  letter-spacing: 0.5px;
   margin-right: 2rem;
 `;
 
 const StyledLabelMargin = styled.label`
   font-weight: 600;
   font-size: 1.6rem;
-  letter-spacing: 0.5px;
   margin-right: 1.2rem;
 `;
 
@@ -496,26 +492,24 @@ const SelectMargin = styled.label`
   margin-top: 12px;
 `;
 
-const FlexStyleDiv = styled.div`
-  display: flex;
+const SelectBetweenMargin = styled.label`
+  margin-right: 1vw;
+`;
+
+const GridStyleDiv = styled.div`
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-templeate-rows: auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 3rem;
-`;
-const RadioStyleDiv = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
+  overflow: hidden;
 `;
 
-const SelectStyleDiv = styled.div`
-  display: flex;
-  align-items: center;
-  width: 89.4%;
-  justify-content: center;
-  margin-bottom: 1rem;
+const FlexStyleDiv = styled.div`
+  display: static
+  justify-content: cetner;
+  align-contents: center;
 `;
 
 export default ExerciseModal;

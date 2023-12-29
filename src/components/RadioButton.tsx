@@ -142,6 +142,12 @@ const InputButtonContainer = styled.div`
   display: flex;
 `;
 
+const CheckButtonContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+
 const InputcheckButtonBox = styled.div<Partial<ReducedButtonInfo>>`
   display: flex;
   cursor: pointer;
@@ -164,7 +170,7 @@ const CheckLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   justify-content: center;
   padding: 0.5rem 1rem;
   margin-bottom: 5px;
-  margin-left: 0.5vw;
+  margin-left: 1vw;
   border-radius: 3rem;
   background-color: ${(props) =>
     props.isSelected
@@ -182,7 +188,7 @@ const CheckAllDayLabel = styled.label<isSelectedType & ReducedButtonInfo>`
   justify-content: center;
   padding: 0.5rem 1rem;
   margin-top: 5px;
-  margin-left: 0.5vw;
+  margin-left: 1vw;
   border: ${(props) =>
     props.isSelected ? 'none' : `1px solid ${getColorValue('primary')}`};
   border-radius: 3rem;
@@ -207,7 +213,7 @@ const CheckButton = ({ info }: InputButtonProps) => {
   };
 
   return (
-    <InputButtonContainer>
+    <CheckButtonContainer>
       {info.type === 'checkbox' && (
         <>
           {info.items.map((item, index) => (
@@ -245,7 +251,7 @@ const CheckButton = ({ info }: InputButtonProps) => {
           </InputcheckButtonBox>
         </>
       )}
-    </InputButtonContainer>
+    </CheckButtonContainer>
   );
 };
 
