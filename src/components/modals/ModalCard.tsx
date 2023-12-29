@@ -125,21 +125,28 @@ const ModalCardContainer = styled.section`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  max-width: 100%;
-  width: 37%;
+  max-width: 500px;
+  min-width: 370px;
   height: auto;
   border: 1px solid #ababab;
-  border-radius: 6px;
+  border-radius: 15px;
   color: #0f0f0f;
   background: white;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   z-index: 100;
+
+  @media only screen and (max-width: 700px) {
+    & {
+      width: 80%  
+  
+  }
 `; //NOTE: width 추가.
 
 const ModalTitle = styled.h2`
   font-weight: 600;
   font-size: 18px;
   margin: 0;
-  padding: 30px 25px 20px 25px;
+  padding: 30px 25px 0px 25px;
   display: flex;
   justify-content: space-between;
 `;
@@ -147,7 +154,7 @@ const ModalTitle = styled.h2`
 //TODO: 수정
 
 const ModalLine = styled.div`
-  margin: 20px 0 30px 0;
+  margin: 20px 15px 30px 15px;
   border-top: 1px solid #ababab;
 `;
 

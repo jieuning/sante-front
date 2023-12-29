@@ -307,13 +307,15 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
         modalButton={modalButton}
       >
         <GridStyleDiv>
-          <div>
-            <StyledLabelMargin>반복</StyledLabelMargin>
-          </div>
+          <StyledLabelMargin>
+            <LabelSpacingDiv />
+            반복
+          </StyledLabelMargin>
           <div>
             <CheckButton info={checkButtonInfo} />
           </div>
           <div>
+            <LabelSpacingDiv />
             <StyledLabel>기간</StyledLabel>
           </div>
           <FlexStyleDiv>
@@ -348,7 +350,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
               <SelectBox
                 ageOptions={hours}
                 placeholder={`${selectHour}시간`}
-                width="14.2vw"
+                width="48%"
                 height="4.5rem"
                 onChange={(targetValue) => {
                   setSelectHour(Number(targetValue));
@@ -360,7 +362,7 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
             <SelectBox
               ageOptions={minutes}
               placeholder={`${selectMinutes}분`}
-              width="14.2vw"
+              width="48%"
               height="4.5rem"
               onChange={(targetValue) => {
                 setSelectMinutes(Number(targetValue));
@@ -370,10 +372,23 @@ const ExerciseModal = ({ modalButton }: ExerciseModalProps) => {
             />
           </FlexStyleDiv>
         </GridStyleDiv>
+
+        <Spacing></Spacing>
       </ModalCard>
     </div>
   );
 };
+
+const LabelSpacingDiv = styled.div`
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  display: inline;
+`;
+
+const Spacing = styled.div`
+  height: 1.5rem;
+`;
 
 const ErrorMessageSpan = styled.span`
   margin-top: 0.5rem;
@@ -387,6 +402,7 @@ const GrayStyledSpan = styled.span`
 `;
 
 const CustomDatePickerWrapper = styled.div`
+  width: 100%;
   position: relative;
   .react-datepicker {
     transform: scale(1.4);
@@ -403,11 +419,6 @@ const CustomDatePickerWrapper = styled.div`
     display: none;
   }
 
-  .react-datepicker input {
-    position: static;
-    transform: scale(0.833);
-    transform-origin: left center;
-  }
 
   .react-datepicker__navigation {
     transform: scale(0.5);
@@ -454,7 +465,7 @@ const CustomDatePickerWrapper = styled.div`
 `;
 
 const StyledButton = styled.button`
-  width: 29.4vw;
+  width: 28vw
   height: 4.5rem;
   border: 1px solid #bebebe;
   outline: none;
@@ -466,26 +477,42 @@ const StyledButton = styled.button`
   &:focus {
     border: 1px solid #81d8d0;
   }
+  @media screen and (max-width: 375px) {
+    width: 300px;
+  }
+
+  @media screen  and (max-width: 760px) {
+    width: 375px;
+  }
+
+ 
+
+
+
 `;
 
 const InputStyledDiv = styled.div`
-  margin-right: 2.5rem;
-  margin-left: 2.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  // margin-right: 2.5rem;
+  // margin-left: 2.5rem;
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  margin-bottom: 4rem;
 `;
 
 const StyledLabel = styled.label`
   font-weight: 600;
   font-size: 1.6rem;
   margin-right: 2rem;
+  min-width: 30px;
+  margin-right: 0;
 `;
 
 const StyledLabelMargin = styled.label`
   font-weight: 600;
   font-size: 1.6rem;
   margin-right: 1.2rem;
+  min-width: 30px;
 `;
 
 const SelectMargin = styled.label`
@@ -498,12 +525,14 @@ const SelectBetweenMargin = styled.label`
 
 const GridStyleDiv = styled.div`
   display: grid;
+  row-gap: 3rem;
   grid-template-columns: auto auto;
   grid-templeate-rows: auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  margin-left: 10px;
+  margin-right: 10px;
 `;
 
 const FlexStyleDiv = styled.div`
