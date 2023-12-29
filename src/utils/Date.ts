@@ -6,7 +6,6 @@ import {
   format,
   startOfDay,
   isWithinInterval,
-  addHours,
 } from 'date-fns';
 
 interface StatisticType {
