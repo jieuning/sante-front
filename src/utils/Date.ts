@@ -234,10 +234,12 @@ function filterFoodListByDateRange(
   const end = startOfDay(endDate);
 
   if (startDate === endDate) {
-    const dateKey = format(addHours(startDate, 9), 'yyyy-MM-dd');
+    const dateKey = format(addHours(startDate, 0), 'yyyy-MM-dd');
     return foodList.filter((food) => {
-      const foodDateKey = format(addHours(food.createdAt, 9), 'yyyy-MM-dd');
+      const foodDateKey = format(addHours(food.createdAt, 0), 'yyyy-MM-dd');
+      console.log(addHours(startDate, 9), food.createdAt);
       if (dateKey === foodDateKey) {
+        console.log(dateKey, foodDateKey);
         return true;
       }
       return false;
