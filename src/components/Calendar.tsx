@@ -251,6 +251,10 @@ const MainCalendarContainer = styled.div`
   .react-datepicker__navigation {
     display: none;
   }
+
+  .react-datepicker__day--outside-month div {
+    display: none !important;
+  }
 `;
 
 const CustomHeader = styled.div`
