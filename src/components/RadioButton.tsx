@@ -52,7 +52,7 @@ const getButtonSize = (size: InputSize) => {
       };
     case 'long-oval': // 긴너비타원
       return {
-        width: '197.5px',
+        width: '182.5px',
         height: '40px',
         fontSize: '13px',
       };

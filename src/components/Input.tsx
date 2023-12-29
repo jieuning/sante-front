@@ -11,6 +11,10 @@ const StyledInputWrapper = styled.div<{
 
   display: block; /* 블록 레벨 요소로 설정 */
   margin: 22px auto; /* 가운데 정렬을 위한 스타일 */
+
+  // display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyledInput = styled.input`
