@@ -42,12 +42,11 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
   const status = useStore((state) => state.status);
   const setModalState = useStore((state) => state.setModalState);
 
-  // const [isModalOpen, setIsModalOpen] = useState(true);
-  const [selectedValue, setSelectedValue] = useState(''); // 카테고리저장을 위한
+  const [selectedValue, setSelectedValue] = useState(''); // 카테고리저장
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   const selectedCategory = foodData?.foodCategory;
   const [userCalory, setUserCalory] = useState();
-  const [isRadioDisabled, setIsRadioDisabled] = useState(false); // 추가된 부분
+  const [isRadioDisabled, setIsRadioDisabled] = useState(false); 
 
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -73,8 +72,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
     } else {
       setFoodItems([...foodItems, newFoodItem]);
     }
-
-    // foodItems 상태 업데이트
   };
 
   // 삭제(단일 음식)
@@ -160,8 +157,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
 
         delete filteredUser?.__v;
 
-        // 유효성 검사
-
         // 총 칼로리 계산
         const totalFoodCalory = foodItems.reduce(
           (total, foodItem) => total + Number(foodItem.calory),
@@ -172,16 +167,9 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           ? [...filteredUser.userFoodList]
           : [];
 
-        let isExistCategory = false;
-
         const selectedFoodId = newUserFoodList.find(
           (item) => item.foodId === foodId
         );
-
-        //create인 경우
-        if (selectedFoodId === undefined) {
-          isExistCategory = false;
-        }
 
         const existingFoodIndex = newUserFoodList.findIndex((item) => {
           return (
@@ -198,7 +186,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
           );
 
           if (category) {
-            //카테고리 있으면 메뉴만 추가
             // 기존 객체 복사
             const existingFood = { ...newUserFoodList[existingFoodIndex] };
             const existingMenu = [...existingFood.foodList[0].menu]; // 메뉴 배열 복사
@@ -221,7 +208,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
             newUserFoodList[existingFoodIndex] = existingFood;
             filteredUser.userFoodList = newUserFoodList;
           } else {
-            //카테고리 없으면 Food.foodList에 새 카테고리 push해줘야
             if (foodData) {
               selectedFoodId.foodList.push({
                 foodCategory: selectedValue,
@@ -262,7 +248,6 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
         }
 
         // 변경된 유저 그대로 업데이트
-
         setUser(filteredUser);
 
         closeModal();
