@@ -10,7 +10,7 @@ type ModalState = {
   exercise: boolean;
 };
 
-type Store = {
+export type Store = {
   user: User | undefined;
   getUser: () => void;
   setUser: (userData: User) => Promise<void>;
