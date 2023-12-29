@@ -24,9 +24,7 @@ export const DateSelect = ({
 
   const day = getDay(currentDate);
   const currentDayName = oneWeek[day];
-  //해당 월의 주를 arr로 반환해줌
-  //하지만 주를 전부 반환하는게 아니라 해당 주의 첫번째 날짜(일요일)만 반환해줌..
-  //해당 주의 날짜를 추가해 줘야함
+  // 해당 월의 시작일 계산
   const currentWeek = startOfWeek(currentDate);
 
   const handlePrevWeek = () => {
