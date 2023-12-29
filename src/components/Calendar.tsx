@@ -267,6 +267,8 @@ const ColorChipWrap = styled.div`
 `;
 
 const ColorChipTagWrap = styled.div`
+  position: sticky;
+  top: 474px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 3px;
