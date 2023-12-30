@@ -17,29 +17,36 @@
 목표를 세워도 뚜렷하게 눈에 보이는 결과가 없으면 지속하기 힘든 점에서 착안한 목표를 습관화해 눈에 보이는 수치로 보여주면서 관리할 수 있는 건강 관리 웹앱입니다.
 
 ## 기능
+### 회원서비스
+로그인과 회원가입이 있고 각 파트의 유효성을 검사
+
+![sante-login](/uploads/a3b23521a7dbe3fef496ffd4aad74741/sante-login.png)
+![sante-register](/uploads/687b3f2d0818ee8b45395d299bc0b5f8/sante-register.png)
 
 ### 메인
 - 등록한 운동과 식단을 컬러칩으로 간단하게 한 달치를 확인할 수 있는 캘린더
 - 운동과 식단을 일자별로 관리할 수 있는 카드
 - 주간 달성률을 알려주는 주간 통계
 
-![image_33](/uploads/125580ef677d8b9b5d453675539382c8/image_33.png)
+![sante-main](/uploads/1296f2b681dd5b5edcffdf17d7700fea/sante-main.png)
 ### 운동/식단 관리
 자유롭게 커스텀할 수 있는 운동과 식단 추가
 
-![w2__1_](/uploads/bb4a9f8f66803358275f20b50971134c/w2__1_.png)
+![sante-ex](/uploads/041dad9c767be5a98d887a1f3dc26e13/sante-ex.png)
+
+![sante-food](/uploads/f4d9dc775a964f6b72fa65dbc0e1758e/sante-food.png)
 ### 한 눈에 보기
 한 달 단위로 한 눈에 조회하고 수정할 수 있는 리스트 페이지
 
-![image_36](/uploads/d6071698a9309a54b62eee0fe3362188/image_36.png)
+![sante-list](/uploads/ed1984c8364e0896a458dbf177d457b2/sante-list.png)
 ### 수치로 확인
 목표 달성을 위해 월간 데이터를 그래프를 통해 가시적으로 표시
 
-![image_37](/uploads/f405da5e118bc6d2d18c66b43770aa87/image_37.png)
+![sante-st](/uploads/bd44e26e92aa9cbbe8f95af9571896c4/sante-st.png)
 ### 모바일 접근성
 반응형으로 처리하여 습관관리를 위해 어디서든 접근할 수 있도록 개발
 
-![m1__1_](/uploads/65eee784a047f34c35e50962480b8b95/m1__1_.png)
+![m1](/uploads/a167a38da668f0cea9178aaf377518ef/m1.png)
 
 ## 기술스택
 
