@@ -1,19 +1,218 @@
 import styled from 'styled-components';
 import GageBar from './GageBar';
+import { useState, useEffect, useMemo } from 'react';
+import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
+import { User, Exercise, Food, FoodList } from '../../types/user';
+import { getColorValue } from '../../types/colorType';
+import { endOfWeek, isSameDay, startOfWeek } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
+import {
+  filterExerciseListByDateRange,
+  filterFoodListByDateRange,
+} from '../../utils/Date';
 
-//NOTE: 미완성
+interface sizeProps {
+  width?: string;
+  height?: string;
+}
+interface MainStatisticProps {
+  user: User | undefined;
+  todayDate?: Date;
+}
+
+// eslint-disable-next-line react/prop-types
+const MainStatistic = ({
+  user,
+  todayDate = new Date(),
+}: MainStatisticProps) => {
+  const todayCaloryStr = localStorage.getItem('todayCalory');
+  const todayCalory = todayCaloryStr ? parseInt(todayCaloryStr) : 0;
+
+  const navigate = useNavigate();
+  const caloryMoods = useMemo(() => {
+    const FOOD_COLORS = {
+      notEnough: getColorValue('orange'),
+      enough: getColorValue('purple'),
+      tooMuch: '#F39797',
+    };
+    return {
+      notEnough: {
+        emoji: '🥺',
+        message: '끼니 거르고 계신거 아니죠?ㅜㅜ',
+        color: FOOD_COLORS.notEnough,
+      },
+      enough: {
+        emoji: '😊',
+        message: '잘 먹고 있어요!',
+        color: FOOD_COLORS.enough,
+      },
+      tooMuch: {
+        emoji: '😵',
+        message: '기준치를 초과했어요',
+        color: FOOD_COLORS.tooMuch,
+      },
+    };
+  }, []);
+
+  const [caloryMood, setCaloryMood] = useState(caloryMoods.notEnough);
+  const [exerciseGage, setExerciseGage] = useState(0);
+  const [exerciseMaxGage, setExerciseMaxGage] = useState(0);
+  const [foodGage, setFoodGage] = useState(0);
+  const [userCalory, setUserCalory] = useState<number>(0);
+
+  const handleCalory = (userFoodData?: Food[]) => {
+    if (userFoodData) {
+      const today: Date = new Date(todayDate);
+      const todayFoods = userFoodData?.find((food: Food) => {
+        return isSameDay(today, new Date(food.createdAt));
+      });
+      if (todayFoods) {
+        const calculatedCalory = todayFoods.foodList.reduce(
+          (acc: number, item: FoodList) => {
+            // console.log('item', item);
+            return acc + item.totalCalory;
+          },
+          0
+        );
+        setFoodGage(calculatedCalory);
+      } else {
+        setFoodGage(0);
+      }
+    }
+  };
+
+  const handleExercise = (userExerciseData?: Exercise[]) => {
+    if (userExerciseData) {
+      const scheduledDateOnlyArray = userExerciseData?.map((exercise) => {
+        return exercise.scheduledDate;
+      });
+      let totalExercise = 0;
+      let doneExercise = 0;
+
+      if (scheduledDateOnlyArray?.length) {
+        scheduledDateOnlyArray.forEach((exercise) => {
+          totalExercise += exercise?.length || 0;
+          const doneExerciseFiltered = exercise?.filter((data) => {
+            return data.isDone === true;
+          });
+          doneExercise += doneExerciseFiltered?.length || 0;
+        });
+      }
+
+      setExerciseMaxGage(totalExercise);
+      setExerciseGage(doneExercise);
+      if (totalExercise === 0) {
+        setExerciseMaxGage(1);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      const today: Date = new Date(todayDate);
+      setUserCalory(todayCalory);
+      const userAllFoodData = user.userFoodList || [];
+      const userAllExerciseData = user.userExerciseList || [];
+
+      const startOfcurrentWeek = startOfWeek(today);
+      const endOfcurrentWeek = endOfWeek(today);
+      const userFoodData = filterFoodListByDateRange(
+        userAllFoodData,
+        startOfcurrentWeek,
+        endOfcurrentWeek
+      );
+      const userExerciseData = filterExerciseListByDateRange(
+        userAllExerciseData,
+        startOfcurrentWeek,
+        endOfcurrentWeek
+      );
+      handleCalory(userFoodData); //TODO: 클릭했던 날짜 값 받아오기
+      handleExercise(userExerciseData);
+    }
+  }, [user, handleCalory, todayDate, todayCalory]);
+
+  const buttonInfo: DynamicButtonInfo = {
+    type: 'outline',
+    text: '통계 상세보기',
+    onClick: () => navigate('/statistic'),
+  };
+
+  const MIN_LIMIT = 80;
+  const MAX_LIMIT = 100;
+
+  const handleCaloryGage = (currentGage: number) => {
+    let newCaloryMood = { ...caloryMood };
+    if (currentGage >= MIN_LIMIT && currentGage <= MAX_LIMIT) {
+      newCaloryMood = caloryMoods.enough;
+    } else if (currentGage > MAX_LIMIT) {
+      newCaloryMood = caloryMoods.tooMuch;
+    } else if (currentGage < MIN_LIMIT) {
+      newCaloryMood = caloryMoods.notEnough;
+    } else {
+      newCaloryMood = { ...newCaloryMood, color: 'red' };
+    }
+    setCaloryMood(newCaloryMood);
+  };
+
+  return (
+    <GageContainerDiv>
+      <GageWrap>
+        {user ? (
+          <>
+            <InformationAreaDiv>
+              <FlexContainerDiv>
+                <TextContainerDiv>주간 운동 달성률</TextContainerDiv>
+                <br />
+                <GageBar gage={exerciseGage} maxGage={exerciseMaxGage} />
+              </FlexContainerDiv>
+              <FlexContainerDiv>
+                <TextContainerDiv>하루 섭취 칼로리</TextContainerDiv>
+                <br />
+                <GageBar
+                  gage={foodGage}
+                  maxGage={userCalory}
+                  handleGage={handleCaloryGage}
+                  color={caloryMood.color}
+                />
+                <br />
+                <div>
+                  <EmojiContainerSpan>{caloryMood.emoji}</EmojiContainerSpan>
+                  <StatusContainerSpan>
+                    {caloryMood.message}
+                  </StatusContainerSpan>
+                </div>
+              </FlexContainerDiv>
+            </InformationAreaDiv>
+            <ButtonAreaDiv>
+              <DynamicButton info={buttonInfo} />
+            </ButtonAreaDiv>
+          </>
+        ) : (
+          <h1>Loading...</h1>
+        )}
+      </GageWrap>
+    </GageContainerDiv>
+  );
+};
+
 const GageContainerDiv = styled.div`
-  width: 27.4rem;
-  height: 36.7rem;
+  position: relative;
+`;
+
+const GageWrap = styled.div<sizeProps>`
+  position: sticky;
+  top: 200px;
+  display: flex;
+  flex-direction: column;
+  height: ${({ height }) => (height ? height : '30rem')};
   border-radius: 2rem;
-  background-color: #FFFFF;
+  background-color: white;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
-//NOTE: globalstyles에 white 컬러 추가
 
 const InformationAreaDiv = styled.div`
   width: 100%;
-  height: 82%;
+  height: 87%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -21,14 +220,15 @@ const InformationAreaDiv = styled.div`
 `;
 
 const ButtonAreaDiv = styled.div`
+  height: auto;
   display: flex;
   justify-content: flex-end;
-  margin: 2.4rem;
+  margin-right: 2.4rem;
 `;
 
 const TextContainerDiv = styled.div`
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: bold;
 `;
 const FlexContainerDiv = styled.div`
   display: flex;
@@ -39,51 +239,10 @@ const FlexContainerDiv = styled.div`
 
 const StatusContainerSpan = styled.span`
   font-size: 1.3rem;
-  font-weight: 600;
 `;
 
 const EmojiContainerSpan = styled.span`
   font-size: 2rem;
   font-weight: 600;
 `;
-
-// const calculateCaloryStatus = (calory) => {};
-
-const MainStatistic = () => {
-  // const caloryStatus = [
-  //   '🥺 끼니 거르고 계신거 아니죠?ㅜㅜ',
-  //   '😊 잘 먹고 있어요!',
-  //   '😵 기준치를 초과했어요',
-  // ];
-
-  //NOTE: 기준 80%
-
-  return (
-    <GageContainerDiv>
-      <InformationAreaDiv>
-        <FlexContainerDiv>
-          <TextContainerDiv>주간 운동 달성률</TextContainerDiv>
-          <br />
-          <GageBar gage={50} type="exercise" />
-        </FlexContainerDiv>
-        <FlexContainerDiv>
-          <TextContainerDiv>하루 섭취 칼로리</TextContainerDiv>
-          <br />
-          <GageBar gage={50} type="food" />
-          <br />
-          <div>
-            <EmojiContainerSpan>🥺</EmojiContainerSpan>
-            <StatusContainerSpan>
-              끼니 거르고 계신거 아니죠?ㅜㅜ
-            </StatusContainerSpan>
-          </div>
-        </FlexContainerDiv>
-      </InformationAreaDiv>
-      <ButtonAreaDiv>
-        <button className="temporaryButton">통계 상세보기</button>
-      </ButtonAreaDiv>
-    </GageContainerDiv>
-  );
-};
-
 export default MainStatistic;
