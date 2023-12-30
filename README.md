@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
+# Santé (습관 기반 건강관리 웹앱)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 목차
+---
+1. 개요
+2. 기능
+3. 기술스택
+4. 사용법
+5. 향후계획
 
-Currently, two official plugins are available:
+## 개요
+---
+### 목표
+운동과 식단을 관리할 수 있고 이를 눈에 보이는 수치로 보여줄 수 있는 웹 어플리케이션 개발을 목표로 합니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 주요 장점
+목표를 세워도 뚜렷하게 눈에 보이는 결과가 없으면 지속하기 힘든 점에서 착안한 목표를 습관화해 눈에 보이는 수치로 보여주면서 관리할 수 있는 건강 관리 웹앱입니다.
 
-## Expanding the ESLint configuration
+## 기능
+---
+### 메인
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### 운동/식단 관리
 
-- Configure the top-level `parserOptions` property like this:
+### 한 눈에 보기
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+### 수치로 확인
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### 모바일 접근성
+
