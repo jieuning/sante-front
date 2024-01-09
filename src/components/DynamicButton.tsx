@@ -14,6 +14,7 @@ type DynamicButtonInfo = {
   onClick?: (e?: any) => void;
   width?: string;
   height?: string;
+  backgroundImage?: string | undefined;
 };
 
 interface DynamicButtonProps {
@@ -101,6 +102,7 @@ const Container = styled.div<DynamicButtonInfo>`
 `;
 
 const SolidButton = styled.button<DynamicButtonInfo>`
+  position: relative;
   width: 100%;
   height: 100%;
   border: none;
@@ -112,8 +114,18 @@ const SolidButton = styled.button<DynamicButtonInfo>`
     getColorValue(props.backgroundColor ?? 'primary')};
   color: ${(props) => getColorValue(props.color ?? 'white')};
   font-weight: ${(props) => (props.fontWeight ? props.fontWeight : 'normal')};
-
   transition: filter 0.3s ease;
+
+  &:before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 15px;
+    background-image: url(${(props) => props.backgroundImage ?? undefined});
+  } //소셜 로그인시 버튼에 icon넣기
+
   &:hover {
     filter: brightness(87%);
   }

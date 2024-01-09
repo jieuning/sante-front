@@ -10,6 +10,7 @@ import ExerciseModal from '../../components/modals/ExerciseModal';
 import FoodModal from '../../components/modals/FoodMadal';
 import { ModalMode } from '../../types/modalMode';
 import { useStore, Store } from '../../states/user';
+import { useLocation } from 'react-router-dom';
 
 interface BalckProps {
   height?: string;
@@ -30,6 +31,9 @@ const Main = () => {
 
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
   const [isCreateMode, setIsCreateMode] = useState(true);
+
+  const location = useLocation();
+  console.log(location);
 
   const handleDayOnClick = (day: Date) => {
     day.setHours(0, 0, 0, 0);
