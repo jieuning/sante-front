@@ -23,7 +23,7 @@ const Profile = () => {
         size="33"
         onClick={handleProfileClick}
       />
-      {isUserInfoVisible && <UserInfoBox onClose={handleCloseUserInfo}/>}
+      {isUserInfoVisible && <UserInfoBox onClose={handleCloseUserInfo} />}
     </>
   );
 };
