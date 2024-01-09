@@ -9,6 +9,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setUser } from '../../utils/WebStorageControl';
+import { KakaoLogin } from '../../components/socialLogin/KakaoLogin';
 
 const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
 
@@ -145,6 +146,7 @@ const Login = () => {
             <DynamicButton info={buttonInfoLogin} />
             <DynamicButton info={buttonInfoSignUp} />
           </StyledButton>
+          <KakaoLogin />
         </LoginContentWrap>
       </StyledLogin>
     </>
