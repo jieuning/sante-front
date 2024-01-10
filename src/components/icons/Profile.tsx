@@ -10,6 +10,10 @@ const Profile = () => {
     setIsUserInfoVisible(!isUserInfoVisible);
   };
 
+  const handleCloseUserInfo = () => {
+    setIsUserInfoVisible(false);
+  };
+
   return (
     <>
       <IoPersonCircleSharp
@@ -19,20 +23,36 @@ const Profile = () => {
         size="33"
         onClick={handleProfileClick}
       />
-      {isUserInfoVisible && <UserInfoBox />}
+      {isUserInfoVisible && <UserInfoBox onClose={handleCloseUserInfo} />}
     </>
   );
 };
 
-const UserInfoBox = () => {
+const UserInfoBox = ({ onClose }: { onClose: () => void }) => {
   return (
     <Container>
-      <UserInfoHeader>회원정보</UserInfoHeader>
+      <UserInfoHeader>
+        <Text>회원정보</Text>
+        <Close onClick={onClose}>x</Close>
+      </UserInfoHeader>
       <UserInfo />
       <Withdrawal />
     </Container>
   );
 };
+
+const Close = styled.div`
+  cursor: pointer;
+  font-size: 16px;
+`;
+
+const Text = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+`;
 
 const Container = styled.div`
   position: absolute;
@@ -56,7 +76,8 @@ const UserInfoHeader = styled.div`
   font-size: 13px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 0 10px;
 `;
 
 const UserInfo = () => {
