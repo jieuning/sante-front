@@ -132,7 +132,7 @@ const List = () => {
   return (
     <>
       <Header></Header>
-
+      <ToMainPage />
       <RadioBtnContainer>
         <RadioButton info={radioCategoryButtonInfo}></RadioButton>
       </RadioBtnContainer>
@@ -144,7 +144,6 @@ const List = () => {
           // ... 다른 속성들
         />
       )}
-      <ToMainPage />
       <WeeklyContainer>
         <MonthlyDateSelector
           targetDate={targetDate}
@@ -242,7 +241,7 @@ const StyledMainText = styled.div`
   display: flex;
   justify-content: center;
   color: var(--gray-color);
-  margin-bottom: 30px;
+  margin-top: 30px;
 `;
 
 export default List;

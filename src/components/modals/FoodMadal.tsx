@@ -105,6 +105,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
         const userData = response.data.user;
         const userCalory = userData.todayCalory;
         setUserCalory(userCalory);
+        console.log(userData);
       })
       .catch((error) => {
         console.error('There was an error!', error);

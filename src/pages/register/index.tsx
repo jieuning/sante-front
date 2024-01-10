@@ -10,6 +10,7 @@ import {
   DynamicButtonInfo,
 } from '../../components/DynamicButton';
 import { RadioButton, InputButtonInfo } from '../../components/RadioButton';
+import CaloryRecommend from '../../utils/CaloryRecommend';
 
 const StyledTitle = styled.h1`
   text-align: center;
@@ -39,7 +40,7 @@ const Register = () => {
   const [email, setEmail] = useState<string>('');
   const [pw, setPw] = useState<string>('');
   const [pwConfirm, setPwConfirm] = useState<string>('');
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [selectedValue, setSelectedValue] = useState<string>('');
   const [selectedGender, setSelectedGender] = useState('');
   // const [recommendCalory, setRecommendCalory] = useState<number>(0);
   //const [age, setAge] = useState('');
@@ -122,8 +123,12 @@ const Register = () => {
       } else {
         setSelectedGender('여성');
       }
+      console.log(selectedGender);
     },
   };
+
+  const todayCalory = CaloryRecommend(selectedGender, selectedValue);
+  // console.log(todayCalory);
 
   const buttonInfo: DynamicButtonInfo = {
     width: '370px',
@@ -169,6 +174,7 @@ const Register = () => {
         password: pw,
         gender: selectedGender,
         age: selectedValue,
+        todayCalory: todayCalory,
       };
       axios
         .post(apiUrl, requestData)
