@@ -1,68 +1,86 @@
-import { eachWeekOfInterval, startOfMonth, endOfMonth } from 'date-fns';
+import {
+  startOfWeek,
+  format,
+  addDays,
+  getDay,
+  subWeeks,
+  addWeeks,
+} from 'date-fns';
 import styled from 'styled-components';
 import { SlArrowLeft } from 'react-icons/sl';
 
-// interface DateSelectProps {
-//   currentDate: Date;
-//   setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
-//   onClick: (e?: any) => void;
-// }
+interface DateSelectProps {
+  currentDate: Date;
+  setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
+  onClick: (e?: any) => void;
+}
 
-export const DateSelect = () => {
-  // const oneWeek: string[] = ['일', '월', '화', '수', '목', '금', '토'];
+export const DateSelect = ({
+  currentDate,
+  setCurrentDate,
+  onClick,
+}: DateSelectProps) => {
+  const oneWeek: string[] = ['일', '월', '화', '수', '목', '금', '토'];
 
-  const eachWeek = eachWeekOfInterval({
-    start: startOfMonth(new Date()),
-    end: endOfMonth(new Date()),
-  });
-
-  console.log(eachWeek);
-
-  // const day = getDay(currentDate);
-  // const currentDayName = oneWeek[day];
+  const day = getDay(currentDate);
+  const currentDayName = oneWeek[day];
   // // 해당 월의 시작일 계산
-  // const currentWeek = startOfWeek(currentDate);
+  const currentWeek = startOfWeek(currentDate);
 
-  // const handlePrevWeek = () => {
-  //   setCurrentDate(subWeeks(currentDate, 1));
-  // };
+  const handlePrevWeek = () => {
+    setCurrentDate(subWeeks(currentDate, 1));
+  };
 
-  // const handleNextWeek = () => {
-  //   setCurrentDate(addWeeks(currentDate, 1));
-  // };
+  const handleNextWeek = () => {
+    setCurrentDate(addWeeks(currentDate, 1));
+  };
 
-  // // 날짜 클릭시 해당 날짜 배경색 변경
-  // const getDayStyle = (day: Date) => {
-  //   const isClicked =
-  //     currentDate &&
-  //     format(currentDate, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd');
-  //   return {
-  //     backgroundColor: isClicked
-  //       ? 'var(--primary-color)'
-  //       : 'var(--gray-light-01)',
-  //   };
-  // };
+  // 날짜 클릭시 해당 날짜 배경색 변경
+  const getDayStyle = (day: Date) => {
+    const isClicked =
+      currentDate &&
+      format(currentDate, 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd');
+    return {
+      backgroundColor: isClicked
+        ? 'var(--primary-color)'
+        : 'var(--gray-light-01)',
+    };
+  };
 
   return (
     <DateSelectContainer>
-      <DateTitle>2023.12.18.월</DateTitle>
+      <DateTitle>
+        {format(currentDate, `yyyy.MM.dd.${currentDayName}`)}
+      </DateTitle>
       <DateSelectWrap>
         {/* prev, next 버튼 */}
-        <Button arrowRight />
-        <Button arrowLeft rotation={180} />
+        <Button arrowRight onClick={handlePrevWeek} />
+        <Button arrowLeft rotation={180} onClick={handleNextWeek} />
         <DayOfMonthWrap>
           <WeekOfMonth>
-            <Day>1</Day>
-            <Day>2</Day>
-            <Day>3</Day>
-            <Day>4</Day>
-            <Day>5</Day>
-            <Day>6</Day>
-            <Day>7</Day>
+            {oneWeek.map((_, index) => {
+              // 주에 dayIndex 만큼 날짜를 추가해 줌
+              // dayOfWeek가 일주일(7일)이기 때문에 7번 추가
+              const addDate = addDays(currentWeek, index);
+              return (
+                <Day
+                  key={addDate.getTime()}
+                  style={getDayStyle(addDate)}
+                  onClick={() => onClick(addDate)}
+                >
+                  {/* 날짜만 렌더링 */}
+                  {format(addDate, 'd')}
+                </Day>
+              );
+            })}
           </WeekOfMonth>
         </DayOfMonthWrap>
       </DateSelectWrap>
-      <OneWeek></OneWeek>
+      <OneWeek>
+        {oneWeek.map((dayOfWeek, index) => (
+          <li key={index}>{dayOfWeek}</li>
+        ))}
+      </OneWeek>
     </DateSelectContainer>
   );
 };
