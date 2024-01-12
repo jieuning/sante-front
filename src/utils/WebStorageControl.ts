@@ -1,13 +1,8 @@
 import CaloryRecommend from './CaloryRecommend';
 
-const setUser = (
-  email: string,
-  password: string,
-  gender: string,
-  age: number
-) => {
+const setUser = (token: string, email: string, gender: string, age: number) => {
+  localStorage.setItem('token', token);
   localStorage.setItem('email', email);
-  localStorage.setItem('password', password);
   localStorage.setItem('gender', gender);
   localStorage.setItem('age', age.toString());
   localStorage.setItem(
@@ -20,8 +15,8 @@ const getEmail = () => {
   return localStorage.getItem('email');
 };
 
-const getPassword = () => {
-  return localStorage.getItem('password');
+const getToken = () => {
+  return localStorage.getItem('token');
 };
 
 const logOut = () => {
@@ -39,4 +34,4 @@ const isLogin = () => {
   return false;
 };
 
-export { setUser, getEmail, getPassword, logOut, isLogin, getTodayCalory };
+export { setUser, getEmail, getToken, logOut, isLogin, getTodayCalory };

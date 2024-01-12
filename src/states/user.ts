@@ -1,9 +1,9 @@
 import create from 'zustand';
 import axios from 'axios';
 import { Exercise, FoodList, User } from '../types/user';
-import { getEmail, getPassword } from '../utils/WebStorageControl';
+import { getToken } from '../utils/WebStorageControl';
 
-const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
+const URL = import.meta.env.VITE_API_URL;
 
 type ModalState = {
   food: boolean;
@@ -31,11 +31,15 @@ export const useStore = create<Store>((set) => ({
   user: undefined,
   setUser: async (userData) => {
     try {
-      const response = await axios.put(`${URL}`, JSON.stringify(userData), {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await axios.put(
+        `${URL}/user`,
+        JSON.stringify(userData),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       set({ user: response.data.user });
     } catch (error) {
       console.error('User update failed', error);
@@ -44,8 +48,7 @@ export const useStore = create<Store>((set) => ({
   getUser: async () => {
     try {
       const response = await axios.post(`${URL}/check`, {
-        email: getEmail(),
-        password: getPassword(),
+        token: getToken(),
       });
       set({ user: response.data.user });
       set({ status: response.status });
