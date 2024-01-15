@@ -11,7 +11,7 @@ import axios from 'axios';
 import { setUser } from '../../utils/WebStorageControl';
 import { KakaoLogin } from '../../components/socialLogin/KakaoLogin';
 import NaverLogin from '../../components/socialLogin/NaverLogin';
-
+import GoogleLogin from '../../components/socialLogin/GoogleLogin';
 const URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
@@ -149,6 +149,7 @@ const Login = () => {
             <DynamicButton info={buttonInfoSignUp} />
             <KakaoLogin />
             <NaverLogin />
+            <GoogleLogin />
           </StyledButton>
         </LoginContentWrap>
       </StyledLogin>
