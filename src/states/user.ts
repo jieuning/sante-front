@@ -37,6 +37,7 @@ export const useStore = create<Store>((set) => ({
         {
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${getToken()}`,
           },
         }
       );
@@ -47,8 +48,10 @@ export const useStore = create<Store>((set) => ({
   },
   getUser: async () => {
     try {
-      const response = await axios.post(`${URL}/check`, {
-        token: getToken(),
+      const response = await axios.get(`${URL}/user/check`, {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
       });
       set({ user: response.data.user });
       set({ status: response.status });

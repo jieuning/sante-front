@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
-import queryString from 'query-string';
 import { useEffect, useState } from 'react';
+import { setUser } from '../../utils/WebStorageControl';
+import queryString from 'query-string';
 import axios from 'axios';
 
 export const KakaoLogin = () => {
@@ -46,29 +47,41 @@ export const KakaoLogin = () => {
       const ACCESS_TOKEN: string = tokenRes.data.access_token;
 
       // 2. 카카오 서버에서 유저 정보 가져오기
-      const userInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
-        headers: {
-          Authorization: `Bearer ${ACCESS_TOKEN}`,
-        },
-      });
+      const kakaoUserInfo = await axios.get(
+        'https://kapi.kakao.com/v2/user/me',
+        {
+          headers: {
+            Authorization: `Bearer ${ACCESS_TOKEN}`,
+          },
+        }
+      );
 
-      const userData = userInfo.data.kakao_account;
+      const kakaoUserData = kakaoUserInfo.data.kakao_account;
 
       // 3. sante 서버로 유저 정보 보내기
       await axios.post('http://localhost:3000/auth/kakao', {
-        email: userData.email,
-        password: userData.email,
-        age: userData.birthyear,
-        gender: userData.gender,
+        email: kakaoUserData.email,
+        password: kakaoUserData.email,
+        age: kakaoUserData.birthyear,
+        gender: kakaoUserData.gender,
       });
 
-      // 4. sante 서버에서 jwt 받아오기
-      const jwToken = await axios.post('http://localhost:3000/auth/kakao', {
-        email: userData.email,
+      // 4. sante 서버에서 유저 데이터 및 jwt 받아오기
+      const user = await axios.post('http://localhost:3000/auth/kakao', {
+        email: kakaoUserData.email,
       });
 
-      // 로컬스토리지에 jwt 저장
-      localStorage.setItem('token', jwToken.data.token);
+      // 서버에서 받아온 유저 데이터
+      const userData = {
+        token: user.data.token,
+        email: user.data.email,
+        age: user.data.age,
+        gender: user.data.gender,
+      };
+
+      // 로컬스토리지에 유저 데이터 저장
+      setUser(userData.token, userData.email, userData.gender, userData.age);
+
       navigate('/main');
     } catch (error) {
       console.log(error);
@@ -79,6 +92,9 @@ export const KakaoLogin = () => {
   const handleTokenChange = (newToken: string) => {
     setToken(newToken);
   };
+
+  // const aa = localStorage.getItem('age');
+  // const bb = JSON.stringify(aa);
 
   const buttonInfoKakao: DynamicButtonInfo = {
     type: 'solid',
