@@ -15,7 +15,7 @@ const useUserModelAll = () => {
   useEffect(() => {
     axios
       .post(`${URL}/user/check`, {
-        token: getToken(),
+        token: `Bearer ${getToken()}`,
       })
       .then((res) => res.data.user)
       .then(setUser)
