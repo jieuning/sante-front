@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import axios from 'axios';
 import queryString from 'query-string';
+import { setUser } from '../../utils/WebStorageControl';
 
 const navigate = (url: string) => {
   window.location.href = url;
@@ -9,7 +10,7 @@ const navigate = (url: string) => {
 
 const login = async () => {
   try {
-    const response = await axios.post('http://localhost:3000/google/login');
+    const response = await axios.post('http://localhost:3000/auth/google');
     const data = response.data;
     navigate(data.url);
   } catch (error) {
@@ -39,14 +40,22 @@ const GoogleLogin = () => {
     const fetchToken = async () => {
       try {
         const response = await axios.post(
-          'http://localhost:3000/google/login/token',
+          'http://localhost:3000/auth/google/token',
           { code: code }
         );
-        const { jwToken } = response.data;
+        const { jwToken, email, gender, age } = response.data;
+        console.log(
+          'jwToken, email, gender, age ',
+          jwToken,
+          email,
+          gender,
+          age
+        );
 
         if (jwToken) {
           navigate('/main');
           localStorage.setItem('token', jwToken);
+          setUser(jwToken, email, gender, age);
         }
       } catch (error) {
         console.error('Error fetching token:', error);
