@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import GageBar from './GageBar';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import { User, Exercise, Food, FoodList } from '../../types/user';
 import { getColorValue } from '../../types/colorType';
@@ -10,6 +10,7 @@ import {
   filterExerciseListByDateRange,
   filterFoodListByDateRange,
 } from '../../utils/Date';
+import { getTodayCalory } from '../../utils/WebStorageControl';
 
 interface sizeProps {
   width?: string;
@@ -25,8 +26,8 @@ const MainStatistic = ({
   user,
   todayDate = new Date(),
 }: MainStatisticProps) => {
-  const todayCaloryStr = localStorage.getItem('todayCalory');
-  const todayCalory = todayCaloryStr ? parseInt(todayCaloryStr) : 1;
+  const todayCaloryStr = getTodayCalory();
+  const todayCalory = todayCaloryStr ? parseInt(todayCaloryStr) : 0;
 
   const navigate = useNavigate();
   const caloryMoods = useMemo(() => {
@@ -60,26 +61,28 @@ const MainStatistic = ({
   const [foodGage, setFoodGage] = useState(0);
   const [userCalory, setUserCalory] = useState<number>(0);
 
-  const handleCalory = (userFoodData?: Food[]) => {
-    if (userFoodData) {
-      const today: Date = new Date(todayDate);
-      const todayFoods = userFoodData?.find((food: Food) => {
-        return isSameDay(today, new Date(food.createdAt));
-      });
-      if (todayFoods) {
-        const calculatedCalory = todayFoods.foodList.reduce(
-          (acc: number, item: FoodList) => {
-            // console.log('item', item);
-            return acc + item.totalCalory;
-          },
-          0
-        );
-        setFoodGage(calculatedCalory);
-      } else {
-        setFoodGage(0);
+  const handleCalory = useCallback(
+    (userFoodData?: Food[]) => {
+      if (userFoodData) {
+        const today: Date = new Date(todayDate);
+        const todayFoods = userFoodData.find((food: Food) => {
+          return isSameDay(today, new Date(food.createdAt));
+        });
+        if (todayFoods) {
+          const calculatedCalory = todayFoods.foodList.reduce(
+            (acc: number, item: FoodList) => {
+              return acc + item.totalCalory;
+            },
+            0
+          );
+          setFoodGage(calculatedCalory);
+        } else {
+          setFoodGage(0);
+        }
       }
-    }
-  };
+    },
+    [todayDate]
+  );
 
   const handleExercise = (userExerciseData?: Exercise[]) => {
     if (userExerciseData) {
