@@ -12,6 +12,7 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { Food, Menu } from '../../types/user';
 import { ModalMode } from '../../types/modalMode';
+import { getTodayCalory, getToken } from '../../utils/WebStorageControl';
 
 import { useStore } from '../../states/user';
 
@@ -96,12 +97,12 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
 
   useEffect(() => {
     axios
-      .post(`${URL}/user/check`, {
-        token: getToken(),
+      .get(`${URL}/user/check`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
       })
       .then((response) => {
         const userData = response.data.user;
-        const userCalory = userData.todayCalory;
+        const userCalory = getTodayCalory();
         setUserCalory(userCalory);
         console.log(userData);
       })
@@ -528,6 +529,6 @@ const P = styled.p`
 `;
 
 export default FoodModal;
-function getToken(): any {
+function getError(): any {
   throw new Error('Function not implemented.');
 }
