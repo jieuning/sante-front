@@ -5,8 +5,23 @@ import { setUser } from '../../utils/WebStorageControl';
 import queryString from 'query-string';
 import axios from 'axios';
 
+interface KakaoUserData {
+  token: string;
+  age: string;
+  email: string;
+  birthyear: number;
+  gender: string;
+}
+
+interface KakaoAuthData {
+  grantType: string;
+  clientId: string;
+  redirectUri: string;
+  code: string;
+}
+
 export const KakaoLogin = () => {
-  const initialToken = localStorage.getItem('token') || '';
+  const initialToken: string = localStorage.getItem('token') || '';
   const [token, setToken] = useState<string>(initialToken);
   const navigate = useNavigate();
 
@@ -17,7 +32,7 @@ export const KakaoLogin = () => {
 
   // 쿼리스트링으로 코드 값 가져오기
   const query = queryString.parse(window.location.search);
-  const code = query.code?.toString();
+  const code: string | undefined = query.code?.toString();
 
   useEffect(() => {
     if (code) {
@@ -27,7 +42,7 @@ export const KakaoLogin = () => {
 
   const getToken = async (code: string) => {
     try {
-      const data = {
+      const data: KakaoAuthData = {
         grantType: 'authorization_code',
         clientId: import.meta.env.VITE_KAKAO_REST_API_KEY,
         redirectUri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
@@ -56,7 +71,7 @@ export const KakaoLogin = () => {
         }
       );
 
-      const kakaoUserData = kakaoUserInfo.data.kakao_account;
+      const kakaoUserData: KakaoUserData = kakaoUserInfo.data.kakao_account;
 
       // 3. sante 서버로 유저 정보 보내기
       await axios.post('http://localhost:3000/auth/kakao', {
@@ -84,7 +99,7 @@ export const KakaoLogin = () => {
 
       navigate('/main');
     } catch (error) {
-      console.log(error);
+      alert(`로그인 중 ${error}에러가 발생했습니다.`);
     }
   };
 
