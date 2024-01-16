@@ -7,12 +7,11 @@ import { setUser } from '../../utils/WebStorageControl';
 const navigate = (url: string) => {
   window.location.href = url;
 };
-
 const login = async () => {
   try {
     const response = await axios.post('http://localhost:3000/auth/google');
-    const data = response.data;
-    navigate(data.url);
+    const { url } = response.data;
+    navigate(url);
   } catch (error) {
     console.error('에러 발생:', error);
   }
@@ -61,8 +60,9 @@ const GoogleLogin = () => {
         console.error('Error fetching token:', error);
       }
     };
-
-    fetchToken();
+    if (code) {
+      fetchToken();
+    }
   }, [code]);
 
   return (
