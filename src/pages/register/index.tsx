@@ -12,6 +12,8 @@ import {
 import { RadioButton, InputButtonInfo } from '../../components/RadioButton';
 import CaloryRecommend from '../../utils/CaloryRecommend';
 
+const URL = import.meta.env.VITE_API_URL;
+
 const StyledTitle = styled.h1`
   text-align: center;
   font-size: 25px;
@@ -168,7 +170,6 @@ const Register = () => {
         return;
       }
 
-      const apiUrl = 'http://kdt-sw-7-team04.elicecoding.com/api/register';
       const requestData = {
         email,
         password: pw,
@@ -177,7 +178,7 @@ const Register = () => {
         todayCalory: todayCalory,
       };
       axios
-        .post(apiUrl, requestData)
+        .post(`${URL}/register`, requestData)
         .then((response) => {
           console.log('성공', response.data);
           alert('가입이 완료되었습니다!');
