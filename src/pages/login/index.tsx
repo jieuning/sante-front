@@ -10,8 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setUser } from '../../utils/WebStorageControl';
 import { KakaoLogin } from '../../components/socialLogin/KakaoLogin';
-import NaverLogin from '../../components/socialLogin/NaverLogin';
-import GoogleLogin from '../../components/socialLogin/GoogleLogin';
+import GoogleLogin from '../../components/socialLogin/googleLogin';
 const URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
@@ -21,7 +20,7 @@ const Login = () => {
   const [emailValid, setEmailValid] = useState<boolean>(false);
   const [pwValid, setPwValid] = useState<boolean>(false);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log('Email:', email);
@@ -148,7 +147,6 @@ const Login = () => {
             <DynamicButton info={buttonInfoLogin} />
             <DynamicButton info={buttonInfoSignUp} />
             <KakaoLogin />
-            <NaverLogin />
             <GoogleLogin />
           </StyledButton>
         </LoginContentWrap>
