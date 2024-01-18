@@ -10,14 +10,15 @@ import { FoodList } from '../../types/user';
 import { ModalMode } from '../../types/modalMode';
 import ExerciseModal from '../../components/modals/ExerciseModal';
 import FoodModal from '../../components/modals/FoodMadal';
+import { useNavigate } from 'react-router-dom';
+import { TiHome } from 'react-icons/ti';
 
 const List = () => {
-  const queryString = window.location.search;  // 현재 페이지의 URL에서 쿼리 문자열
+  const queryString = window.location.search; // 현재 페이지의 URL에서 쿼리 문자열
   const urlParams = new URLSearchParams(queryString);
-  console.log('urlParams', urlParams);  //  가져온 쿼리 문자열을 URLSearchParams 객체로 변환
-  const selectCategory = urlParams.get('category');  //운동이면 운동,식단이면 식단
-  console.log('selectCategory==========', selectCategory);  
-
+  console.log('urlParams', urlParams); //  가져온 쿼리 문자열을 URLSearchParams 객체로 변환
+  const selectCategory = urlParams.get('category'); //운동이면 운동,식단이면 식단
+  console.log('selectCategory==========', selectCategory);
 
   const user = useStore((state: Store) => state.user);
   const getUser = useStore((state: Store) => state.getUser);
@@ -131,7 +132,7 @@ const List = () => {
   return (
     <>
       <Header></Header>
-
+      <ToMainPage />
       <RadioBtnContainer>
         <RadioButton info={radioCategoryButtonInfo}></RadioButton>
       </RadioBtnContainer>
@@ -200,7 +201,7 @@ const List = () => {
 const RadioBtnContainer = styled.div`
   display: flex;
   justify-content: center;
-  margin: 30px 0;
+  margin: 30px 0 10px 0;
 `;
 
 const WeeklyContainer = styled.div`
@@ -218,6 +219,29 @@ const RoutineCardContainer = styled.div`
 
 const AllRoutineCardContainer = styled.div`
   margin: auto;
+`;
+
+const ToMainPage = () => {
+  const navigate = useNavigate();
+  const handleMainClick = () => {
+    navigate('/main');
+  };
+
+  return (
+    <StyledMainText onClick={handleMainClick}>
+      메인이동
+      <TiHome />
+    </StyledMainText>
+  );
+};
+
+const StyledMainText = styled.div`
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  color: var(--gray-color);
+  margin-top: 30px;
 `;
 
 export default List;

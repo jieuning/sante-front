@@ -26,7 +26,7 @@ const MainStatistic = ({
   todayDate = new Date(),
 }: MainStatisticProps) => {
   const todayCaloryStr = localStorage.getItem('todayCalory');
-  const todayCalory = todayCaloryStr ? parseInt(todayCaloryStr) : 0;
+  const todayCalory = todayCaloryStr ? parseInt(todayCaloryStr) : 1;
 
   const navigate = useNavigate();
   const caloryMoods = useMemo(() => {

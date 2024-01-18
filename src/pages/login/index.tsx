@@ -9,8 +9,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setUser } from '../../utils/WebStorageControl';
-
-const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
+import { KakaoLogin } from '../../components/socialLogin/KakaoLogin';
+import NaverLogin from '../../components/socialLogin/NaverLogin';
+import GoogleLogin from '../../components/socialLogin/GoogleLogin';
+const URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   const [email, setEmail] = useState<string | number>('');
@@ -60,17 +62,18 @@ const Login = () => {
       return;
     }
     axios
-      .post(`${URL}/check`, {
+      .post(`${URL}/user/login`, {
         email: email,
         password: password,
       })
       .then((res) => {
         if (res.status === 200) {
+          console.log(res.data);
           setUser(
-            email.toString(),
-            password.toString(),
-            res.data.user.gender,
-            res.data.user.age
+            res.data.token,
+            res.data.email,
+            res.data.gender,
+            res.data.age
           );
           navigate('/main');
         } else if (res.status === 404) {
@@ -144,6 +147,9 @@ const Login = () => {
           <StyledButton>
             <DynamicButton info={buttonInfoLogin} />
             <DynamicButton info={buttonInfoSignUp} />
+            <KakaoLogin />
+            <NaverLogin />
+            <GoogleLogin />
           </StyledButton>
         </LoginContentWrap>
       </StyledLogin>

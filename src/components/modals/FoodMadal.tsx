@@ -12,11 +12,11 @@ import axios from 'axios';
 import { format } from 'date-fns';
 import { Food, Menu } from '../../types/user';
 import { ModalMode } from '../../types/modalMode';
-import { getEmail, getPassword } from '../../utils/WebStorageControl';
+import { getTodayCalory, getToken } from '../../utils/WebStorageControl';
 
 import { useStore } from '../../states/user';
 
-const URL = 'http://kdt-sw-7-team04.elicecoding.com/api/user';
+const URL = import.meta.env.VITE_API_URL;
 
 interface FoodModalProps {
   modalButton: any;
@@ -97,14 +97,14 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
 
   useEffect(() => {
     axios
-      .post(`${URL}/check`, {
-        email: getEmail(),
-        password: getPassword(),
+      .get(`${URL}/user/check`, {
+        headers: { Authorization: `Bearer ${getToken()}` },
       })
       .then((response) => {
         const userData = response.data.user;
-        const userCalory = userData.todayCalory;
+        const userCalory = getTodayCalory();
         setUserCalory(userCalory);
+        console.log(userData);
       })
       .catch((error) => {
         console.error('There was an error!', error);
@@ -529,3 +529,6 @@ const P = styled.p`
 `;
 
 export default FoodModal;
+function getError(): any {
+  throw new Error('Function not implemented.');
+}

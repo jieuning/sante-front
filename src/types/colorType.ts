@@ -8,7 +8,9 @@ type ColorType =
   | 'lightGray'
   | 'lightGray01'
   | 'lightGray02'
-  | 'inputText';
+  | 'inputText'
+  | 'kakao'
+  | 'naver';
 
 const getColorValue = (color: ColorType) => {
   switch (color) {
@@ -32,6 +34,10 @@ const getColorValue = (color: ColorType) => {
       return '#E8E8E8';
     case 'inputText':
       return '#757575';
+    case 'kakao':
+      return '#FEE500';
+    case 'naver':
+      return '#00C73C';
   }
 };
 

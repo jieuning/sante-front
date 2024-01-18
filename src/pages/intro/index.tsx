@@ -48,39 +48,36 @@ const Intro = () => {
   return (
     <Container>
       <Header />
-      <ImgContainer>
-        <ContentsContainer>
-          <Title>
-            운동과 식단관리, 지금부턴{' '}
-            <StyledLogoImage src="./logo.png" alt="logoImage" />
-            에서 시작하세요!{' '}
-          </Title>
-          <Blank height="25rem" />
-          <DynamicButton info={registerButtonInfo} />
-          <Blank />
-          <p>이미 사용중이라면?</p>
-          <Blank />
-          <DynamicButton info={loginButtonInfo} />
-        </ContentsContainer>
-      </ImgContainer>
+      <ContentsContainer>
+        <Title>
+          운동과 식단관리, 지금부턴{' '}
+          <StyledLogoImage src="./logo.png" alt="logoImage" />
+          에서 시작하세요!{' '}
+        </Title>
+        <Blank height="18rem" />
+        <DynamicButton info={registerButtonInfo} />
+        <Blank />
+        <p>이미 사용중이라면?</p>
+        <Blank />
+        <DynamicButton info={loginButtonInfo} />
+      </ContentsContainer>
     </Container>
   );
 };
 
-const Container = styled.div``;
-
-const ImgContainer = styled.div`
-  width: 100%; /* 너비 지정 */
-  height: 100vh; /* 높이 지정 */
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
   background-image: url('./intro.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  display: flex;
-  justify-content: center;
 `;
 
 const ContentsContainer = styled.div`
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -93,7 +90,9 @@ const ContentsContainer = styled.div`
 const Title = styled.div`
   color: white;
   font-size: 30px;
-  margin-top: 10rem;
+  text-align: center;
+  word-break: keep-all;
+  line-height: 1.4em;
 `;
 
 const Blank = styled.div<BlankProps>`

@@ -22,10 +22,10 @@ export const DateSelect = ({
 }: DateSelectProps) => {
   const oneWeek: string[] = ['일', '월', '화', '수', '목', '금', '토'];
 
-  const day = getDay(currentDate);
-  const currentDayName = oneWeek[day];
+  const day: number = getDay(currentDate);
+  const currentDayName: string = oneWeek[day];
   // 해당 월의 시작일 계산
-  const currentWeek = startOfWeek(currentDate);
+  const currentWeek: Date = startOfWeek(currentDate);
 
   const handlePrevWeek = () => {
     setCurrentDate(subWeeks(currentDate, 1));

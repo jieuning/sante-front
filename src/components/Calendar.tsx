@@ -18,6 +18,12 @@ interface MonthCalendarProps {
   currentDate: Date;
 }
 
+interface Tag {
+  type: string;
+  label: string;
+  background: string;
+}
+
 export const MonthCalendar = ({
   exerciseList,
   foodList,
@@ -39,29 +45,31 @@ export const MonthCalendar = ({
     '12',
   ];
 
-  const tagsData = [
+  const tagsData: Tag[] = [
     { type: 'register', label: '운동등록', background: '#8699FF' },
     { type: 'complete', label: '운동완료', background: '#8699FF' },
     { type: 'normal', label: '칼로리적정', background: '#97F39A' },
     { type: 'excess', label: '칼로리초과', background: '#F39797' },
   ];
 
-  const currentMonth = getMonth(currentDate);
-  const currentMonthName = months[currentMonth];
-  const userCalory = Number(localStorage.getItem('todayCalory'));
+  const currentMonth: number = getMonth(currentDate);
+  const currentMonthName: string = months[currentMonth];
+  const userCalory: number | null = Number(localStorage.getItem('todayCalory'));
 
   // 해당 월의 시작일과 종료일을 계산
-  const startOfCurrentMonth = startOfMonth(currentDate);
-  const endOfCurrentMonth = endOfMonth(currentDate);
+  const startOfCurrentMonth: Date = startOfMonth(currentDate);
+  const endOfCurrentMonth: Date = endOfMonth(currentDate);
 
   const renderCustomDayContents = (date: number) => {
     let exerciseColorChips: JSX.Element | undefined = undefined;
     let foodColorChips: JSX.Element | undefined = undefined;
 
-    const tempDate = new Date(
+    // currentDate의 년도와 월을 기준으로 날짜 생성
+    const tempDate: Date = new Date(
       `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${date}`
     );
-    const dateKey = format(tempDate, 'yyyy-MM-dd');
+
+    const dateKey: string = format(tempDate, 'yyyy-MM-dd');
 
     // 운동 컬러칩
     if (exerciseList !== undefined) {
@@ -72,6 +80,7 @@ export const MonthCalendar = ({
       );
 
       const packedExerciseList = packingScheduledDate(filteredExerciseList);
+      // dateKey 배열의 value가 모두 true인지 확인
       const result = packedExerciseList.get(dateKey)?.reduce((acc, curr) => {
         return acc && curr;
       }, true);
@@ -105,6 +114,7 @@ export const MonthCalendar = ({
         foodColorChips = (
           <ColorChip
             color={calory && calory <= userCalory ? '#97F39A' : '#F39797'}
+            display={calory !== 0 ? 'flex' : 'none'}
           />
         );
       }
