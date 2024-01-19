@@ -45,7 +45,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
   const [selectedValue, setSelectedValue] = useState(''); // 카테고리저장
   const [foodItems, setFoodItems] = useState<ModalFoodItem[]>([]);
   const selectedCategory = foodData?.foodCategory;
-  const [userCalory, setUserCalory] = useState();
+  const [userCalory, setUserCalory] = useState<string>();
   const [isRadioDisabled, setIsRadioDisabled] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -103,7 +103,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
       .then((response) => {
         const userData = response.data.user;
         const userCalory = getTodayCalory();
-        setUserCalory(userCalory);
+        setUserCalory(userCalory ?? undefined);
         console.log(userData);
       })
       .catch((error) => {
@@ -529,6 +529,3 @@ const P = styled.p`
 `;
 
 export default FoodModal;
-function getError(): any {
-  throw new Error('Function not implemented.');
-}
