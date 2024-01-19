@@ -4,12 +4,14 @@ import axios from 'axios';
 import queryString from 'query-string';
 import { setUser } from '../../utils/WebStorageControl';
 
+const URL: string = `${import.meta.env.VITE_API_URL}/auth`;
+
 const navigate = (url: string) => {
   window.location.href = url;
 };
 const login = async () => {
   try {
-    const response = await axios.post('http://localhost:3000/auth/google');
+    const response = await axios.post(`${URL}/google`);
     const { url } = response.data;
     navigate(url);
   } catch (error) {
@@ -38,10 +40,9 @@ const GoogleLogin = () => {
   useEffect(() => {
     const fetchToken = async () => {
       try {
-        const response = await axios.post(
-          'http://localhost:3000/auth/google/token',
-          { code: code }
-        );
+        const response = await axios.post(`${URL}/google/token`, {
+          code: code,
+        });
         const { jwToken, email, gender, age } = response.data;
         console.log(
           'jwToken, email, gender, age ',

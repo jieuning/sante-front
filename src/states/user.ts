@@ -3,8 +3,6 @@ import axios from 'axios';
 import { Exercise, FoodList, User } from '../types/user';
 import { getToken } from '../utils/WebStorageControl';
 
-const URL = import.meta.env.VITE_API_URL;
-
 type ModalState = {
   food: boolean;
   exercise: boolean;
@@ -27,20 +25,18 @@ export type Store = {
   setModalState: (key: keyof ModalState, isOpen: boolean) => void;
 };
 
+const URL = `${import.meta.env.VITE_API_URL}/user`;
+
 export const useStore = create<Store>((set) => ({
   user: undefined,
   setUser: async (userData) => {
     try {
-      const response = await axios.put(
-        `${URL}/user`,
-        JSON.stringify(userData),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${getToken()}`,
-          },
-        }
-      );
+      const response = await axios.put(URL, JSON.stringify(userData), {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`,
+        },
+      });
       set({ user: response.data.user });
     } catch (error) {
       console.error('User update failed', error);
@@ -48,7 +44,7 @@ export const useStore = create<Store>((set) => ({
   },
   getUser: async () => {
     try {
-      const response = await axios.get(`${URL}/user/check`, {
+      const response = await axios.get(`${URL}/check`, {
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },

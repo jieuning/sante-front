@@ -16,8 +16,6 @@ import { getTodayCalory, getToken } from '../../utils/WebStorageControl';
 
 import { useStore } from '../../states/user';
 
-const URL = import.meta.env.VITE_API_URL;
-
 interface FoodModalProps {
   modalButton: any;
   modalType: ModalMode;
@@ -97,7 +95,7 @@ const FoodModal = ({ modalButton, currentDate }: FoodModalProps) => {
 
   useEffect(() => {
     axios
-      .get(`${URL}/user/check`, {
+      .get(`${import.meta.env.VITE_API_URL}/user/check`, {
         headers: { Authorization: `Bearer ${getToken()}` },
       })
       .then((response) => {

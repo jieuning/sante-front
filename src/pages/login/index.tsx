@@ -11,7 +11,7 @@ import axios from 'axios';
 import { setUser } from '../../utils/WebStorageControl';
 import { KakaoLogin } from '../../components/socialLogin/KakaoLogin';
 import GoogleLogin from '../../components/socialLogin/googleLogin';
-const URL = import.meta.env.VITE_API_URL;
+const URL = `${import.meta.env.VITE_API_URL}/user`;
 
 const Login = () => {
   const [email, setEmail] = useState<string | number>('');
@@ -61,7 +61,7 @@ const Login = () => {
       return;
     }
     axios
-      .post(`${URL}/user/login`, {
+      .post(`${URL}/login`, {
         email: email,
         password: password,
       })

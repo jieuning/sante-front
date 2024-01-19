@@ -52,11 +52,6 @@ const useCheckboxHandler = (
 
       // 서버에 변경 사항 업데이트
       setUser(filteredUser);
-      // await axios.put(`${URL}`, JSON.stringify(user), {
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // });
     } catch (error) {
       console.error('checkboxHook error', error);
       setCheckboxStates((prevStates) => ({

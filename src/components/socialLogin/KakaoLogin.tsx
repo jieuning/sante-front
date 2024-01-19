@@ -25,8 +25,11 @@ export const KakaoLogin = () => {
   const [token, setToken] = useState<string>(initialToken);
   const navigate = useNavigate();
 
+  const URL: string = `${import.meta.env.VITE_API_URL}/auth`;
+  const kakaoURL: string = 'https://kauth.kakao.com/oauth';
+
   // 인가 코드 받기 위한 url
-  const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${
+  const kakaoAuthUrl: string = `${kakaoURL}/oauth/authorize?response_type=code&client_id=${
     import.meta.env.VITE_KAKAO_REST_API_KEY
   }&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}`;
 
@@ -51,7 +54,7 @@ export const KakaoLogin = () => {
 
       // 1. kakao에서 access token 받기
       const tokenRes = await axios.post(
-        `https://kauth.kakao.com/oauth/token?grant_type=${data.grantType}&client_id=${data.clientId}&redirect_uri=${data.redirectUri}&code=${data.code}`,
+        `${kakaoURL}/token?grant_type=${data.grantType}&client_id=${data.clientId}&redirect_uri=${data.redirectUri}&code=${data.code}`,
         {
           header: {
             'Content-type': 'application/x-www-form-urlencoded;charset=utf-8',
@@ -74,7 +77,7 @@ export const KakaoLogin = () => {
       const kakaoUserData: KakaoUserData = kakaoUserInfo.data.kakao_account;
 
       // 3. sante 서버로 유저 정보 보내기
-      await axios.post('http://localhost:3000/auth/kakao', {
+      await axios.post(`${URL}/kakao`, {
         email: kakaoUserData.email,
         password: kakaoUserData.email,
         age: kakaoUserData.birthyear,
@@ -82,7 +85,7 @@ export const KakaoLogin = () => {
       });
 
       // 4. sante 서버에서 유저 데이터 및 jwt 받아오기
-      const user = await axios.post('http://localhost:3000/auth/kakao', {
+      const user = await axios.post(`${URL}/kakao`, {
         email: kakaoUserData.email,
       });
 
@@ -99,7 +102,7 @@ export const KakaoLogin = () => {
 
       navigate('/main');
     } catch (error) {
-      alert(`로그인 중 ${error}에러가 발생했습니다.`);
+      alert(`로그인 중 예기치 못한 에러가 발생했습니다.`);
     }
   };
 
@@ -108,9 +111,6 @@ export const KakaoLogin = () => {
     setToken(newToken);
   };
 
-  // const aa = localStorage.getItem('age');
-  // const bb = JSON.stringify(aa);
-
   const buttonInfoKakao: DynamicButtonInfo = {
     type: 'solid',
     text: '카카오 로그인',
@@ -118,10 +118,11 @@ export const KakaoLogin = () => {
     color: 'black',
     height: '50px',
     backgroundImage: './kakao_icon.png',
+    onClick: () => handleTokenChange(token),
   };
 
   return (
-    <Link to={kakaoAuthUrl} onClick={() => handleTokenChange(token)}>
+    <Link to={kakaoAuthUrl}>
       <DynamicButton info={buttonInfoKakao} />
     </Link>
   );

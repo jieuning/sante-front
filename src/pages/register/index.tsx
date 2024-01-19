@@ -12,8 +12,6 @@ import {
 import { RadioButton, InputButtonInfo } from '../../components/RadioButton';
 import CaloryRecommend from '../../utils/CaloryRecommend';
 
-const URL = import.meta.env.VITE_API_URL;
-
 const StyledTitle = styled.h1`
   text-align: center;
   font-size: 25px;
@@ -44,13 +42,12 @@ const Register = () => {
   const [pwConfirm, setPwConfirm] = useState<string>('');
   const [selectedValue, setSelectedValue] = useState<string>('');
   const [selectedGender, setSelectedGender] = useState('');
-  // const [recommendCalory, setRecommendCalory] = useState<number>(0);
-  //const [age, setAge] = useState('');
-
   const [emailValid, setEmailValid] = useState<boolean>(false);
   const [pwValid, setPwValid] = useState<boolean>(false);
   const [pwCheck, setPwCheck] = useState<boolean>(false);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
+
+  const URL = `${import.meta.env.VITE_API_URL}`;
 
   const navigate = useNavigate();
 
@@ -130,7 +127,6 @@ const Register = () => {
   };
 
   const todayCalory = CaloryRecommend(selectedGender, selectedValue);
-  // console.log(todayCalory);
 
   const buttonInfo: DynamicButtonInfo = {
     width: '370px',
