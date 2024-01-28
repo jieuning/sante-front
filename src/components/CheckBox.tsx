@@ -36,7 +36,7 @@ const CheckBoxContainer = styled.div`
     left: -3px;
     width: 25px;
     height: 25px;
-    background-image: url(${checkImg});
+    background-image: url('./check.png');
     background-size: contain;
   }
 `;
