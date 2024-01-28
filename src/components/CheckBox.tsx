@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import checkImg from '../assets/check.png';
 
 interface CheckBoxProps {
   checked: boolean;
