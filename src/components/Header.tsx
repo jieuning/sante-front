@@ -5,10 +5,6 @@ import { isLogin, logOut } from '../utils/WebStorageControl';
 import Profile from '../components/icons/Profile';
 import { useNavigate } from 'react-router-dom';
 
-const LogoImage = () => {
-  return <StyledLogoImage src="../assets/logo.png" alt="logoImage" />;
-};
-
 const Header = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(isLogin());
@@ -42,7 +38,7 @@ const Header = () => {
   return (
     <StyledHeader>
       <div onClick={handleLogoClick}>
-        <LogoImage></LogoImage>
+        <StyledLogoImage src="../assets/logo.png" alt="logoImage" />
       </div>
       <StyledRightSection>
         {isLoggedIn ? (
