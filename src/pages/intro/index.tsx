@@ -7,6 +7,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { isLogin } from '../../utils/WebStorageControl';
+import logo from '../../assets/app_logo.png';
+import intro from '../../assets/intro.png';
 
 interface BlankProps {
   height?: string;
@@ -51,7 +53,7 @@ const Intro = () => {
       <ContentsContainer>
         <Title>
           운동과 식단관리, 지금부턴{' '}
-          <StyledLogoImage src="src/assets/logo.png" alt="logoImage" />
+          <StyledLogoImage src={logo} alt="로고 이미지" />
           에서 시작하세요!{' '}
         </Title>
         <Blank height="18rem" />
@@ -68,7 +70,7 @@ const Intro = () => {
 const Container = styled.div`
   width: 100%;
   height: 100vh;
-  background-image: url('../../assets/intro.png');
+  background-image: url(${intro});
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { setUser } from '../../utils/WebStorageControl';
 import queryString from 'query-string';
 import axios from 'axios';
+import kakaoIcon from '../../assets/kakao_icon.png';
+
 interface KakaoUserData {
   token: string;
   age: string;
@@ -116,7 +118,7 @@ export const KakaoLogin = () => {
     backgroundColor: 'kakao',
     color: 'black',
     height: '50px',
-    backgroundImage: 'src/assets/kakao_icon.png',
+    backgroundImage: kakaoIcon,
     onClick: () => handleTokenChange(token),
   };
 

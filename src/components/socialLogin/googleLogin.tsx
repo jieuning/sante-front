@@ -3,6 +3,7 @@ import { DynamicButton, DynamicButtonInfo } from '../DynamicButton';
 import axios from 'axios';
 import queryString from 'query-string';
 import { setUser } from '../../utils/WebStorageControl';
+import googleIcon from '../../assets/google-color-icon.svg';
 
 const URL: string = `${import.meta.env.VITE_API_URL}/auth`;
 
@@ -25,7 +26,7 @@ const buttonInfoGoogleLogin: DynamicButtonInfo = {
   backgroundColor: 'white',
   color: 'black',
   height: '50px',
-  backgroundImage: 'src/assets/google-color-icon.svg',
+  backgroundImage: googleIcon,
   onClick: () => {
     login();
     console.log('hi');

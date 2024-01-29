@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import checkIcon from '../assets/check.png';
 
 interface CheckBoxProps {
   checked: boolean;
@@ -35,7 +36,7 @@ const CheckBoxContainer = styled.div`
     left: -3px;
     width: 25px;
     height: 25px;
-    background-image: url('src/assets/check.png');
+    background-image: url(${checkIcon});
     background-size: contain;
   }
 `;
