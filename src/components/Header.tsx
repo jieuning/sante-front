@@ -38,7 +38,7 @@ const Header = () => {
   return (
     <StyledHeader>
       <div onClick={handleLogoClick}>
-        <StyledLogoImage src="../assets/logo.png" alt="logoImage" />
+        <StyledLogoImage src="../assets/sante_logo.png" alt="logoImage" />
       </div>
       <StyledRightSection>
         {isLoggedIn ? (
