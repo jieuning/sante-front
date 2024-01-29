@@ -51,7 +51,7 @@ const Intro = () => {
       <ContentsContainer>
         <Title>
           운동과 식단관리, 지금부턴{' '}
-          <StyledLogoImage src="../../assets/logo.png" alt="logoImage" />
+          <StyledLogoImage src="src/assets/logo.png" alt="logoImage" />
           에서 시작하세요!{' '}
         </Title>
         <Blank height="18rem" />

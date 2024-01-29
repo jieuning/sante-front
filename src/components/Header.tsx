@@ -38,7 +38,7 @@ const Header = () => {
   return (
     <StyledHeader>
       <div onClick={handleLogoClick}>
-        <StyledLogoImage src="../assets/app_logo.png" alt="로고 이미지" />
+        <StyledLogoImage src="src/assets/app_logo.png" alt="로고 이미지" />
       </div>
       <StyledRightSection>
         {isLoggedIn ? (

@@ -25,7 +25,7 @@ const buttonInfoGoogleLogin: DynamicButtonInfo = {
   backgroundColor: 'white',
   color: 'black',
   height: '50px',
-  backgroundImage: '../../assets/google-color-icon.svg',
+  backgroundImage: 'src/assets/google-color-icon.svg',
   onClick: () => {
     login();
     console.log('hi');

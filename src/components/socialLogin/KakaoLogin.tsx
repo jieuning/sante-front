@@ -116,7 +116,7 @@ export const KakaoLogin = () => {
     backgroundColor: 'kakao',
     color: 'black',
     height: '50px',
-    backgroundImage: '../../assets/kakao_icon.png',
+    backgroundImage: 'src/assets/kakao_icon.png',
     onClick: () => handleTokenChange(token),
   };
 
