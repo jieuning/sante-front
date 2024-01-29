@@ -51,7 +51,7 @@ const Intro = () => {
       <ContentsContainer>
         <Title>
           운동과 식단관리, 지금부턴{' '}
-          <StyledLogoImage src="./logo.png" alt="logoImage" />
+          <StyledLogoImage src="../../assets/logo.png" alt="logoImage" />
           에서 시작하세요!{' '}
         </Title>
         <Blank height="18rem" />
@@ -68,7 +68,7 @@ const Intro = () => {
 const Container = styled.div`
   width: 100%;
   height: 100vh;
-  background-image: url('./intro.png');
+  background-image: url('../../assets/intro.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

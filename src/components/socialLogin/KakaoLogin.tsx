@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { setUser } from '../../utils/WebStorageControl';
 import queryString from 'query-string';
 import axios from 'axios';
-
 interface KakaoUserData {
   token: string;
   age: string;
@@ -29,9 +28,8 @@ export const KakaoLogin = () => {
   const kakaoURL: string = 'https://kauth.kakao.com/oauth';
 
   // 인가 코드 받기 위한 url
-  const kakaoAuthUrl = `${kakaoURL}/authorize?response_type=code&client_id=${
-    import.meta.env.VITE_KAKAO_REST_API_KEY
-  }&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}`;
+  const kakaoAuthUrl = `${kakaoURL}/authorize?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY
+    }&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}`;
 
   // 쿼리스트링으로 코드 값 가져오기
   const query = queryString.parse(window.location.search);
@@ -118,7 +116,7 @@ export const KakaoLogin = () => {
     backgroundColor: 'kakao',
     color: 'black',
     height: '50px',
-    backgroundImage: './kakao_icon.png',
+    backgroundImage: '../../assets/kakao_icon.png',
     onClick: () => handleTokenChange(token),
   };
 

@@ -6,7 +6,7 @@ import Profile from '../components/icons/Profile';
 import { useNavigate } from 'react-router-dom';
 
 const LogoImage = () => {
-  return <StyledLogoImage src="./logo.png" alt="logoImage" />;
+  return <StyledLogoImage src="../assets/logo.png" alt="logoImage" />;
 };
 
 const Header = () => {
