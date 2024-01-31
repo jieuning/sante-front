@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import RoutineCard from '../../components/RoutineCard';
 import { FoodList } from '../../types/user';
