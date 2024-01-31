@@ -73,13 +73,16 @@ export const MonthCalendar = ({
 
     // 운동 컬러칩
     if (exerciseList !== undefined) {
-      const filteredExerciseList = filterExerciseListByDateRange(
+      // 해당 월의 ExerciseList만 필터링
+      const filteredExerciseList: Exercise[] = filterExerciseListByDateRange(
         userData?.userExerciseList ?? [],
         startOfCurrentMonth,
         endOfCurrentMonth
       );
 
+      // ExerciseList의 생성일과 isDone을 가공하여 반환
       const packedExerciseList = packingScheduledDate(filteredExerciseList);
+
       // dateKey 배열의 value가 모두 true인지 확인
       const result = packedExerciseList.get(dateKey)?.reduce((acc, curr) => {
         return acc && curr;
@@ -99,12 +102,33 @@ export const MonthCalendar = ({
 
     // 식단 컬러칩
     if (foodList !== undefined) {
-      const filteredFoodList = filterFoodListByDateRange(
-        userData?.userFoodList ?? [],
+      // db에 저장되는 시간이 미국 기준으로 되어있어
+      // 시차로인해 날짜가 하루씩 당겨져서 저장되는 문제가 발생
+      // 해당 날짜를 하루씩 뒤로 이동 시킴
+      const changedDate: Food[] = (userData?.userFoodList ?? []).map(
+        (foodList) => {
+          const originalDate = new Date(foodList.createdAt);
+
+          // 날짜 하루 뒤로 이동
+          const newDate = new Date(originalDate);
+          newDate.setDate(originalDate.getDate() + 1);
+
+          // 변경된 객체 반환
+          return {
+            ...foodList,
+            createdAt: newDate,
+          };
+        }
+      );
+
+      // 해당 월의 FoodList만 필터링
+      const filteredFoodList: Food[] = filterFoodListByDateRange(
+        changedDate,
         startOfCurrentMonth,
         endOfCurrentMonth
       );
 
+      // 날짜별로 생성한 식단 칼로리를 모두 더해서 반환
       const packedFoodList = packingFoodList(filteredFoodList);
       const calory = packedFoodList.get(dateKey);
 
