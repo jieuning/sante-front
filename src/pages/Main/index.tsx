@@ -1,7 +1,8 @@
+import styled from 'styled-components';
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import RoutineCard from '../../components/RoutineCard';
 import { FoodList } from '../../types/user';
-import styled from 'styled-components';
 import Header from '../../components/Header';
 import MainStatistic from '../../components/mainStatistic/MainStatistic';
 import { MonthCalendar } from '../../components/Calendar';
@@ -17,8 +18,6 @@ interface BalckProps {
 
 const Main = () => {
   const today = new Date(); // 현재 날짜를 가져옵니다.
-  today.setHours(0, 0, 0, 0);
-  //const [user, setUser] = useState<User>();
   const user = useStore((state: Store) => state.user);
   const getUser = useStore((state: Store) => state.getUser);
   const setExerciseData = useStore((state: Store) => state.setExerciseData);
@@ -32,7 +31,6 @@ const Main = () => {
   const [isCreateMode, setIsCreateMode] = useState(true);
 
   const handleDayOnClick = (day: Date) => {
-    day.setHours(0, 0, 0, 0);
     setCurrentDate(day);
   };
 

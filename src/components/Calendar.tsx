@@ -142,6 +142,7 @@ export const MonthCalendar = ({
   return (
     <MainCalendarContainer>
       <DatePicker
+        dateFormat="MM-dd-yyyy"
         onChange={(date) => date}
         inline
         selected={currentDate}
