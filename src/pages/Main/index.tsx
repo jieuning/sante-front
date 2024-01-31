@@ -16,7 +16,6 @@ interface BalckProps {
 }
 
 const Main = () => {
-  const today = new Date(); // 현재 날짜를 가져옵니다.
   const user = useStore((state: Store) => state.user);
   const getUser = useStore((state: Store) => state.getUser);
   const setExerciseData = useStore((state: Store) => state.setExerciseData);
@@ -24,8 +23,9 @@ const Main = () => {
   const setModalState = useStore((state: Store) => state.setModalState);
   const setFoodData = useStore((state: Store) => state.setFoodData);
   const setFoodId = useStore((state: Store) => state.setFoodId);
-  const [currentDate, setCurrentDate] = useState<Date>(today);
 
+  const today = new Date(); // 현재 날짜를 가져옵니다.
+  const [currentDate, setCurrentDate] = useState<Date>(today);
   const [foodModalType, setFoodModalType] = useState<ModalMode>('create');
   const [isCreateMode, setIsCreateMode] = useState(true);
 
