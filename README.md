@@ -21,6 +21,7 @@
 로그인과 회원가입이 있고 각 파트의 유효성을 검사
 
 ![로그인](https://github.com/jieuning/sante-front/assets/108172664/063dde94-9548-4c31-9659-630aa90a9fa6)
+<br/><br/>
 ![회원가입](https://github.com/jieuning/sante-front/assets/108172664/6d17d142-72df-4dda-b9a7-d2af5253bf2f)
 
 ### 메인
