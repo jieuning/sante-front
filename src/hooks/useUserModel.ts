@@ -22,9 +22,6 @@ const useUserModel = (startDate: Date, endDate?: Date) => {
       })
       .then((response) => {
         const userData = response.data.user;
-
-        console.log(userData);
-
         let filteredFoodList = new Array<Food>();
         let filteredExerciseList = new Array<Exercise>();
 

@@ -127,7 +127,6 @@ const Main = () => {
                 setModalState('food', true);
               }}
               onClickEdit={(value) => {
-                console.log('main data', value[0]);
                 setFoodData(value[0]);
                 handleEditClick(value);
                 setModalState('food', true);

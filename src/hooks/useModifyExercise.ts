@@ -24,7 +24,6 @@ const useModifyExercise = () => {
 
       filteredUser.userExerciseList?.forEach((exerciseData: Exercise) => {
         if (exerciseData.exerciseId === exerciseId) {
-          console.log('---compare', exerciseData.exerciseId, '--', exerciseId);
           exerciseData.exerciseName =
             exercise.exerciseName || exerciseData.exerciseName;
           exerciseData.exerciseStartDate =

@@ -16,14 +16,14 @@ interface StatisticType {
 
 type ExerciseType = 'rate' | 'cnt';
 
-function getWeekOfMonth(date: Date): number {
+const getWeekOfMonth = (date: Date): number => {
   const startOfMonthDate = startOfMonth(date);
   const dayOfWeek = getDay(startOfMonthDate);
   const dateDayOfWeek = getDay(date);
 
   // 주차 계산: 시작 요일과 날짜의 요일 차이를 고려
   return Math.ceil((date.getDate() + dayOfWeek - dateDayOfWeek) / 7);
-}
+};
 
 const getMonthlyExerciseRateStatistic = (
   userExerciseList: Exercise[] | undefined,
@@ -43,7 +43,6 @@ const getMonthlyExerciseRateStatistic = (
   //여기서 해당 날짜 isDone 체크되어있는지 확인
   //scheduled date 의 날짜와 존재하는 isDone을 키밸류로 저장
   const isDoneDate = packingScheduledDate(userExerciseList);
-  if (exerciseType === 'cnt') console.log(isDoneDate);
   let max = 0;
   for (let i = 1; i <= endOfMonth(targetDate).getDate(); i++) {
     const thisDay = new Date(
@@ -51,7 +50,6 @@ const getMonthlyExerciseRateStatistic = (
       targetDate.getMonth(),
       i
     );
-    //console.log(format(thisDay, 'yyyy-MM-dd'));
     const currWeek = getWeekOfMonth(thisDay);
     //주차가 증가하면 새로운 주차 추가
     if (statistic.length < currWeek) {
@@ -97,8 +95,7 @@ const getMonthlyExerciseRateStatistic = (
       };
     }
   }
-  if (exerciseType === 'rate') {
-  }
+
   const list = statistic.reduce((acc, curr) => {
     if (exerciseType === 'rate') {
       const result = curr.max > 0 ? Math.ceil((curr.curr / curr.max) * 100) : 0;
@@ -207,7 +204,7 @@ const packingScheduledDate = (userExerciseList: Exercise[]) => {
   }, new Map<string, Boolean[]>());
 };
 
-function convertUtcToKstString(utcDate: Date) {
+const convertUtcToKstString = (utcDate: Date) => {
   const date = new Date(utcDate);
   const kstDate = new Date(
     date.getUTCFullYear(),
@@ -224,7 +221,7 @@ function convertUtcToKstString(utcDate: Date) {
   }
 
   return kstDate.toISOString().split('T')[0];
-}
+};
 
 const packingFoodList = (userFoodList: Food[]) => {
   return userFoodList.reduce((acc, curr) => {
@@ -240,11 +237,11 @@ const getSum = (arr: StatisticType[]): number => {
   return arr.reduce((acc, curr) => acc + curr.curr, 0);
 };
 
-function filterFoodListByDateRange(
+const filterFoodListByDateRange = (
   foodList: Food[],
   startDate: Date,
   endDate: Date
-) {
+) => {
   const start = startOfDay(startDate);
   const end = startOfDay(endDate);
 
@@ -252,9 +249,7 @@ function filterFoodListByDateRange(
     const dateKey = convertUtcToKstString(startDate);
     return foodList.filter((food) => {
       const foodDateKey = convertUtcToKstString(food.createdAt);
-      //console.log(addHours(startDate, 9), food.createdAt);
       if (dateKey === foodDateKey) {
-        //console.log(dateKey, foodDateKey);
         return true;
       }
       return false;
@@ -265,18 +260,17 @@ function filterFoodListByDateRange(
     const foodDate = startOfDay(new Date(food.createdAt));
     return isWithinInterval(foodDate, { start, end });
   });
-}
+};
 
-function filterExerciseListByDateRange(
+const filterExerciseListByDateRange = (
   exerciseList: Exercise[],
   startDate: Date,
   endDate: Date
-): Exercise[] {
+): Exercise[] => {
   const start = startOfDay(startDate);
   const end = startOfDay(endDate);
 
   if (startDate === endDate) {
-    //const dateKey = convertUtcToKstString(startDate);
     return exerciseList
       .map((exercise) => {
         // 날짜 범위에 맞는 scheduledDate만 필터링
@@ -316,7 +310,7 @@ function filterExerciseListByDateRange(
     .filter(
       (exercise) => exercise.scheduledDate && exercise.scheduledDate.length > 0
     );
-}
+};
 interface WeeklyData {
   done: number;
   total: number;

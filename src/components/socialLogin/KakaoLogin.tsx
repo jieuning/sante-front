@@ -30,8 +30,9 @@ export const KakaoLogin = () => {
   const kakaoURL: string = 'https://kauth.kakao.com/oauth';
 
   // 인가 코드 받기 위한 url
-  const kakaoAuthUrl = `${kakaoURL}/authorize?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY
-    }&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}`;
+  const kakaoAuthUrl = `${kakaoURL}/authorize?response_type=code&client_id=${
+    import.meta.env.VITE_KAKAO_REST_API_KEY
+  }&redirect_uri=${import.meta.env.VITE_KAKAO_REDIRECT_URI}`;
 
   // 쿼리스트링으로 코드 값 가져오기
   const query = queryString.parse(window.location.search);
@@ -102,7 +103,6 @@ export const KakaoLogin = () => {
 
       navigate('/main');
     } catch (error) {
-      console.log(error);
       alert(`로그인 중 예기치 못한 에러가 발생했습니다.`);
     }
   };

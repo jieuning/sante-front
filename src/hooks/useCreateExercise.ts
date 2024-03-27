@@ -22,7 +22,6 @@ const useCreateExercise = () => {
       delete filteredUser.__v;
 
       filteredUser.userExerciseList?.push(exercise);
-      console.log('user', JSON.stringify(filteredUser));
 
       setUser(filteredUser);
     } catch (error) {

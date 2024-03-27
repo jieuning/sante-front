@@ -122,7 +122,6 @@ const Register = () => {
       } else {
         setSelectedGender('여성');
       }
-      console.log(selectedGender);
     },
   };
 
@@ -175,8 +174,7 @@ const Register = () => {
       };
       axios
         .post(`${URL}/register`, requestData)
-        .then((response) => {
-          console.log('성공', response.data);
+        .then(() => {
           alert('가입이 완료되었습니다!');
           navigate('/login');
         })

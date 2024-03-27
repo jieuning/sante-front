@@ -23,7 +23,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Email:', email);
     const emailRegex = /^\S+@\S+.\S+$/;
     if (typeof email === 'string' && emailRegex.test(email)) {
       setEmailValid(true);
@@ -33,7 +32,6 @@ const Login = () => {
   }, [email]);
 
   useEffect(() => {
-    console.log('Password:', password);
     const pwRegex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (typeof password === 'string' && pwRegex.test(password)) {
@@ -67,7 +65,6 @@ const Login = () => {
       })
       .then((res) => {
         if (res.status === 200) {
-          console.log(res.data);
           setUser(
             res.data.token,
             res.data.email,
@@ -78,11 +75,9 @@ const Login = () => {
         } else if (res.status === 404) {
           alert('아이디 또는 비밀번호를 확인해주세요.');
         }
-        console.log('status', res.data.message);
         return res.status;
       })
-      .catch((error) => {
-        console.log(error);
+      .catch(() => {
         alert('아이디 또는 비밀번호를 확인하세요');
       });
   };

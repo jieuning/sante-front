@@ -28,14 +28,12 @@ const buttonInfoGoogleLogin: DynamicButtonInfo = {
   backgroundImage: './google-color-icon.svg',
   onClick: () => {
     login();
-    console.log('hi');
   },
 };
 
 const GoogleLogin = () => {
   const query = queryString.parse(window.location.search);
   const code = query?.code?.toString() || '';
-  console.log('this is my code', code);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -44,13 +42,6 @@ const GoogleLogin = () => {
           code: code,
         });
         const { jwToken, email, gender, age } = response.data;
-        console.log(
-          'jwToken, email, gender, age ',
-          jwToken,
-          email,
-          gender,
-          age
-        );
 
         if (jwToken) {
           navigate('/main');

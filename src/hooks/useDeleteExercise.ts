@@ -24,8 +24,6 @@ const useDeleteExercise = () => {
 
       filteredUser.userExerciseList = exerciseFiltered;
 
-      console.log('user', JSON.stringify(filteredUser));
-
       setUser(filteredUser);
     } catch (error) {
       console.error('삭제 요청 실패', error);

@@ -11,7 +11,6 @@ const Test = () => {
     backgroundColor: 'primary',
     color: 'white',
     fontWeight: 'bold',
-    onClick: () => console.log('Button clicked!'),
   };
   return (
     <div>
