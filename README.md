@@ -20,33 +20,33 @@
 ### 회원서비스
 로그인과 회원가입이 있고 각 파트의 유효성을 검사
 
-![sante-login](/uploads/a3b23521a7dbe3fef496ffd4aad74741/sante-login.png)
-![sante-register](/uploads/687b3f2d0818ee8b45395d299bc0b5f8/sante-register.png)
+![로그인](https://github.com/jieuning/sante-front/assets/108172664/063dde94-9548-4c31-9659-630aa90a9fa6)
+![회원가입](https://github.com/jieuning/sante-front/assets/108172664/6d17d142-72df-4dda-b9a7-d2af5253bf2f)
 
 ### 메인
 - 등록한 운동과 식단을 컬러칩으로 간단하게 한 달치를 확인할 수 있는 캘린더
 - 운동과 식단을 일자별로 관리할 수 있는 카드
 - 주간 달성률을 알려주는 주간 통계
 
-![sante-main](/uploads/1296f2b681dd5b5edcffdf17d7700fea/sante-main.png)
+![메인](https://github.com/jieuning/sante-front/assets/108172664/aa67c7f7-a798-429b-bfe1-ce4f4ea7aad6)
 ### 운동/식단 관리
 자유롭게 커스텀할 수 있는 운동과 식단 추가
 
-![sante-ex](/uploads/041dad9c767be5a98d887a1f3dc26e13/sante-ex.png)
+![운동 모달](https://github.com/jieuning/sante-front/assets/108172664/143e9cb8-bd19-46fd-ba40-57cb67845e95)
 
-![sante-food](/uploads/f4d9dc775a964f6b72fa65dbc0e1758e/sante-food.png)
+![식단 모달](https://github.com/jieuning/sante-front/assets/108172664/e7058a98-519d-435b-9fef-a274d5693568)
 ### 한 눈에 보기
 한 달 단위로 한 눈에 조회하고 수정할 수 있는 리스트 페이지
 
-![sante-list](/uploads/ed1984c8364e0896a458dbf177d457b2/sante-list.png)
+![더보기](https://github.com/jieuning/sante-front/assets/108172664/6bbb5a97-3dee-457b-bb9f-4fa8707490d4)
 ### 수치로 확인
 목표 달성을 위해 월간 데이터를 그래프를 통해 가시적으로 표시
 
-![sante-st](/uploads/bd44e26e92aa9cbbe8f95af9571896c4/sante-st.png)
+![게이지](https://github.com/jieuning/sante-front/assets/108172664/ca0a29a8-1267-42f6-9960-993232ec4e58)
 ### 모바일 접근성
 반응형으로 처리하여 습관관리를 위해 어디서든 접근할 수 있도록 개발
 
-![m1](/uploads/a167a38da668f0cea9178aaf377518ef/m1.png)
+![모바일](https://github.com/jieuning/sante-front/assets/108172664/485a8b31-f8b1-401f-9b62-cf256fba7dd7)
 
 ## 기술스택
 
